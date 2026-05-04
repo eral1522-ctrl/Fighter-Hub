@@ -3,20 +3,31 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: FightersRoom API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: fighters
+    description: Fighter profile operations
+  - name: opportunities
+    description: Fight and sponsor opportunities
+  - name: events
+    description: Events
+  - name: applications
+    description: Applications for opportunities
+  - name: admin
+    description: Admin operations
+  - name: membership
+    description: Membership and subscription
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +35,388 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Fighter profile
+  /fighters/me:
+    get:
+      operationId: getMyProfile
+      tags: [fighters]
+      summary: Get current fighter's profile
+      responses:
+        "200":
+          description: Fighter profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fighter"
+        "404":
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createMyProfile
+      tags: [fighters]
+      summary: Create fighter profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFighterBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fighter"
+    patch:
+      operationId: updateMyProfile
+      tags: [fighters]
+      summary: Update fighter profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFighterBody"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fighter"
+
+  # Opportunities
+  /opportunities:
+    get:
+      operationId: listOpportunities
+      tags: [opportunities]
+      summary: List all opportunities (fight + sponsor)
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [fight, sponsor]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, closed]
+      responses:
+        "200":
+          description: List of opportunities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Opportunity"
+
+  /opportunities/{id}:
+    get:
+      operationId: getOpportunity
+      tags: [opportunities]
+      summary: Get opportunity by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Opportunity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # Events
+  /events:
+    get:
+      operationId: listEvents
+      tags: [events]
+      summary: List all events
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+
+  /events/{id}:
+    get:
+      operationId: getEvent
+      tags: [events]
+      summary: Get event by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  # Applications
+  /applications:
+    get:
+      operationId: listMyApplications
+      tags: [applications]
+      summary: List my applications
+      responses:
+        "200":
+          description: My applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+    post:
+      operationId: createApplication
+      tags: [applications]
+      summary: Apply to an opportunity or event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateApplicationBody"
+      responses:
+        "201":
+          description: Application submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  # Dashboard stats (wow endpoint)
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [fighters]
+      summary: Get dashboard summary stats for current fighter
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  # Membership
+  /membership/plans:
+    get:
+      operationId: listMembershipPlans
+      tags: [membership]
+      summary: List available membership plans
+      responses:
+        "200":
+          description: Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembershipPlan"
+
+  /membership/subscribe:
+    post:
+      operationId: subscribeMembership
+      tags: [membership]
+      summary: Subscribe to a membership plan (creates Stripe checkout session)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscribeBody"
+      responses:
+        "200":
+          description: Checkout URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutResponse"
+
+  # Admin endpoints
+  /admin/fighters:
+    get:
+      operationId: adminListFighters
+      tags: [admin]
+      summary: List all registered fighters
+      responses:
+        "200":
+          description: All fighters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Fighter"
+
+  /admin/fighters/{id}/approve:
+    patch:
+      operationId: adminApproveFighter
+      tags: [admin]
+      summary: Approve a fighter profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated fighter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fighter"
+
+  /admin/fighters/{id}/reject:
+    patch:
+      operationId: adminRejectFighter
+      tags: [admin]
+      summary: Reject a fighter profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated fighter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fighter"
+
+  /admin/opportunities:
+    post:
+      operationId: adminCreateOpportunity
+      tags: [admin]
+      summary: Create a new opportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOpportunityBody"
+      responses:
+        "201":
+          description: Created opportunity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+
+  /admin/events:
+    post:
+      operationId: adminCreateEvent
+      tags: [admin]
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventBody"
+      responses:
+        "201":
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /admin/applications:
+    get:
+      operationId: adminListApplications
+      tags: [admin]
+      summary: List all applications
+      responses:
+        "200":
+          description: All applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
+  /admin/applications/{id}/approve:
+    patch:
+      operationId: adminApproveApplication
+      tags: [admin]
+      summary: Approve an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /admin/applications/{id}/reject:
+    patch:
+      operationId: adminRejectApplication
+      tags: [admin]
+      summary: Reject an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /admin/stats:
+    get:
+      operationId: adminGetStats
+      tags: [admin]
+      summary: Get admin overview stats
+      responses:
+        "200":
+          description: Admin stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +427,401 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Fighter:
+      type: object
+      properties:
+        id:
+          type: integer
+        clerkUserId:
+          type: string
+        fullName:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        age:
+          type: ["integer", "null"]
+        height:
+          type: ["string", "null"]
+        stance:
+          type: ["string", "null"]
+        coach:
+          type: ["string", "null"]
+        manager:
+          type: ["string", "null"]
+        instagram:
+          type: ["string", "null"]
+        whatsapp:
+          type: ["string", "null"]
+        email:
+          type: string
+        videoLinks:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        availableInternationally:
+          type: boolean
+        membershipPlan:
+          type: ["string", "null"]
+        membershipStatus:
+          type: string
+        approvalStatus:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - clerkUserId
+        - fullName
+        - country
+        - city
+        - weightClass
+        - record
+        - email
+        - availableInternationally
+        - membershipStatus
+        - approvalStatus
+        - createdAt
+
+    CreateFighterBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        age:
+          type: ["integer", "null"]
+        height:
+          type: ["string", "null"]
+        stance:
+          type: ["string", "null"]
+        coach:
+          type: ["string", "null"]
+        manager:
+          type: ["string", "null"]
+        instagram:
+          type: ["string", "null"]
+        whatsapp:
+          type: ["string", "null"]
+        email:
+          type: string
+        videoLinks:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        availableInternationally:
+          type: boolean
+      required:
+        - fullName
+        - country
+        - city
+        - weightClass
+        - record
+        - email
+        - availableInternationally
+
+    UpdateFighterBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        age:
+          type: ["integer", "null"]
+        height:
+          type: ["string", "null"]
+        stance:
+          type: ["string", "null"]
+        coach:
+          type: ["string", "null"]
+        manager:
+          type: ["string", "null"]
+        instagram:
+          type: ["string", "null"]
+        whatsapp:
+          type: ["string", "null"]
+        email:
+          type: string
+        videoLinks:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        availableInternationally:
+          type: boolean
+
+    Opportunity:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [fight, sponsor]
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: ["string", "null"]
+        date:
+          type: ["string", "null"]
+        weightClass:
+          type: ["string", "null"]
+        compensation:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, closed]
+        createdAt:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - description
+        - status
+        - createdAt
+
+    CreateOpportunityBody:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [fight, sponsor]
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: ["string", "null"]
+        date:
+          type: ["string", "null"]
+        weightClass:
+          type: ["string", "null"]
+        compensation:
+          type: ["string", "null"]
+      required:
+        - type
+        - title
+        - description
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+        promoter:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [upcoming, past, cancelled]
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - location
+        - date
+        - status
+        - createdAt
+
+    CreateEventBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+        promoter:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+      required:
+        - title
+        - description
+        - location
+        - date
+
+    Application:
+      type: object
+      properties:
+        id:
+          type: integer
+        fighterId:
+          type: integer
+        fighterName:
+          type: string
+        opportunityId:
+          type: ["integer", "null"]
+        eventId:
+          type: ["integer", "null"]
+        opportunityTitle:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        message:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - fighterId
+        - fighterName
+        - status
+        - createdAt
+
+    CreateApplicationBody:
+      type: object
+      properties:
+        opportunityId:
+          type: ["integer", "null"]
+        eventId:
+          type: ["integer", "null"]
+        message:
+          type: ["string", "null"]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalOpportunities:
+          type: integer
+        totalFightOpportunities:
+          type: integer
+        totalSponsorOpportunities:
+          type: integer
+        totalEvents:
+          type: integer
+        myApplications:
+          type: integer
+        pendingApplications:
+          type: integer
+        approvedApplications:
+          type: integer
+        membershipStatus:
+          type: string
+        approvalStatus:
+          type: string
+      required:
+        - totalOpportunities
+        - totalFightOpportunities
+        - totalSponsorOpportunities
+        - totalEvents
+        - myApplications
+        - pendingApplications
+        - approvedApplications
+        - membershipStatus
+        - approvalStatus
+
+    MembershipPlan:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+        interval:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        stripePriceId:
+          type: ["string", "null"]
+      required:
+        - id
+        - name
+        - price
+        - currency
+        - interval
+        - features
+
+    SubscribeBody:
+      type: object
+      properties:
+        planId:
+          type: string
+      required:
+        - planId
+
+    CheckoutResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        sessionId:
+          type: ["string", "null"]
+      required:
+        - url
+
+    AdminStats:
+      type: object
+      properties:
+        totalFighters:
+          type: integer
+        pendingApproval:
+          type: integer
+        approvedFighters:
+          type: integer
+        totalOpportunities:
+          type: integer
+        totalEvents:
+          type: integer
+        totalApplications:
+          type: integer
+        pendingApplications:
+          type: integer
+      required:
+        - totalFighters
+        - pendingApproval
+        - approvedFighters
+        - totalOpportunities
+        - totalEvents
+        - totalApplications
+        - pendingApplications
