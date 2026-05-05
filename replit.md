@@ -61,7 +61,8 @@ Manual configuration needed:
 - `STRIPE_PRICE_PRO` — Stripe Price ID for Pro plan (€49/month)
 - `STRIPE_PRICE_ANNUAL` — Stripe Price ID for Annual plan (€299/year)
 - `ADMIN_CLERK_IDS` — Comma-separated list of Clerk user IDs with admin access
-- `APP_URL` — Public app URL (for Stripe redirect URLs)
+- `ADMIN_EMAIL` — Email address to receive new fighter application notifications
+- `APP_URL` — Public app URL (for Stripe redirect URLs and admin notification links)
 
 ## Stripe Integration
 

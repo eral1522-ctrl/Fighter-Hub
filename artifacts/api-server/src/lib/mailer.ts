@@ -68,9 +68,25 @@ async function deliver(transport: nodemailer.Transporter, opts: nodemailer.SendM
   }
 }
 
-export async function sendApplicationConfirmation(to: string, name: string): Promise<void> {
+/** Escapes user-provided text for safe interpolation into HTML email bodies. */
+function esc(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export async function sendApplicationConfirmation(details: ApplicationDetails): Promise<void> {
   const transport = createTransport();
   if (!transport) return; // silently skip — confirmation is best-effort
+
+  const fieldRow = (label: string, value: string) => `
+    <tr>
+      <td style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:7px 14px 7px 0;white-space:nowrap;vertical-align:top;">${label}</td>
+      <td style="color:#f5f5f5;font-size:14px;padding:7px 0;vertical-align:top;">${value}</td>
+    </tr>`;
 
   const html = `
 <!DOCTYPE html>
@@ -82,15 +98,28 @@ export async function sendApplicationConfirmation(to: string, name: string): Pro
     <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Received</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
-        Thank you for applying to IFA – International Fighters Association, <strong style="color:#f5f5f5;">${name}</strong>.
+        Thank you for applying to IFA – International Fighters Association, <strong style="color:#f5f5f5;">${esc(details.name)}</strong>.
       </p>
-      <p style="color:#ccc;line-height:1.7;margin-bottom:24px;">
-        Your profile is under review. If selected, you will receive the next steps to activate your membership.
+      <p style="color:#ccc;line-height:1.7;margin-bottom:20px;">
+        Your application is now under review. Our team reviews all applications within <strong style="color:#f5f5f5;">5–7 business days</strong>. If selected, you will receive the next steps to activate your membership.
       </p>
+
+      <p style="color:#888;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin:0 0 10px;">What you submitted</p>
+      <div style="background:#111;border:1px solid #222;border-radius:4px;padding:14px 18px;margin-bottom:24px;">
+        <table style="width:100%;border-collapse:collapse;">
+          ${fieldRow("Name", esc(details.name))}
+          ${fieldRow("Country", esc(details.country))}
+          ${fieldRow("Discipline", esc(details.discipline))}
+          ${fieldRow("Weight Class", esc(details.weightClass))}
+          ${fieldRow("Record", esc(details.record))}
+          ${details.bio ? fieldRow("Bio", `<span style="color:#ccc;font-style:italic;">${esc(details.bio)}</span>`) : ""}
+        </table>
+      </div>
+
       <div style="border-left:3px solid #f5c518;padding-left:16px;margin-bottom:24px;">
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
           Gracias por aplicar a IFA – International Fighters Association.<br/>
-          Tu perfil está en revisión. Si eres seleccionado, recibirás los siguientes pasos para activar tu membresía.
+          Tu solicitud está en revisión. Nuestro equipo revisa todas las solicitudes en un plazo de <strong style="color:#ccc;">5–7 días hábiles</strong>. Si eres seleccionado, recibirás los siguientes pasos para activar tu membresía.
         </p>
       </div>
     </div>
@@ -101,8 +130,72 @@ export async function sendApplicationConfirmation(to: string, name: string): Pro
 
   await deliver(transport, {
     from: SMTP_FROM,
-    to,
+    to: details.email,
     subject: "IFA Application Received / Solicitud Recibida",
+    html,
+  });
+}
+
+export interface ApplicationDetails {
+  name: string;
+  email: string;
+  country: string;
+  discipline: string;
+  weightClass: string;
+  record: string;
+  bio?: string | null;
+}
+
+export async function sendAdminNewApplicationNotification(details: ApplicationDetails): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) return; // silently skip — ADMIN_EMAIL not configured
+
+  const transport = createTransport();
+  if (!transport) return; // silently skip — SMTP not configured
+
+  const fieldRow = (label: string, value: string) => `
+    <tr>
+      <td style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:8px 12px 8px 0;white-space:nowrap;vertical-align:top;">${label}</td>
+      <td style="color:#f5f5f5;font-size:14px;padding:8px 0;vertical-align:top;">${value}</td>
+    </tr>`;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
+  <div style="max-width:560px;margin:0 auto;">
+    ${header()}
+    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 8px;">New Application Received</h2>
+      <p style="color:#888;font-size:13px;margin:0 0 24px;">A fighter has just submitted an application for review.</p>
+      <div style="background:#111;border:1px solid #222;border-radius:4px;padding:16px 20px;margin-bottom:24px;">
+        <table style="width:100%;border-collapse:collapse;">
+          ${fieldRow("Name", esc(details.name))}
+          ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#f5c518;text-decoration:none;">${esc(details.email)}</a>`)}
+          ${fieldRow("Country", esc(details.country))}
+          ${fieldRow("Discipline", esc(details.discipline))}
+          ${fieldRow("Weight Class", esc(details.weightClass))}
+          ${fieldRow("Record", esc(details.record))}
+          ${details.bio ? fieldRow("Bio", `<span style="color:#ccc;font-style:italic;">${esc(details.bio)}</span>`) : ""}
+        </table>
+      </div>
+      <div style="text-align:center;">
+        <a href="${esc(process.env.APP_URL || "https://ifa-fighters.org")}/admin"
+           style="display:inline-block;background:#f5c518;color:#0d0d0d;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
+          Review in Admin Panel
+        </a>
+      </div>
+    </div>
+    ${footer()}
+  </div>
+</body>
+</html>`.trim();
+
+  await deliver(transport, {
+    from: SMTP_FROM,
+    to: adminEmail,
+    subject: `IFA – New Application: ${details.name}`,
     html,
   });
 }

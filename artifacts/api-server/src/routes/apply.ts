@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db, fighterApplicationsTable } from "@workspace/db";
 import { SubmitFighterApplicationBody } from "@workspace/api-zod";
-import { sendApplicationConfirmation } from "../lib/mailer";
+import { sendApplicationConfirmation, sendAdminNewApplicationNotification } from "../lib/mailer";
 
 const router = Router();
 
@@ -18,9 +18,14 @@ router.post("/", async (req: any, res: any) => {
       .values(parsed.data)
       .returning();
 
-    // Fire email confirmation — non-blocking, failure doesn't affect response
-    sendApplicationConfirmation(parsed.data.email, parsed.data.name).catch((err) => {
-      req.log.warn({ err }, "Apply: failed to send confirmation email (check SMTP env vars)");
+    // Fire fighter confirmation email — non-blocking, failure doesn't affect response
+    sendApplicationConfirmation(parsed.data).catch((err) => {
+      req.log.warn({ err }, "Apply: failed to send fighter confirmation email (check SMTP env vars)");
+    });
+
+    // Fire admin notification email — non-blocking, failure doesn't affect response
+    sendAdminNewApplicationNotification(parsed.data).catch((err) => {
+      req.log.warn({ err }, "Apply: failed to send admin notification email (check SMTP/ADMIN_EMAIL env vars)");
     });
 
     return res.status(201).json(application);
