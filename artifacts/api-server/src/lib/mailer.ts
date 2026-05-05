@@ -6,13 +6,55 @@ const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_FROM = process.env.SMTP_FROM || "IFA – International Fighters Association <no-reply@ifa-fighters.org>";
 
+export type SmtpErrorType =
+  | "Missing SMTP variable"
+  | "Authentication failed"
+  | "Connection timeout"
+  | "Invalid SMTP host"
+  | "Sender rejected"
+  | "TLS/SSL error"
+  | "Unknown SMTP error";
+
+/** Classifies a raw nodemailer/socket error into one of the 7 known categories. */
+export function classifySmtpError(err: unknown): SmtpErrorType {
+  const code: string = (err as any)?.code ?? "";
+  const msg: string = ((err as any)?.message ?? "").toLowerCase();
+
+  if (code === "EAUTH" || msg.includes("535") || msg.includes("authentication") || msg.includes("invalid login") || msg.includes("username and password")) {
+    return "Authentication failed";
+  }
+  if (code === "ETIMEDOUT" || code === "ECONNABORTED" || msg.includes("timeout") || msg.includes("timed out")) {
+    return "Connection timeout";
+  }
+  if (code === "ECONNREFUSED" || code === "ECONNRESET" || code === "ENOTFOUND" || code === "EDNS" || msg.includes("getaddrinfo") || msg.includes("enotfound")) {
+    return "Invalid SMTP host";
+  }
+  if (code === "EENVELOPE" || msg.includes("sender") || msg.includes("mail from") || msg.includes("from address")) {
+    return "Sender rejected";
+  }
+  if (code.startsWith("ERR_TLS") || code.includes("SSL") || msg.includes("tls") || msg.includes("ssl") || msg.includes("certificate") || msg.includes("self-signed")) {
+    return "TLS/SSL error";
+  }
+  return "Unknown SMTP error";
+}
+
+/** Enriched error thrown by deliver() — carries the classified error type. */
+export class SmtpDeliveryError extends Error {
+  errorType: SmtpErrorType;
+  constructor(message: string, errorType: SmtpErrorType) {
+    super(message);
+    this.name = "SmtpDeliveryError";
+    this.errorType = errorType;
+  }
+}
+
 /** Returns config state for diagnostics — never includes the password value. */
 export function getSmtpDiagnostics() {
   return {
     SMTP_HOST: SMTP_HOST || null,
     SMTP_PORT,
     SMTP_USER: SMTP_USER || null,
-    SMTP_PASS: SMTP_PASS ? `set (${SMTP_PASS.length} chars)` : "NOT SET",
+    SMTP_PASS: SMTP_PASS ? "****hidden****" : "NOT SET",
     SMTP_FROM,
     configured: !!(SMTP_HOST && SMTP_USER && SMTP_PASS),
   };
@@ -27,7 +69,7 @@ function sanitizeError(err: unknown): string {
 
   // Redact password from message in case the SMTP server echoes credentials
   if (SMTP_PASS) {
-    msg = msg.replaceAll(SMTP_PASS, "***");
+    msg = msg.replaceAll(SMTP_PASS, "****hidden****");
   }
   return msg;
 }
@@ -59,12 +101,13 @@ function footer() {
   `;
 }
 
-/** Throws a sanitized error if SMTP is misconfigured or delivery fails. */
+/** Throws a SmtpDeliveryError with sanitized message and classified error type. */
 async function deliver(transport: nodemailer.Transporter, opts: nodemailer.SendMailOptions) {
   try {
     await transport.sendMail(opts);
   } catch (err) {
-    throw new Error(sanitizeError(err));
+    const errorType = classifySmtpError(err);
+    throw new SmtpDeliveryError(sanitizeError(err), errorType);
   }
 }
 
@@ -203,14 +246,15 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
 export async function sendPaymentLink(to: string, name: string, paymentLink: string): Promise<void> {
   const diag = getSmtpDiagnostics();
   if (!diag.configured) {
-    throw new Error(
-      `SMTP not configured. Missing: ${[
+    throw new SmtpDeliveryError(
+      `Missing SMTP variable: ${[
         !SMTP_HOST && "SMTP_HOST",
         !SMTP_USER && "SMTP_USER",
         !SMTP_PASS && "SMTP_PASS",
       ]
         .filter(Boolean)
-        .join(", ")}.`,
+        .join(", ")} not set.`,
+      "Missing SMTP variable",
     );
   }
 
@@ -269,14 +313,15 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
 export async function sendTestEmail(to: string): Promise<void> {
   const diag = getSmtpDiagnostics();
   if (!diag.configured) {
-    throw new Error(
-      `SMTP not configured. Missing: ${[
+    throw new SmtpDeliveryError(
+      `Missing SMTP variable: ${[
         !SMTP_HOST && "SMTP_HOST",
         !SMTP_USER && "SMTP_USER",
         !SMTP_PASS && "SMTP_PASS",
       ]
         .filter(Boolean)
-        .join(", ")}.`,
+        .join(", ")} not set.`,
+      "Missing SMTP variable",
     );
   }
 

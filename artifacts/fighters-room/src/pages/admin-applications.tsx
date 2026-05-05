@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 
 // Inline fetcher for the test-email endpoint (not in generated hooks)
-async function postAdminTestEmail(): Promise<{ success?: boolean; sentTo?: string; error?: string; smtpConfig?: Record<string, unknown> }> {
+async function postAdminTestEmail(): Promise<{ success?: boolean; sentTo?: string; error?: string; errorType?: string; smtpConfig?: Record<string, unknown> }> {
   const res = await fetch("/api/admin/test-email", { method: "POST" });
   return res.json();
 }
@@ -56,14 +56,17 @@ export default function AdminApplicationsPage() {
         setTestEmailResult({ ok: true, msg: `Test email sent to ${data.sentTo}`, config: data.smtpConfig });
         toast({ title: `Test email sent to ${data.sentTo} ✓` });
       } else {
-        setTestEmailResult({ ok: false, msg: data.error ?? "Unknown error", config: data.smtpConfig });
-        toast({ title: data.error ?? "Email failed", variant: "destructive" });
+        const errorType = data.errorType ?? "Unknown SMTP error";
+        const detail = data.error ?? "Unknown error";
+        setTestEmailResult({ ok: false, msg: `${errorType}: ${detail}`, config: data.smtpConfig });
+        console.error("[IFA] Test email failed:", errorType, detail, data.smtpConfig);
+        toast({ title: errorType, description: detail, variant: "destructive" });
       }
     },
     onError: (err: any) => {
       const msg = err?.message ?? "Request failed";
       setTestEmailResult({ ok: false, msg });
-      toast({ title: msg, variant: "destructive" });
+      toast({ title: "Unknown SMTP error", description: msg, variant: "destructive" });
     },
   });
 
@@ -161,15 +164,22 @@ export default function AdminApplicationsPage() {
           setSendingLink(prev => ({ ...prev, [id]: false }));
         },
         onError: (err: any) => {
-          // Surface the exact SMTP error returned by the server
           const data = (err as any)?.response?.data ?? {};
-          const msg = data?.error ?? "Failed to send email";
+          const errorType: string = data?.errorType ?? "Unknown SMTP error";
+          const detail: string = data?.error ?? "Failed to send email";
           const cfg = data?.smtpConfig;
-          const detail = cfg
-            ? `\nSMTP: host=${cfg.SMTP_HOST ?? "NOT SET"} port=${cfg.SMTP_PORT} user=${cfg.SMTP_USER ?? "NOT SET"} pass=${cfg.SMTP_PASS}`
-            : "";
-          console.error("[IFA] Send payment link failed:", msg + detail);
-          toast({ title: msg, description: cfg ? `SMTP host: ${cfg.SMTP_HOST ?? "NOT SET"} · user: ${cfg.SMTP_USER ?? "NOT SET"}` : undefined, variant: "destructive" });
+          // Log full SMTP context with password hidden
+          console.error(
+            `[IFA] Send payment link failed — ${errorType}: ${detail}`,
+            cfg
+              ? `\nSMTP_HOST=${cfg.SMTP_HOST ?? "NOT SET"} SMTP_PORT=${cfg.SMTP_PORT} SMTP_USER=${cfg.SMTP_USER ?? "NOT SET"} SMTP_PASS=${cfg.SMTP_PASS} SMTP_FROM=${cfg.SMTP_FROM}`
+              : "(no SMTP config returned)",
+          );
+          toast({
+            title: errorType,
+            description: detail,
+            variant: "destructive",
+          });
           setSendingLink(prev => ({ ...prev, [id]: false }));
         },
       }

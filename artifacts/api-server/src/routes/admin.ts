@@ -14,7 +14,7 @@ import {
   AdminCreateEventBody,
   AdminUpdateFighterApplicationBody,
 } from "@workspace/api-zod";
-import { getSmtpDiagnostics, sendPaymentLink as mailerSendPaymentLink, sendTestEmail } from "../lib/mailer";
+import { getSmtpDiagnostics, sendPaymentLink as mailerSendPaymentLink, sendTestEmail, SmtpDeliveryError } from "../lib/mailer";
 
 const router = Router();
 
@@ -335,9 +335,13 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
     return res.json(application);
   } catch (err: any) {
     const message: string = err?.message ?? "Unknown error";
-    req.log.error({ err: message, smtpConfig: getSmtpDiagnostics() }, "Admin: failed to send payment link");
-    // Return the sanitized real error — password is already stripped by mailer
-    return res.status(502).json({ error: message, smtpConfig: getSmtpDiagnostics() });
+    const errorType: string = err instanceof SmtpDeliveryError ? err.errorType : "Unknown SMTP error";
+    const diag = getSmtpDiagnostics();
+    req.log.error(
+      { errorType, err: message, smtpConfig: diag },
+      "Admin: failed to send payment link",
+    );
+    return res.status(502).json({ error: message, errorType, smtpConfig: diag });
   }
 });
 
@@ -365,8 +369,9 @@ router.post("/test-email", requireAdmin, async (req: any, res: any) => {
     return res.json({ success: true, sentTo: adminEmail, smtpConfig: diag });
   } catch (err: any) {
     const message: string = err?.message ?? "Unknown error";
-    req.log.error({ err: message, smtpConfig: diag }, "Admin: test email failed");
-    return res.status(502).json({ error: message, smtpConfig: diag });
+    const errorType: string = err instanceof SmtpDeliveryError ? err.errorType : "Unknown SMTP error";
+    req.log.error({ errorType, err: message, smtpConfig: diag }, "Admin: test email failed");
+    return res.status(502).json({ error: message, errorType, smtpConfig: diag });
   }
 });
 
