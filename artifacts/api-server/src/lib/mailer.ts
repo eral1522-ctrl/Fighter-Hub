@@ -79,7 +79,8 @@ function createTransport() {
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
-    secure: SMTP_PORT === 465,
+    secure: SMTP_PORT === 465,         // true = implicit TLS (port 465)
+    requireTLS: SMTP_PORT === 587,     // true = enforce STARTTLS upgrade (port 587)
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 }
