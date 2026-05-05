@@ -242,7 +242,7 @@ router.get("/fighter-applications", requireAdmin, async (req: any, res: any) => 
   }
 });
 
-// PATCH /api/admin/fighter-applications/:id — update status and/or notes
+// PATCH /api/admin/fighter-applications/:id — update status, notes, paymentStatus, paymentLink
 router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: any) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
@@ -256,6 +256,7 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
   if (parsed.data.status !== undefined) updates.status = parsed.data.status;
   if (parsed.data.adminNotes !== undefined) updates.adminNotes = parsed.data.adminNotes;
   if (parsed.data.paymentStatus !== undefined) updates.paymentStatus = parsed.data.paymentStatus;
+  if (parsed.data.paymentLink !== undefined) updates.paymentLink = parsed.data.paymentLink;
 
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({ error: "No fields to update" });
@@ -272,6 +273,42 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
     return res.json(application);
   } catch (err) {
     req.log.error({ err }, "Admin: failed to update fighter application");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// POST /api/admin/fighter-applications/:id/send-payment-link — save link and email fighter
+router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  const { AdminSendPaymentLinkBody } = await import("@workspace/api-zod");
+  const parsed = AdminSendPaymentLinkBody.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.message });
+  }
+
+  try {
+    // Save the payment link to the application
+    const [application] = await db
+      .update(fighterApplicationsTable)
+      .set({ paymentLink: parsed.data.paymentLink })
+      .where(eq(fighterApplicationsTable.id, id))
+      .returning();
+
+    if (!application) return res.status(404).json({ error: "Application not found" });
+
+    // Send bilingual payment email
+    const { sendPaymentLink } = await import("../lib/mailer");
+    await sendPaymentLink(application.email, application.name, parsed.data.paymentLink);
+
+    req.log.info({ id, email: application.email }, "Admin: payment link email sent");
+    return res.json(application);
+  } catch (err: any) {
+    if (err?.message?.includes("SMTP not configured")) {
+      return res.status(503).json({ error: "Email not configured. Add SMTP_HOST, SMTP_USER and SMTP_PASS environment variables." });
+    }
+    req.log.error({ err }, "Admin: failed to send payment link");
     return res.status(500).json({ error: "Internal server error" });
   }
 });

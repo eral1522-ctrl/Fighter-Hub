@@ -464,6 +464,7 @@ export const AdminListFighterApplicationsResponseItem = zod.object({
   status: zod.enum(["pending", "approved", "rejected"]),
   adminNotes: zod.string().nullish(),
   paymentStatus: zod.enum(["not_paid", "paid"]),
+  paymentLink: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const AdminListFighterApplicationsResponse = zod.array(
@@ -471,7 +472,7 @@ export const AdminListFighterApplicationsResponse = zod.array(
 );
 
 /**
- * @summary Update status and/or notes on a fighter application
+ * @summary Update status, notes, payment status or payment link on a fighter application
  */
 export const AdminUpdateFighterApplicationParams = zod.object({
   id: zod.coerce.number(),
@@ -481,6 +482,7 @@ export const AdminUpdateFighterApplicationBody = zod.object({
   status: zod.enum(["pending", "approved", "rejected"]).optional(),
   adminNotes: zod.string().nullish(),
   paymentStatus: zod.enum(["not_paid", "paid"]).optional(),
+  paymentLink: zod.string().nullish(),
 });
 
 export const AdminUpdateFighterApplicationResponse = zod.object({
@@ -495,6 +497,34 @@ export const AdminUpdateFighterApplicationResponse = zod.object({
   status: zod.enum(["pending", "approved", "rejected"]),
   adminNotes: zod.string().nullish(),
   paymentStatus: zod.enum(["not_paid", "paid"]),
+  paymentLink: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+/**
+ * @summary Save payment link and send bilingual payment email to the fighter
+ */
+export const AdminSendPaymentLinkParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminSendPaymentLinkBody = zod.object({
+  paymentLink: zod.string(),
+});
+
+export const AdminSendPaymentLinkResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  country: zod.string(),
+  discipline: zod.string(),
+  weightClass: zod.string(),
+  record: zod.string(),
+  bio: zod.string().nullish(),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  adminNotes: zod.string().nullish(),
+  paymentStatus: zod.enum(["not_paid", "paid"]),
+  paymentLink: zod.string().nullish(),
   createdAt: zod.string(),
 });
 

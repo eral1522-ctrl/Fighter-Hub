@@ -21,6 +21,7 @@ export const fighterApplicationsTable = pgTable("fighter_applications", {
   adminNotes: text("admin_notes"),
   // not_paid | paid
   paymentStatus: text("payment_status").notNull().default("not_paid"),
+  paymentLink: text("payment_link"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

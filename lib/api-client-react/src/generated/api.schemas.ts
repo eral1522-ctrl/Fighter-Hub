@@ -290,6 +290,8 @@ export interface FighterApplication {
   /** @nullable */
   adminNotes?: string | null;
   paymentStatus: FighterApplicationPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
   createdAt: string;
 }
 
@@ -326,6 +328,12 @@ export interface AdminUpdateFighterApplicationBody {
   /** @nullable */
   adminNotes?: string | null;
   paymentStatus?: AdminUpdateFighterApplicationBodyPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
+}
+
+export interface AdminSendPaymentLinkBody {
+  paymentLink: string;
 }
 
 export interface AdminStats {

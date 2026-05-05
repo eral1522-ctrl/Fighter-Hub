@@ -13,4 +13,6 @@ export interface AdminUpdateFighterApplicationBody {
   /** @nullable */
   adminNotes?: string | null;
   paymentStatus?: AdminUpdateFighterApplicationBodyPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
 }

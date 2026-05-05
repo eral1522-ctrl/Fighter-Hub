@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AdminSendPaymentLinkBody,
   AdminStats,
   AdminUpdateFighterApplicationBody,
   Application,
@@ -1934,7 +1935,7 @@ export function useAdminListFighterApplications<
 }
 
 /**
- * @summary Update status and/or notes on a fighter application
+ * @summary Update status, notes, payment status or payment link on a fighter application
  */
 export const getAdminUpdateFighterApplicationUrl = (id: number) => {
   return `/api/admin/fighter-applications/${id}`;
@@ -2002,7 +2003,7 @@ export type AdminUpdateFighterApplicationMutationBody =
 export type AdminUpdateFighterApplicationMutationError = ErrorType<unknown>;
 
 /**
- * @summary Update status and/or notes on a fighter application
+ * @summary Update status, notes, payment status or payment link on a fighter application
  */
 export const useAdminUpdateFighterApplication = <
   TError = ErrorType<unknown>,
@@ -2022,6 +2023,94 @@ export const useAdminUpdateFighterApplication = <
   TContext
 > => {
   return useMutation(getAdminUpdateFighterApplicationMutationOptions(options));
+};
+
+/**
+ * @summary Save payment link and send bilingual payment email to the fighter
+ */
+export const getAdminSendPaymentLinkUrl = (id: number) => {
+  return `/api/admin/fighter-applications/${id}/send-payment-link`;
+};
+
+export const adminSendPaymentLink = async (
+  id: number,
+  adminSendPaymentLinkBody: AdminSendPaymentLinkBody,
+  options?: RequestInit,
+): Promise<FighterApplication> => {
+  return customFetch<FighterApplication>(getAdminSendPaymentLinkUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(adminSendPaymentLinkBody),
+  });
+};
+
+export const getAdminSendPaymentLinkMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminSendPaymentLink>>,
+    TError,
+    { id: number; data: BodyType<AdminSendPaymentLinkBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof adminSendPaymentLink>>,
+  TError,
+  { id: number; data: BodyType<AdminSendPaymentLinkBody> },
+  TContext
+> => {
+  const mutationKey = ["adminSendPaymentLink"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof adminSendPaymentLink>>,
+    { id: number; data: BodyType<AdminSendPaymentLinkBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return adminSendPaymentLink(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AdminSendPaymentLinkMutationResult = NonNullable<
+  Awaited<ReturnType<typeof adminSendPaymentLink>>
+>;
+export type AdminSendPaymentLinkMutationBody =
+  BodyType<AdminSendPaymentLinkBody>;
+export type AdminSendPaymentLinkMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Save payment link and send bilingual payment email to the fighter
+ */
+export const useAdminSendPaymentLink = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminSendPaymentLink>>,
+    TError,
+    { id: number; data: BodyType<AdminSendPaymentLinkBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof adminSendPaymentLink>>,
+  TError,
+  { id: number; data: BodyType<AdminSendPaymentLinkBody> },
+  TContext
+> => {
+  return useMutation(getAdminSendPaymentLinkMutationOptions(options));
 };
 
 /**

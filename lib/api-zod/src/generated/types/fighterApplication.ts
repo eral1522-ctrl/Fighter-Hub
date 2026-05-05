@@ -22,5 +22,7 @@ export interface FighterApplication {
   /** @nullable */
   adminNotes?: string | null;
   paymentStatus: FighterApplicationPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
   createdAt: string;
 }

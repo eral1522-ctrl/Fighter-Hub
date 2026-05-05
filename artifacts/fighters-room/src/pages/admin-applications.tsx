@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout";
 import {
   useAdminListFighterApplications,
   useAdminUpdateFighterApplication,
+  useAdminSendPaymentLink,
   getAdminListFighterApplicationsQueryKey,
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { ShieldAlert, Search, CreditCard } from "lucide-react";
+import { ShieldAlert, Search, CreditCard, Send, Link2 } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
 
@@ -34,11 +35,14 @@ function paymentBadge(ps: string) {
 export default function AdminApplicationsPage() {
   const { data: applications, isLoading } = useAdminListFighterApplications();
   const updateApplication = useAdminUpdateFighterApplication();
+  const sendPaymentLink = useAdminSendPaymentLink();
   const { toast } = useToast();
   const qc = useQueryClient();
 
   const [editingNotes, setEditingNotes] = useState<Record<number, string>>({});
   const [savingNotes, setSavingNotes] = useState<Record<number, boolean>>({});
+  const [paymentLinks, setPaymentLinks] = useState<Record<number, string>>({});
+  const [sendingLink, setSendingLink] = useState<Record<number, boolean>>({});
 
   // Search & filter state
   const [search, setSearch] = useState("");
@@ -99,6 +103,31 @@ export default function AdminApplicationsPage() {
     );
   };
 
+  const handleSendPaymentLink = (id: number, app: { name: string; email: string; paymentLink?: string | null }) => {
+    const link = paymentLinks[id] ?? app.paymentLink ?? "";
+    if (!link.trim()) {
+      toast({ title: "Paste a payment link first", variant: "destructive" });
+      return;
+    }
+    setSendingLink(prev => ({ ...prev, [id]: true }));
+    sendPaymentLink.mutate(
+      { id, data: { paymentLink: link.trim() } },
+      {
+        onSuccess: () => {
+          toast({ title: `Payment link sent to ${app.email} ✓` });
+          invalidate();
+          setPaymentLinks(prev => ({ ...prev, [id]: "" }));
+          setSendingLink(prev => ({ ...prev, [id]: false }));
+        },
+        onError: (err: any) => {
+          const msg = err?.response?.data?.error ?? "Failed to send email";
+          toast({ title: msg, variant: "destructive" });
+          setSendingLink(prev => ({ ...prev, [id]: false }));
+        },
+      }
+    );
+  };
+
   // Derive unique filter options from data
   const countries = useMemo(() => {
     if (!applications) return [];
@@ -137,7 +166,7 @@ export default function AdminApplicationsPage() {
           <ShieldAlert className="h-8 w-8 text-primary" />
           <div>
             <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Fighter Applications</h1>
-            <p className="text-muted-foreground text-sm mt-1">Public /apply form submissions — review, update status, and manage payment.</p>
+            <p className="text-muted-foreground text-sm mt-1">Review applications, send payment links, and manage membership status.</p>
           </div>
         </div>
 
@@ -262,6 +291,10 @@ export default function AdminApplicationsPage() {
           <div className="space-y-4">
             {filtered.map(app => {
               const notesValue = editingNotes[app.id] !== undefined ? editingNotes[app.id] : (app.adminNotes ?? "");
+              const linkValue = paymentLinks[app.id] !== undefined ? paymentLinks[app.id] : (app.paymentLink ?? "");
+              const isSending = sendingLink[app.id] ?? false;
+              const isApproved = app.status === "approved";
+
               return (
                 <div key={app.id} className="bg-zinc-950 border border-border rounded-md overflow-hidden">
                   {/* Header row */}
@@ -272,7 +305,6 @@ export default function AdminApplicationsPage() {
                       <h3 className="font-heading text-xl uppercase tracking-wide">{app.name}</h3>
                       <span className="text-xs text-muted-foreground">{format(new Date(app.createdAt), "MMM d, yyyy")}</span>
                     </div>
-                    {/* Controls */}
                     <div className="flex flex-wrap gap-2 items-center">
                       {/* Status selector */}
                       <Select
@@ -304,8 +336,8 @@ export default function AdminApplicationsPage() {
                   </div>
 
                   {/* Details grid */}
-                  <div className="p-4">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-4 text-sm">
+                  <div className="p-4 space-y-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-sm">
                       <div>
                         <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Email</div>
                         <div className="font-medium truncate">{app.email}</div>
@@ -333,8 +365,43 @@ export default function AdminApplicationsPage() {
                     </div>
 
                     {app.bio && (
-                      <div className="mb-4 text-sm text-muted-foreground italic bg-background border border-border rounded p-3">
+                      <div className="text-sm text-muted-foreground italic bg-background border border-border rounded p-3">
                         "{app.bio}"
+                      </div>
+                    )}
+
+                    {/* Payment Link — only shown for approved applications */}
+                    {isApproved && (
+                      <div className="bg-background border border-primary/20 rounded-md p-4 space-y-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Link2 className="h-4 w-4 text-primary" />
+                          <p className="text-xs font-bold uppercase tracking-widest text-primary font-heading">
+                            Payment Link
+                          </p>
+                          {app.paymentLink && (
+                            <span className="text-xs text-muted-foreground italic ml-auto truncate max-w-[200px]">{app.paymentLink}</span>
+                          )}
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <Input
+                            className="bg-zinc-950 flex-1 text-sm placeholder:text-muted-foreground/50"
+                            placeholder="Paste Stripe, PayPal or bank payment link..."
+                            value={linkValue}
+                            onChange={e => setPaymentLinks(prev => ({ ...prev, [app.id]: e.target.value }))}
+                          />
+                          <Button
+                            size="sm"
+                            className="font-heading uppercase tracking-wider text-xs shrink-0 gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                            onClick={() => handleSendPaymentLink(app.id, app)}
+                            disabled={isSending || !linkValue.trim()}
+                          >
+                            <Send className="h-3 w-3" />
+                            {isSending ? "Sending..." : "Send Payment Link"}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Sends a bilingual EN/ES email to <span className="text-foreground">{app.email}</span> with the €20/month payment link. The link is saved automatically.
+                        </p>
                       </div>
                     )}
 
