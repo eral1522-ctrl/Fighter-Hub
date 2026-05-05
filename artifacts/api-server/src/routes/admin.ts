@@ -6,11 +6,13 @@ import {
   opportunitiesTable,
   eventsTable,
   applicationsTable,
+  fighterApplicationsTable,
 } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
 import {
   AdminCreateOpportunityBody,
   AdminCreateEventBody,
+  AdminUpdateFighterApplicationBody,
 } from "@workspace/api-zod";
 
 const router = Router();
@@ -222,6 +224,53 @@ router.patch("/applications/:id/reject", requireAdmin, async (req: any, res: any
     });
   } catch (err) {
     req.log.error({ err }, "Admin: failed to reject application");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /api/admin/fighter-applications — list all public fighter applications
+router.get("/fighter-applications", requireAdmin, async (req: any, res: any) => {
+  try {
+    const applications = await db
+      .select()
+      .from(fighterApplicationsTable)
+      .orderBy(fighterApplicationsTable.createdAt);
+    return res.json(applications);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to list fighter applications");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// PATCH /api/admin/fighter-applications/:id — update status and/or notes
+router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  const parsed = AdminUpdateFighterApplicationBody.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.message });
+  }
+
+  const updates: Record<string, unknown> = {};
+  if (parsed.data.status !== undefined) updates.status = parsed.data.status;
+  if (parsed.data.adminNotes !== undefined) updates.adminNotes = parsed.data.adminNotes;
+
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: "No fields to update" });
+  }
+
+  try {
+    const [application] = await db
+      .update(fighterApplicationsTable)
+      .set(updates)
+      .where(eq(fighterApplicationsTable.id, id))
+      .returning();
+
+    if (!application) return res.status(404).json({ error: "Application not found" });
+    return res.json(application);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to update fighter application");
     return res.status(500).json({ error: "Internal server error" });
   }
 });

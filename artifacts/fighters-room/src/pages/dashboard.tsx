@@ -54,8 +54,8 @@ export default function DashboardPage() {
       <div className="container py-8 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Fighter Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Manage your career and apply for opportunities.</p>
+            <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">IFA Member Dashboard</h1>
+            <p className="text-muted-foreground mt-1">Manage your career and apply for IFA opportunities.</p>
           </div>
           
           {isStatsLoading ? (
@@ -66,7 +66,7 @@ export default function DashboardPage() {
                 {stats?.approvalStatus}
               </Badge>
               <Badge variant={stats?.membershipStatus === "active" ? "default" : "outline"} className="uppercase tracking-wider">
-                {stats?.membershipStatus === "active" ? "Pro Member" : "Basic Member"}
+                {stats?.membershipStatus === "active" ? "IFA Pro" : "IFA Member"}
               </Badge>
             </div>
           )}
@@ -77,7 +77,7 @@ export default function DashboardPage() {
             <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" />
             <div>
               <h3 className="font-bold">Profile Pending Approval</h3>
-              <p className="text-sm opacity-90">Your profile is currently under review by our team. You can still browse opportunities, but applications may be restricted until approved.</p>
+              <p className="text-sm opacity-90">Your IFA profile is currently under review by our team. You can still browse opportunities, but applications may be restricted until approved.</p>
             </div>
           </div>
         )}
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-zinc-950">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">Total Opportunities</CardTitle>
+              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">IFA Opportunities</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold font-heading">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.totalOpportunities}</div>

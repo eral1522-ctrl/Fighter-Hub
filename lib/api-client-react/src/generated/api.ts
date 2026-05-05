@@ -18,6 +18,7 @@ import type {
 
 import type {
   AdminStats,
+  AdminUpdateFighterApplicationBody,
   Application,
   CheckoutResponse,
   CreateApplicationBody,
@@ -28,10 +29,12 @@ import type {
   ErrorResponse,
   Event,
   Fighter,
+  FighterApplication,
   HealthStatus,
   ListOpportunitiesParams,
   MembershipPlan,
   Opportunity,
+  SubmitFighterApplicationBody,
   SubscribeBody,
   UpdateFighterBody,
 } from "./api.schemas";
@@ -1761,6 +1764,264 @@ export const useAdminRejectApplication = <
   TContext
 > => {
   return useMutation(getAdminRejectApplicationMutationOptions(options));
+};
+
+/**
+ * @summary Submit a public fighter application (no auth required)
+ */
+export const getSubmitFighterApplicationUrl = () => {
+  return `/api/apply`;
+};
+
+export const submitFighterApplication = async (
+  submitFighterApplicationBody: SubmitFighterApplicationBody,
+  options?: RequestInit,
+): Promise<FighterApplication> => {
+  return customFetch<FighterApplication>(getSubmitFighterApplicationUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(submitFighterApplicationBody),
+  });
+};
+
+export const getSubmitFighterApplicationMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFighterApplication>>,
+    TError,
+    { data: BodyType<SubmitFighterApplicationBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitFighterApplication>>,
+  TError,
+  { data: BodyType<SubmitFighterApplicationBody> },
+  TContext
+> => {
+  const mutationKey = ["submitFighterApplication"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitFighterApplication>>,
+    { data: BodyType<SubmitFighterApplicationBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return submitFighterApplication(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitFighterApplicationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitFighterApplication>>
+>;
+export type SubmitFighterApplicationMutationBody =
+  BodyType<SubmitFighterApplicationBody>;
+export type SubmitFighterApplicationMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Submit a public fighter application (no auth required)
+ */
+export const useSubmitFighterApplication = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFighterApplication>>,
+    TError,
+    { data: BodyType<SubmitFighterApplicationBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitFighterApplication>>,
+  TError,
+  { data: BodyType<SubmitFighterApplicationBody> },
+  TContext
+> => {
+  return useMutation(getSubmitFighterApplicationMutationOptions(options));
+};
+
+/**
+ * @summary List all public fighter applications
+ */
+export const getAdminListFighterApplicationsUrl = () => {
+  return `/api/admin/fighter-applications`;
+};
+
+export const adminListFighterApplications = async (
+  options?: RequestInit,
+): Promise<FighterApplication[]> => {
+  return customFetch<FighterApplication[]>(
+    getAdminListFighterApplicationsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getAdminListFighterApplicationsQueryKey = () => {
+  return [`/api/admin/fighter-applications`] as const;
+};
+
+export const getAdminListFighterApplicationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof adminListFighterApplications>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof adminListFighterApplications>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getAdminListFighterApplicationsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof adminListFighterApplications>>
+  > = ({ signal }) =>
+    adminListFighterApplications({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof adminListFighterApplications>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type AdminListFighterApplicationsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof adminListFighterApplications>>
+>;
+export type AdminListFighterApplicationsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all public fighter applications
+ */
+
+export function useAdminListFighterApplications<
+  TData = Awaited<ReturnType<typeof adminListFighterApplications>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof adminListFighterApplications>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getAdminListFighterApplicationsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update status and/or notes on a fighter application
+ */
+export const getAdminUpdateFighterApplicationUrl = (id: number) => {
+  return `/api/admin/fighter-applications/${id}`;
+};
+
+export const adminUpdateFighterApplication = async (
+  id: number,
+  adminUpdateFighterApplicationBody: AdminUpdateFighterApplicationBody,
+  options?: RequestInit,
+): Promise<FighterApplication> => {
+  return customFetch<FighterApplication>(
+    getAdminUpdateFighterApplicationUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(adminUpdateFighterApplicationBody),
+    },
+  );
+};
+
+export const getAdminUpdateFighterApplicationMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminUpdateFighterApplication>>,
+    TError,
+    { id: number; data: BodyType<AdminUpdateFighterApplicationBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof adminUpdateFighterApplication>>,
+  TError,
+  { id: number; data: BodyType<AdminUpdateFighterApplicationBody> },
+  TContext
+> => {
+  const mutationKey = ["adminUpdateFighterApplication"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof adminUpdateFighterApplication>>,
+    { id: number; data: BodyType<AdminUpdateFighterApplicationBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return adminUpdateFighterApplication(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AdminUpdateFighterApplicationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof adminUpdateFighterApplication>>
+>;
+export type AdminUpdateFighterApplicationMutationBody =
+  BodyType<AdminUpdateFighterApplicationBody>;
+export type AdminUpdateFighterApplicationMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Update status and/or notes on a fighter application
+ */
+export const useAdminUpdateFighterApplication = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminUpdateFighterApplication>>,
+    TError,
+    { id: number; data: BodyType<AdminUpdateFighterApplicationBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof adminUpdateFighterApplication>>,
+  TError,
+  { id: number; data: BodyType<AdminUpdateFighterApplicationBody> },
+  TContext
+> => {
+  return useMutation(getAdminUpdateFighterApplicationMutationOptions(options));
 };
 
 /**

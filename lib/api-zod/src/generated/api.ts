@@ -437,6 +437,65 @@ export const AdminRejectApplicationResponse = zod.object({
 });
 
 /**
+ * @summary Submit a public fighter application (no auth required)
+ */
+export const SubmitFighterApplicationBody = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  country: zod.string(),
+  discipline: zod.string(),
+  weightClass: zod.string(),
+  record: zod.string(),
+  bio: zod.string().nullish(),
+});
+
+/**
+ * @summary List all public fighter applications
+ */
+export const AdminListFighterApplicationsResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  country: zod.string(),
+  discipline: zod.string(),
+  weightClass: zod.string(),
+  record: zod.string(),
+  bio: zod.string().nullish(),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  adminNotes: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const AdminListFighterApplicationsResponse = zod.array(
+  AdminListFighterApplicationsResponseItem,
+);
+
+/**
+ * @summary Update status and/or notes on a fighter application
+ */
+export const AdminUpdateFighterApplicationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminUpdateFighterApplicationBody = zod.object({
+  status: zod.enum(["pending", "approved", "rejected"]).optional(),
+  adminNotes: zod.string().nullish(),
+});
+
+export const AdminUpdateFighterApplicationResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  country: zod.string(),
+  discipline: zod.string(),
+  weightClass: zod.string(),
+  record: zod.string(),
+  bio: zod.string().nullish(),
+  status: zod.enum(["pending", "approved", "rejected"]),
+  adminNotes: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+/**
  * @summary Get admin overview stats
  */
 export const AdminGetStatsResponse = zod.object({

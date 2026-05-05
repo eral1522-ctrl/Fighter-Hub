@@ -404,6 +404,65 @@ paths:
               schema:
                 $ref: "#/components/schemas/Application"
 
+  /apply:
+    post:
+      operationId: submitFighterApplication
+      tags: [public]
+      summary: Submit a public fighter application (no auth required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitFighterApplicationBody"
+      responses:
+        "201":
+          description: Application submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FighterApplication"
+
+  /admin/fighter-applications:
+    get:
+      operationId: adminListFighterApplications
+      tags: [admin]
+      summary: List all public fighter applications
+      responses:
+        "200":
+          description: All fighter applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FighterApplication"
+
+  /admin/fighter-applications/{id}:
+    patch:
+      operationId: adminUpdateFighterApplication
+      tags: [admin]
+      summary: Update status and/or notes on a fighter application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUpdateFighterApplicationBody"
+      responses:
+        "200":
+          description: Updated fighter application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FighterApplication"
+
   /admin/stats:
     get:
       operationId: adminGetStats
@@ -799,6 +858,77 @@ components:
           type: ["string", "null"]
       required:
         - url
+
+    FighterApplication:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        discipline:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        bio:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        adminNotes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - country
+        - discipline
+        - weightClass
+        - record
+        - status
+        - createdAt
+
+    SubmitFighterApplicationBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        discipline:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        bio:
+          type: ["string", "null"]
+      required:
+        - name
+        - email
+        - country
+        - discipline
+        - weightClass
+        - record
+
+    AdminUpdateFighterApplicationBody:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        adminNotes:
+          type: ["string", "null"]
 
     AdminStats:
       type: object

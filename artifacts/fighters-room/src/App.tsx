@@ -12,6 +12,8 @@ import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
 import ProfilePage from "@/pages/profile";
 import AdminPage from "@/pages/admin";
+import ApplyPage from "@/pages/apply";
+import AdminApplicationsPage from "@/pages/admin-applications";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -132,6 +134,8 @@ function Router() {
       <Route path="/dashboard"><ProtectedRoute component={DashboardPage} /></Route>
       <Route path="/profile"><ProtectedRoute component={ProfilePage} /></Route>
       <Route path="/admin"><ProtectedRoute component={AdminPage} /></Route>
+      <Route path="/admin/applications"><ProtectedRoute component={AdminApplicationsPage} /></Route>
+      <Route path="/apply" component={ApplyPage} />
       <Route component={NotFound} />
     </Switch>
   );

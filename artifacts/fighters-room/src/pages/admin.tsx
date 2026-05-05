@@ -56,12 +56,12 @@ export default function AdminPage() {
       <div className="container py-8">
         <div className="mb-8 flex items-center gap-3">
           <ShieldAlert className="h-8 w-8 text-primary" />
-          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Matchmaker Admin</h1>
+          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">IFA Admin Panel</h1>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-zinc-950 border-border">
-            <CardHeader className="pb-2"><CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">Total Roster</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">IFA Members</CardTitle></CardHeader>
             <CardContent><div className="text-3xl font-bold font-heading">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.totalFighters}</div></CardContent>
           </Card>
           <Card className="bg-zinc-950 border-border">
@@ -81,7 +81,7 @@ export default function AdminPage() {
         <Tabs defaultValue="fighters" className="w-full">
           <TabsList className="w-full justify-start border-b rounded-none h-12 bg-transparent p-0 mb-6">
             <TabsTrigger value="fighters" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
-              Roster Approvals
+              Member Approvals
             </TabsTrigger>
             <TabsTrigger value="applications" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
               Fight Applications

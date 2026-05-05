@@ -56,6 +56,8 @@ async function buildAll() {
       "protobufjs",
       "onnxruntime-node",
       "@tensorflow/*",
+      "@clerk/shared",
+      "@clerk/shared/*",
       "@prisma/client",
       "@mikro-orm/*",
       "@grpc/*",

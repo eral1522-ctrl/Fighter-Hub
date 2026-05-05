@@ -111,8 +111,8 @@ export default function ProfilePage() {
     <Layout>
       <div className="container py-8 max-w-3xl">
         <div className="mb-8 border-b border-border pb-6">
-          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Fighter Profile</h1>
-          <p className="text-muted-foreground mt-1">Complete your profile to apply for fights and sponsorships. A complete profile increases your chances of approval.</p>
+          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">IFA Member Profile</h1>
+          <p className="text-muted-foreground mt-1">Complete your IFA member profile to access opportunities, apply for fights, and connect with sponsors worldwide.</p>
         </div>
 
         {isLoading ? (

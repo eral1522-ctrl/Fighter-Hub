@@ -259,6 +259,57 @@ export interface CheckoutResponse {
   sessionId?: string | null;
 }
 
+export type FighterApplicationStatus =
+  (typeof FighterApplicationStatus)[keyof typeof FighterApplicationStatus];
+
+export const FighterApplicationStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export interface FighterApplication {
+  id: number;
+  name: string;
+  email: string;
+  country: string;
+  discipline: string;
+  weightClass: string;
+  record: string;
+  /** @nullable */
+  bio?: string | null;
+  status: FighterApplicationStatus;
+  /** @nullable */
+  adminNotes?: string | null;
+  createdAt: string;
+}
+
+export interface SubmitFighterApplicationBody {
+  name: string;
+  email: string;
+  country: string;
+  discipline: string;
+  weightClass: string;
+  record: string;
+  /** @nullable */
+  bio?: string | null;
+}
+
+export type AdminUpdateFighterApplicationBodyStatus =
+  (typeof AdminUpdateFighterApplicationBodyStatus)[keyof typeof AdminUpdateFighterApplicationBodyStatus];
+
+export const AdminUpdateFighterApplicationBodyStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;
+
+export interface AdminUpdateFighterApplicationBody {
+  status?: AdminUpdateFighterApplicationBodyStatus;
+  /** @nullable */
+  adminNotes?: string | null;
+}
+
 export interface AdminStats {
   totalFighters: number;
   pendingApproval: number;

@@ -7,6 +7,7 @@ import applicationsRouter from "./applications";
 import dashboardRouter from "./dashboard";
 import membershipRouter from "./membership";
 import adminRouter from "./admin";
+import applyRouter from "./apply";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use("/applications", applicationsRouter);
 router.use("/dashboard", dashboardRouter);
 router.use("/membership", membershipRouter);
 router.use("/admin", adminRouter);
+router.use("/apply", applyRouter);
 
 export default router;

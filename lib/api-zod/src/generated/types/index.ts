@@ -7,6 +7,8 @@
  */
 
 export * from "./adminStats";
+export * from "./adminUpdateFighterApplicationBody";
+export * from "./adminUpdateFighterApplicationBodyStatus";
 export * from "./application";
 export * from "./applicationStatus";
 export * from "./checkoutResponse";
@@ -20,6 +22,8 @@ export * from "./errorResponse";
 export * from "./event";
 export * from "./eventStatus";
 export * from "./fighter";
+export * from "./fighterApplication";
+export * from "./fighterApplicationStatus";
 export * from "./healthStatus";
 export * from "./listOpportunitiesParams";
 export * from "./listOpportunitiesStatus";
@@ -28,5 +32,6 @@ export * from "./membershipPlan";
 export * from "./opportunity";
 export * from "./opportunityStatus";
 export * from "./opportunityType";
+export * from "./submitFighterApplicationBody";
 export * from "./subscribeBody";
 export * from "./updateFighterBody";
