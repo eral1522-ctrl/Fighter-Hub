@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAuth } from "@clerk/express";
+import { getAuth, clerkClient } from "@clerk/express";
 import {
   db,
   fightersTable,
@@ -14,6 +14,7 @@ import {
   AdminCreateEventBody,
   AdminUpdateFighterApplicationBody,
 } from "@workspace/api-zod";
+import { getSmtpDiagnostics, sendPaymentLink as mailerSendPaymentLink, sendTestEmail } from "../lib/mailer";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ const ADMIN_CLERK_IDS = (process.env.ADMIN_CLERK_IDS || "").split(",").filter(Bo
 
 function requireAdmin(req: any, res: any, next: any) {
   const auth = getAuth(req);
-  const userId = auth?.sessionClaims?.userId || auth?.userId;
+  const userId = (auth?.sessionClaims?.userId as string | undefined) || auth?.userId;
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -298,18 +299,45 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
 
     if (!application) return res.status(404).json({ error: "Application not found" });
 
-    // Send bilingual payment email
-    const { sendPaymentLink } = await import("../lib/mailer");
-    await sendPaymentLink(application.email, application.name, parsed.data.paymentLink);
+    // Send bilingual payment email — surfaces real SMTP error to caller
+    await mailerSendPaymentLink(application.email, application.name, parsed.data.paymentLink);
 
     req.log.info({ id, email: application.email }, "Admin: payment link email sent");
     return res.json(application);
   } catch (err: any) {
-    if (err?.message?.includes("SMTP not configured")) {
-      return res.status(503).json({ error: "Email not configured. Add SMTP_HOST, SMTP_USER and SMTP_PASS environment variables." });
+    const message: string = err?.message ?? "Unknown error";
+    req.log.error({ err: message, smtpConfig: getSmtpDiagnostics() }, "Admin: failed to send payment link");
+    // Return the sanitized real error — password is already stripped by mailer
+    return res.status(502).json({ error: message, smtpConfig: getSmtpDiagnostics() });
+  }
+});
+
+// POST /api/admin/test-email — send a test email to the logged-in admin
+router.post("/test-email", requireAdmin, async (req: any, res: any) => {
+  const diag = getSmtpDiagnostics();
+  req.log.info({ smtpConfig: diag }, "Admin: test-email requested");
+
+  try {
+    // Look up admin's primary email via Clerk
+    const user = await clerkClient.users.getUser(req.clerkUserId);
+    const adminEmail = user.emailAddresses.find(
+      (e: any) => e.id === user.primaryEmailAddressId,
+    )?.emailAddress;
+
+    if (!adminEmail) {
+      return res.status(400).json({
+        error: "Could not find your email address in Clerk.",
+        smtpConfig: diag,
+      });
     }
-    req.log.error({ err }, "Admin: failed to send payment link");
-    return res.status(500).json({ error: "Internal server error" });
+
+    await sendTestEmail(adminEmail);
+    req.log.info({ adminEmail }, "Admin: test email sent successfully");
+    return res.json({ success: true, sentTo: adminEmail, smtpConfig: diag });
+  } catch (err: any) {
+    const message: string = err?.message ?? "Unknown error";
+    req.log.error({ err: message, smtpConfig: diag }, "Admin: test email failed");
+    return res.status(502).json({ error: message, smtpConfig: diag });
   }
 });
 

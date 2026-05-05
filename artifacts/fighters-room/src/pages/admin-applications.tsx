@@ -13,10 +13,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { ShieldAlert, Search, CreditCard, Send, Link2 } from "lucide-react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo } from "react";
+
+// Inline fetcher for the test-email endpoint (not in generated hooks)
+async function postAdminTestEmail(): Promise<{ success?: boolean; sentTo?: string; error?: string; smtpConfig?: Record<string, unknown> }> {
+  const res = await fetch("/api/admin/test-email", { method: "POST" });
+  return res.json();
+}
 
 type Status = "pending" | "approved" | "rejected";
 type PaymentStatus = "not_paid" | "paid";
@@ -43,6 +49,25 @@ export default function AdminApplicationsPage() {
   const [savingNotes, setSavingNotes] = useState<Record<number, boolean>>({});
   const [paymentLinks, setPaymentLinks] = useState<Record<number, string>>({});
   const [sendingLink, setSendingLink] = useState<Record<number, boolean>>({});
+  const [testEmailResult, setTestEmailResult] = useState<{ ok: boolean; msg: string; config?: Record<string, unknown> } | null>(null);
+
+  const testEmail = useMutation({
+    mutationFn: postAdminTestEmail,
+    onSuccess: (data) => {
+      if (data.success) {
+        setTestEmailResult({ ok: true, msg: `Test email sent to ${data.sentTo}`, config: data.smtpConfig });
+        toast({ title: `Test email sent to ${data.sentTo} ✓` });
+      } else {
+        setTestEmailResult({ ok: false, msg: data.error ?? "Unknown error", config: data.smtpConfig });
+        toast({ title: data.error ?? "Email failed", variant: "destructive" });
+      }
+    },
+    onError: (err: any) => {
+      const msg = err?.message ?? "Request failed";
+      setTestEmailResult({ ok: false, msg });
+      toast({ title: msg, variant: "destructive" });
+    },
+  });
 
   // Search & filter state
   const [search, setSearch] = useState("");
@@ -120,8 +145,15 @@ export default function AdminApplicationsPage() {
           setSendingLink(prev => ({ ...prev, [id]: false }));
         },
         onError: (err: any) => {
-          const msg = err?.response?.data?.error ?? "Failed to send email";
-          toast({ title: msg, variant: "destructive" });
+          // Surface the exact SMTP error returned by the server
+          const data = (err as any)?.response?.data ?? {};
+          const msg = data?.error ?? "Failed to send email";
+          const cfg = data?.smtpConfig;
+          const detail = cfg
+            ? `\nSMTP: host=${cfg.SMTP_HOST ?? "NOT SET"} port=${cfg.SMTP_PORT} user=${cfg.SMTP_USER ?? "NOT SET"} pass=${cfg.SMTP_PASS}`
+            : "";
+          console.error("[IFA] Send payment link failed:", msg + detail);
+          toast({ title: msg, description: cfg ? `SMTP host: ${cfg.SMTP_HOST ?? "NOT SET"} · user: ${cfg.SMTP_USER ?? "NOT SET"}` : undefined, variant: "destructive" });
           setSendingLink(prev => ({ ...prev, [id]: false }));
         },
       }
@@ -162,13 +194,49 @@ export default function AdminApplicationsPage() {
   return (
     <Layout>
       <div className="container py-8 max-w-6xl">
-        <div className="mb-8 flex items-center gap-3">
-          <ShieldAlert className="h-8 w-8 text-primary" />
-          <div>
-            <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Fighter Applications</h1>
-            <p className="text-muted-foreground text-sm mt-1">Review applications, send payment links, and manage membership status.</p>
+        <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="h-8 w-8 text-primary" />
+            <div>
+              <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">Fighter Applications</h1>
+              <p className="text-muted-foreground text-sm mt-1">Review applications, send payment links, and manage membership status.</p>
+            </div>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-zinc-700 text-zinc-400 hover:text-white gap-2 shrink-0"
+            onClick={() => { setTestEmailResult(null); testEmail.mutate(); }}
+            disabled={testEmail.isPending}
+          >
+            <FlaskConical className="h-4 w-4" />
+            {testEmail.isPending ? "Sending…" : "Test Email Config"}
+          </Button>
         </div>
+
+        {/* SMTP test result panel */}
+        {testEmailResult && (
+          <div className={`mb-6 rounded border p-4 text-sm ${testEmailResult.ok ? "border-green-800 bg-green-950/40" : "border-red-800 bg-red-950/40"}`}>
+            <div className="flex items-start gap-3">
+              {testEmailResult.ok
+                ? <CheckCircle2 className="h-4 w-4 text-green-400 mt-0.5 shrink-0" />
+                : <AlertTriangle className="h-4 w-4 text-red-400 mt-0.5 shrink-0" />}
+              <div className="flex-1 min-w-0">
+                <p className={`font-medium ${testEmailResult.ok ? "text-green-300" : "text-red-300"}`}>{testEmailResult.msg}</p>
+                {testEmailResult.config && (
+                  <div className="mt-2 font-mono text-xs text-zinc-400 space-y-0.5">
+                    <div>SMTP_HOST: <span className="text-zinc-200">{String(testEmailResult.config.SMTP_HOST ?? "NOT SET")}</span></div>
+                    <div>SMTP_PORT: <span className="text-zinc-200">{String(testEmailResult.config.SMTP_PORT)}</span></div>
+                    <div>SMTP_USER: <span className="text-zinc-200">{String(testEmailResult.config.SMTP_USER ?? "NOT SET")}</span></div>
+                    <div>SMTP_PASS: <span className="text-zinc-200">{String(testEmailResult.config.SMTP_PASS)}</span></div>
+                    <div>SMTP_FROM: <span className="text-zinc-200">{String(testEmailResult.config.SMTP_FROM)}</span></div>
+                  </div>
+                )}
+              </div>
+              <button onClick={() => setTestEmailResult(null)} className="text-zinc-500 hover:text-zinc-300 text-lg leading-none ml-2">×</button>
+            </div>
+          </div>
+        )}
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
