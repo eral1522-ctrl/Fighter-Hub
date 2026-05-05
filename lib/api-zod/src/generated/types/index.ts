@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./adminListFighterApplicationsParams";
+export * from "./adminListFighterApplicationsStatus";
 export * from "./adminSendPaymentLinkBody";
 export * from "./adminStats";
 export * from "./adminUpdateFighterApplicationBody";

@@ -30,7 +30,7 @@ function requireAdmin(req: any, res: any, next: any) {
   }
 
   // Allow if userId is in admin list OR if no admins configured (dev mode)
-  if (ADMIN_CLERK_IDS.length > 0 && !ADMIN_CLERK_IDS.includes(userId)) {
+  if (ADMIN_CLERK_IDS.length > 0 && !ADMIN_CLERK_IDS.includes(userId as string)) {
     return res.status(403).json({ error: "Forbidden: Admin access required" });
   }
 
@@ -230,12 +230,41 @@ router.patch("/applications/:id/reject", requireAdmin, async (req: any, res: any
 });
 
 // GET /api/admin/fighter-applications — list all public fighter applications
+// Supports query params: q (search name/email), status, discipline
 router.get("/fighter-applications", requireAdmin, async (req: any, res: any) => {
   try {
+    const { q, status, discipline } = req.query as {
+      q?: string;
+      status?: string;
+      discipline?: string;
+    };
+
+    const conditions: SQL[] = [];
+
+    if (q && q.trim()) {
+      const term = `%${q.trim()}%`;
+      conditions.push(
+        or(
+          ilike(fighterApplicationsTable.name, term),
+          ilike(fighterApplicationsTable.email, term),
+        )!,
+      );
+    }
+
+    if (status && ["pending", "approved", "rejected"].includes(status)) {
+      conditions.push(eq(fighterApplicationsTable.status, status));
+    }
+
+    if (discipline && discipline.trim()) {
+      conditions.push(ilike(fighterApplicationsTable.discipline, discipline.trim()));
+    }
+
     const applications = await db
       .select()
       .from(fighterApplicationsTable)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(fighterApplicationsTable.createdAt);
+
     return res.json(applications);
   } catch (err) {
     req.log.error({ err }, "Admin: failed to list fighter applications");

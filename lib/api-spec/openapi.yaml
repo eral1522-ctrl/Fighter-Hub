@@ -428,6 +428,23 @@ paths:
       operationId: adminListFighterApplications
       tags: [admin]
       summary: List all public fighter applications
+      parameters:
+        - name: q
+          in: query
+          description: Search by name or email (case-insensitive)
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by application status
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+        - name: discipline
+          in: query
+          description: Filter by discipline
+          schema:
+            type: string
       responses:
         "200":
           description: All fighter applications

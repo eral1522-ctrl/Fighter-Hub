@@ -366,3 +366,27 @@ export const ListOpportunitiesStatus = {
   active: "active",
   closed: "closed",
 } as const;
+
+export type AdminListFighterApplicationsParams = {
+  /**
+   * Search by name or email (case-insensitive)
+   */
+  q?: string;
+  /**
+   * Filter by application status
+   */
+  status?: AdminListFighterApplicationsStatus;
+  /**
+   * Filter by discipline
+   */
+  discipline?: string;
+};
+
+export type AdminListFighterApplicationsStatus =
+  (typeof AdminListFighterApplicationsStatus)[keyof typeof AdminListFighterApplicationsStatus];
+
+export const AdminListFighterApplicationsStatus = {
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
+} as const;

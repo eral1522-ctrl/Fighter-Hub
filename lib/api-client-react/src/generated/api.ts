@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AdminListFighterApplicationsParams,
   AdminSendPaymentLinkBody,
   AdminStats,
   AdminUpdateFighterApplicationBody,
@@ -1857,15 +1858,30 @@ export const useSubmitFighterApplication = <
 /**
  * @summary List all public fighter applications
  */
-export const getAdminListFighterApplicationsUrl = () => {
-  return `/api/admin/fighter-applications`;
+export const getAdminListFighterApplicationsUrl = (
+  params?: AdminListFighterApplicationsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/fighter-applications?${stringifiedParams}`
+    : `/api/admin/fighter-applications`;
 };
 
 export const adminListFighterApplications = async (
+  params?: AdminListFighterApplicationsParams,
   options?: RequestInit,
 ): Promise<FighterApplication[]> => {
   return customFetch<FighterApplication[]>(
-    getAdminListFighterApplicationsUrl(),
+    getAdminListFighterApplicationsUrl(params),
     {
       ...options,
       method: "GET",
@@ -1873,30 +1889,38 @@ export const adminListFighterApplications = async (
   );
 };
 
-export const getAdminListFighterApplicationsQueryKey = () => {
-  return [`/api/admin/fighter-applications`] as const;
+export const getAdminListFighterApplicationsQueryKey = (
+  params?: AdminListFighterApplicationsParams,
+) => {
+  return [
+    `/api/admin/fighter-applications`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getAdminListFighterApplicationsQueryOptions = <
   TData = Awaited<ReturnType<typeof adminListFighterApplications>>,
   TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof adminListFighterApplications>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
+>(
+  params?: AdminListFighterApplicationsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof adminListFighterApplications>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getAdminListFighterApplicationsQueryKey();
+    queryOptions?.queryKey ?? getAdminListFighterApplicationsQueryKey(params);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof adminListFighterApplications>>
   > = ({ signal }) =>
-    adminListFighterApplications({ signal, ...requestOptions });
+    adminListFighterApplications(params, { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof adminListFighterApplications>>,
@@ -1917,15 +1941,21 @@ export type AdminListFighterApplicationsQueryError = ErrorType<unknown>;
 export function useAdminListFighterApplications<
   TData = Awaited<ReturnType<typeof adminListFighterApplications>>,
   TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof adminListFighterApplications>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getAdminListFighterApplicationsQueryOptions(options);
+>(
+  params?: AdminListFighterApplicationsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof adminListFighterApplications>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getAdminListFighterApplicationsQueryOptions(
+    params,
+    options,
+  );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

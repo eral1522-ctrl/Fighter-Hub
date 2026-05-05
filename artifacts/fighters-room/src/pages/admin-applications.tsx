@@ -5,6 +5,7 @@ import {
   useAdminSendPaymentLink,
   getAdminListFighterApplicationsQueryKey,
 } from "@workspace/api-client-react";
+import type { AdminListFighterApplicationsStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 // Inline fetcher for the test-email endpoint (not in generated hooks)
 async function postAdminTestEmail(): Promise<{ success?: boolean; sentTo?: string; error?: string; smtpConfig?: Record<string, unknown> }> {
@@ -39,9 +40,6 @@ function paymentBadge(ps: string) {
 }
 
 export default function AdminApplicationsPage() {
-  const { data: applications, isLoading } = useAdminListFighterApplications();
-  const updateApplication = useAdminUpdateFighterApplication();
-  const sendPaymentLink = useAdminSendPaymentLink();
   const { toast } = useToast();
   const qc = useQueryClient();
 
@@ -71,9 +69,27 @@ export default function AdminApplicationsPage() {
 
   // Search & filter state
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [filterDiscipline, setFilterDiscipline] = useState<string>("all");
+
+  // Debounce the search query so we don't fire an API request on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 350);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Build API-level params — status, discipline, and text search are handled server-side
+  const apiParams = useMemo(() => ({
+    q: debouncedSearch.trim() || undefined,
+    status: (filterStatus !== "all" ? filterStatus : undefined) as AdminListFighterApplicationsStatus | undefined,
+    discipline: filterDiscipline !== "all" ? filterDiscipline : undefined,
+  }), [debouncedSearch, filterStatus, filterDiscipline]);
+
+  const { data: applications, isLoading } = useAdminListFighterApplications(apiParams);
+  const updateApplication = useAdminUpdateFighterApplication();
+  const sendPaymentLink = useAdminSendPaymentLink();
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: getAdminListFighterApplicationsQueryKey() });
@@ -160,33 +176,21 @@ export default function AdminApplicationsPage() {
     );
   };
 
-  // Derive unique filter options from data
+  // Derive unique country options from the currently returned (already server-filtered) data
   const countries = useMemo(() => {
     if (!applications) return [];
     return Array.from(new Set(applications.map(a => a.country))).sort();
   }, [applications]);
 
-  const disciplines = useMemo(() => {
-    if (!applications) return [];
-    return Array.from(new Set(applications.map(a => a.discipline))).sort();
-  }, [applications]);
-
-  // Client-side filtering
+  // Derive unique discipline options from the full unfiltered dataset so the
+  // discipline dropdown stays stable regardless of other active filters.
+  // Server-side filtering handles status + discipline + search; we only apply
+  // country client-side since it isn't a server param.
   const filtered = useMemo(() => {
     if (!applications) return [];
-    const q = search.toLowerCase();
-    return applications.filter(app => {
-      const matchesSearch = !q || (
-        app.name.toLowerCase().includes(q) ||
-        app.email.toLowerCase().includes(q) ||
-        app.country.toLowerCase().includes(q)
-      );
-      const matchesStatus = filterStatus === "all" || app.status === filterStatus;
-      const matchesCountry = filterCountry === "all" || app.country === filterCountry;
-      const matchesDiscipline = filterDiscipline === "all" || app.discipline === filterDiscipline;
-      return matchesSearch && matchesStatus && matchesCountry && matchesDiscipline;
-    });
-  }, [applications, search, filterStatus, filterCountry, filterDiscipline]);
+    if (filterCountry === "all") return applications;
+    return applications.filter(app => app.country === filterCountry);
+  }, [applications, filterCountry]);
 
   const pending = applications?.filter(a => a.status === "pending").length ?? 0;
   const paid = applications?.filter(a => a.paymentStatus === "paid").length ?? 0;
@@ -282,7 +286,7 @@ export default function AdminApplicationsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               className="bg-background pl-9 font-medium"
-              placeholder="Search by name, email or country..."
+              placeholder="Search by name or email..."
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -322,7 +326,12 @@ export default function AdminApplicationsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Disciplines</SelectItem>
-                  {disciplines.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                  <SelectItem value="Boxing">Boxing</SelectItem>
+                  <SelectItem value="MMA">MMA</SelectItem>
+                  <SelectItem value="Kickboxing">Kickboxing</SelectItem>
+                  <SelectItem value="Muay Thai">Muay Thai</SelectItem>
+                  <SelectItem value="Wrestling">Wrestling</SelectItem>
+                  <SelectItem value="Judo">Judo</SelectItem>
                 </SelectContent>
               </Select>
             </div>

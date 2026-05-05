@@ -452,6 +452,18 @@ export const SubmitFighterApplicationBody = zod.object({
 /**
  * @summary List all public fighter applications
  */
+export const AdminListFighterApplicationsQueryParams = zod.object({
+  q: zod.coerce
+    .string()
+    .optional()
+    .describe("Search by name or email (case-insensitive)"),
+  status: zod
+    .enum(["pending", "approved", "rejected"])
+    .optional()
+    .describe("Filter by application status"),
+  discipline: zod.coerce.string().optional().describe("Filter by discipline"),
+});
+
 export const AdminListFighterApplicationsResponseItem = zod.object({
   id: zod.number(),
   name: zod.string(),

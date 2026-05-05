@@ -45,8 +45,8 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export default function ProfilePage() {
   const { data: profile, isLoading, error } = useGetMyProfile({
     query: {
+      queryKey: getGetMyProfileQueryKey(),
       retry: false,
-      queryKey: ["getMyProfile"],
     }
   });
   const isNewProfile = !!error && (error as any)?.response?.status === 404;
