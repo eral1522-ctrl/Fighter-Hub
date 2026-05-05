@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db, fighterApplicationsTable } from "@workspace/db";
 import { SubmitFighterApplicationBody } from "@workspace/api-zod";
+import { sendApplicationConfirmation } from "../lib/mailer";
 
 const router = Router();
 
@@ -16,6 +17,12 @@ router.post("/", async (req: any, res: any) => {
       .insert(fighterApplicationsTable)
       .values(parsed.data)
       .returning();
+
+    // Fire email confirmation — non-blocking, failure doesn't affect response
+    sendApplicationConfirmation(parsed.data.email, parsed.data.name).catch((err) => {
+      req.log.warn({ err }, "Apply: failed to send confirmation email (check SMTP env vars)");
+    });
+
     return res.status(201).json(application);
   } catch (err) {
     req.log.error({ err }, "Apply: failed to save fighter application");

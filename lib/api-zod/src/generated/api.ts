@@ -463,6 +463,7 @@ export const AdminListFighterApplicationsResponseItem = zod.object({
   bio: zod.string().nullish(),
   status: zod.enum(["pending", "approved", "rejected"]),
   adminNotes: zod.string().nullish(),
+  paymentStatus: zod.enum(["not_paid", "paid"]),
   createdAt: zod.string(),
 });
 export const AdminListFighterApplicationsResponse = zod.array(
@@ -479,6 +480,7 @@ export const AdminUpdateFighterApplicationParams = zod.object({
 export const AdminUpdateFighterApplicationBody = zod.object({
   status: zod.enum(["pending", "approved", "rejected"]).optional(),
   adminNotes: zod.string().nullish(),
+  paymentStatus: zod.enum(["not_paid", "paid"]).optional(),
 });
 
 export const AdminUpdateFighterApplicationResponse = zod.object({
@@ -492,6 +494,7 @@ export const AdminUpdateFighterApplicationResponse = zod.object({
   bio: zod.string().nullish(),
   status: zod.enum(["pending", "approved", "rejected"]),
   adminNotes: zod.string().nullish(),
+  paymentStatus: zod.enum(["not_paid", "paid"]),
   createdAt: zod.string(),
 });
 

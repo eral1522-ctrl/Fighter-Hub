@@ -8,6 +8,7 @@
 
 export * from "./adminStats";
 export * from "./adminUpdateFighterApplicationBody";
+export * from "./adminUpdateFighterApplicationBodyPaymentStatus";
 export * from "./adminUpdateFighterApplicationBodyStatus";
 export * from "./application";
 export * from "./applicationStatus";
@@ -23,6 +24,7 @@ export * from "./event";
 export * from "./eventStatus";
 export * from "./fighter";
 export * from "./fighterApplication";
+export * from "./fighterApplicationPaymentStatus";
 export * from "./fighterApplicationStatus";
 export * from "./healthStatus";
 export * from "./listOpportunitiesParams";

@@ -19,6 +19,8 @@ export const fighterApplicationsTable = pgTable("fighter_applications", {
   // pending | approved | rejected
   status: text("status").notNull().default("pending"),
   adminNotes: text("admin_notes"),
+  // not_paid | paid
+  paymentStatus: text("payment_status").notNull().default("not_paid"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

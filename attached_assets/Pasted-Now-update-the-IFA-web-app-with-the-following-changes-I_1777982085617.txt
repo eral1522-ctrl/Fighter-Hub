@@ -1,0 +1,151 @@
+Now update the IFA web app with the following changes.
+
+IMPORTANT:
+Do not break the current design.
+Do not remove existing functionality.
+Keep the FightersRoom visual style.
+Keep mobile-first design.
+
+========================================
+1. MEMBERSHIP MODEL (SINGLE PLAN)
+========================================
+
+Replace all existing membership plans with ONE single plan:
+
+Name:
+IFA Membership
+
+Price:
+€20/month
+
+English description:
+"Full access to IFA membership including fighter profile, fight opportunities, sponsor opportunities and career support."
+
+Spanish description:
+"Acceso completo a la membresía IFA incluyendo perfil de fighter, oportunidades de pelea, oportunidades con sponsors y apoyo profesional."
+
+Update all pricing sections across the website.
+
+========================================
+2. APPLY FLOW + PAYMENT LOGIC
+========================================
+
+Update the flow:
+
+Step 1:
+User submits application at /apply
+
+Step 2:
+Application is reviewed by admin
+
+Step 3:
+If approved, user receives payment link (Stripe-ready later)
+
+Add message after apply:
+
+English:
+"Your application has been received. IFA will review your profile and contact you if selected."
+
+Spanish:
+"Hemos recibido tu solicitud. IFA revisará tu perfil y te contactará si eres seleccionado."
+
+========================================
+3. BILINGUAL CONTENT (ENGLISH + SPANISH)
+========================================
+
+Make sure ALL key sections include both languages.
+
+HOMEPAGE HERO:
+
+English:
+Headline:
+"Fighters are not alone anymore."
+
+Subheadline:
+"Join the International Fighters Association and access protection, career support, fight opportunities and sponsor connections."
+
+Spanish:
+Headline:
+"Los fighters ya no están solos."
+
+Subheadline:
+"Únete a la International Fighters Association y accede a protección, apoyo profesional, oportunidades de pelea y sponsors."
+
+Buttons:
+"Join IFA" / "Unirme a IFA"
+"Apply Now" / "Aplicar ahora"
+
+========================================
+4. ADD PAYMENT STATUS TO APPLICATIONS
+========================================
+
+In the database and admin panel, add:
+
+Field:
+Payment Status
+
+Values:
+- Not Paid
+- Paid
+
+Only "Paid" users should later access premium sections.
+
+========================================
+5. EMAIL CONFIRMATION (BILINGUAL)
+========================================
+
+Send email after application submission:
+
+Subject:
+IFA Application Received
+
+Body:
+
+English:
+"Thank you for applying to IFA – International Fighters Association.
+Your profile is under review. If selected, you will receive the next steps to activate your membership."
+
+Spanish:
+"Gracias por aplicar a IFA – International Fighters Association.
+Tu perfil está en revisión. Si eres seleccionado, recibirás los siguientes pasos para activar tu membresía."
+
+========================================
+6. ADMIN PANEL IMPROVEMENTS
+========================================
+
+In /admin/applications add:
+
+- Payment status column
+- Ability to mark as Paid
+- Search by:
+  Name, Email, Country
+- Filters:
+  Status, Country, Discipline
+
+========================================
+7. PREPARE FOR CUSTOM DOMAIN (IONOS)
+========================================
+
+Explain clearly:
+
+1. How to deploy this project publicly
+2. How to connect a custom domain from IONOS
+3. DNS settings needed (A record or CNAME)
+4. Where to paste the domain inside Replit
+5. How to activate HTTPS
+
+Do NOT change the app for this.
+Only provide instructions after implementation.
+
+========================================
+FINAL STEP
+========================================
+
+After completing all changes:
+
+Explain:
+- What files were modified
+- How to test the application
+- How to test admin panel
+- How to simulate payment flow
+- How to connect IONOS domain step by step

@@ -883,6 +883,9 @@ components:
           enum: [pending, approved, rejected]
         adminNotes:
           type: ["string", "null"]
+        paymentStatus:
+          type: string
+          enum: [not_paid, paid]
         createdAt:
           type: string
       required:
@@ -894,6 +897,7 @@ components:
         - weightClass
         - record
         - status
+        - paymentStatus
         - createdAt
 
     SubmitFighterApplicationBody:
@@ -929,6 +933,9 @@ components:
           enum: [pending, approved, rejected]
         adminNotes:
           type: ["string", "null"]
+        paymentStatus:
+          type: string
+          enum: [not_paid, paid]
 
     AdminStats:
       type: object

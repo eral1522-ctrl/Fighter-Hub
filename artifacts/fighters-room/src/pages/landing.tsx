@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, Trophy, DollarSign, Globe, CheckCircle2, Shield, FileText, Users, Heart, Tv, Mail, Instagram, MessageCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { ArrowRight, CheckCircle2, Shield, FileText, Globe, Heart, Tv, Users, Mail, Instagram, MessageCircle } from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -17,14 +17,14 @@ export default function LandingPage() {
               <Button variant="ghost" className="text-muted-foreground hover:text-white uppercase font-heading tracking-wider">Log In</Button>
             </Link>
             <Link href="/apply">
-              <Button className="font-heading uppercase tracking-wider font-bold">Join IFA</Button>
+              <Button className="font-heading uppercase tracking-wider font-bold">Join IFA / Unirme</Button>
             </Link>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Hero Section — Bilingual */}
         <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-border min-h-[90vh] flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -36,22 +36,35 @@ export default function LandingPage() {
             <div className="inline-block bg-primary/10 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-8 font-heading">
               International Fighters Association
             </div>
-            <h1 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter max-w-4xl leading-[0.85] text-foreground mb-6">
-              Protecting Fighters.<br />Creating Opportunities.<br />Building Careers.
+
+            {/* English headline */}
+            <h1 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter max-w-4xl leading-[0.85] text-foreground mb-2">
+              Fighters are not alone anymore.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 font-medium">
-              The IFA is the global home for professional combat sports athletes. We fight for your rights, connect you to world-class opportunities, and back your career every step of the way.
+            {/* Spanish headline */}
+            <p className="font-heading text-2xl md:text-4xl font-bold uppercase tracking-tight text-primary/80 mb-6">
+              Los fighters ya no están solos.
             </p>
+
+            {/* English subheadline */}
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-2 font-medium">
+              Join the International Fighters Association and access protection, career support, fight opportunities and sponsor connections.
+            </p>
+            {/* Spanish subheadline */}
+            <p className="text-base md:text-lg text-muted-foreground/70 max-w-2xl mb-10 italic">
+              Únete a la International Fighters Association y accede a protección, apoyo profesional, oportunidades de pelea y sponsors.
+            </p>
+
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/apply" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto h-14 px-8 font-heading text-xl uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
-                  Join IFA
+                  Join IFA / Unirme a IFA
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/apply" className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 font-heading text-xl uppercase tracking-wider font-bold border-white/20 text-white hover:bg-white/5">
-                  Apply as Fighter
+                  Apply Now / Aplicar ahora
                 </Button>
               </Link>
             </div>
@@ -62,7 +75,7 @@ export default function LandingPage() {
         <section className="py-20 md:py-28 bg-zinc-950 border-b border-border">
           <div className="container">
             <div className="mb-12">
-              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Who We Represent</p>
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Who We Represent / A Quién Representamos</p>
               <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tight mb-4">The Fighters</h2>
               <div className="h-1 w-20 bg-primary mb-4" />
               <p className="text-muted-foreground text-lg max-w-2xl">The IFA represents professional boxers, MMA fighters, and kickboxers at every level — from rising prospects to world champions.</p>
@@ -112,7 +125,7 @@ export default function LandingPage() {
                 <h3 className="font-heading text-2xl uppercase tracking-wide mb-6">Partner with IFA</h3>
                 <p className="text-muted-foreground mb-6">Whether you're running a local card or an international event, IFA connects you with the right fighters at the right time.</p>
                 <Link href="/apply">
-                  <Button className="font-heading uppercase tracking-wider font-bold w-full">Apply as Fighter</Button>
+                  <Button className="font-heading uppercase tracking-wider font-bold w-full">Apply as Fighter / Aplicar ahora</Button>
                 </Link>
               </div>
             </div>
@@ -147,7 +160,7 @@ export default function LandingPage() {
         <section className="py-20 md:py-28 border-b border-border">
           <div className="container">
             <div className="mb-12">
-              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">What You Get</p>
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">What You Get / Lo Que Obtienes</p>
               <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tight mb-4">Member Benefits</h2>
               <div className="h-1 w-20 bg-primary" />
             </div>
@@ -164,7 +177,7 @@ export default function LandingPage() {
                   <CardHeader>
                     <Icon className="h-10 w-10 text-primary mb-3" />
                     <CardTitle className="font-heading text-xl uppercase tracking-wide">{label}</CardTitle>
-                    <CardDescription className="text-sm">{desc}</CardDescription>
+                    <p className="text-muted-foreground text-sm">{desc}</p>
                   </CardHeader>
                 </Card>
               ))}
@@ -196,7 +209,7 @@ export default function LandingPage() {
                   <h3 className="font-heading text-xl uppercase tracking-wide mb-2">{o.label}</h3>
                   <p className="text-muted-foreground text-sm mb-4">{o.desc}</p>
                   <Link href="/apply">
-                    <Button variant="outline" size="sm" className="font-heading uppercase tracking-wider text-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">Apply as Fighter</Button>
+                    <Button variant="outline" size="sm" className="font-heading uppercase tracking-wider text-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">Apply Now / Aplicar</Button>
                   </Link>
                 </div>
               ))}
@@ -204,90 +217,81 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Membership Plans Section */}
+        {/* Membership Plan — Single Plan */}
         <section className="py-20 md:py-32 relative overflow-hidden border-b border-border">
           <div className="container">
             <div className="text-center mb-16">
-              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Invest in Your Career</p>
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Invest in Your Career / Invierte en Tu Carrera</p>
               <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tight mb-4">IFA Membership</h2>
-              <p className="text-muted-foreground text-lg">No hidden fees. Cancel anytime.</p>
+              <p className="text-muted-foreground text-lg">No hidden fees. Cancel anytime. / Sin costes ocultos. Cancela cuando quieras.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Card className="bg-zinc-950 border-border">
-                <CardHeader>
-                  <CardTitle className="font-heading text-2xl uppercase">Challenger</CardTitle>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest">Entry Level</p>
-                  <div className="flex items-baseline gap-1 mt-4">
-                    <span className="text-4xl font-bold font-heading">€19</span>
-                    <span className="text-muted-foreground">/month</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {["IFA member profile", "Access to local fight listings", "IFA member card", "Standard support"].map((f) => (
-                    <div key={f} className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                      <span className="text-sm text-muted-foreground">{f}</span>
-                    </div>
-                  ))}
-                </CardContent>
-                <CardFooter>
-                  <Link href="/apply" className="w-full">
-                    <Button variant="outline" className="w-full font-heading uppercase tracking-wider">Apply as Fighter</Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-
-              <Card className="bg-background border-primary relative transform md:-translate-y-4 shadow-[0_0_40px_-15px_hsl(var(--primary))]">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-4 py-1 text-xs font-bold uppercase tracking-wider rounded-full">
-                  Most Popular
+            <div className="max-w-md mx-auto">
+              <Card className="bg-background border-primary relative shadow-[0_0_60px_-15px_hsl(var(--primary))]">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-6 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full font-heading">
+                  Full Access — Acceso Completo
                 </div>
-                <CardHeader>
-                  <CardTitle className="font-heading text-2xl uppercase">Contender</CardTitle>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest">Professional</p>
-                  <div className="flex items-baseline gap-1 mt-4">
-                    <span className="text-4xl font-bold font-heading">€49</span>
-                    <span className="text-muted-foreground">/month</span>
+                <CardHeader className="pt-10 text-center">
+                  <CardTitle className="font-heading text-3xl uppercase tracking-wide">IFA Membership</CardTitle>
+                  <div className="flex items-baseline gap-1 mt-4 justify-center">
+                    <span className="text-6xl font-bold font-heading text-primary">€20</span>
+                    <span className="text-muted-foreground text-lg">/month</span>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {["Premium IFA profile", "International fight access", "Contract review (2/year)", "Sponsorship applications", "Legal support", "Priority support"].map((f) => (
+                  <div className="border-t border-border pt-4">
+                    <p className="text-sm text-muted-foreground mb-4 text-center">
+                      Full access to IFA membership including fighter profile, fight opportunities, sponsor opportunities and career support.
+                    </p>
+                    <p className="text-sm text-muted-foreground/70 mb-6 text-center italic">
+                      Acceso completo a la membresía IFA incluyendo perfil de fighter, oportunidades de pelea, oportunidades con sponsors y apoyo profesional.
+                    </p>
+                  </div>
+                  {[
+                    "Fighter profile & IFA member card",
+                    "Access to fight opportunities",
+                    "Sponsor opportunity listings",
+                    "Career support & legal guidance",
+                    "International event access",
+                    "Priority support",
+                  ].map((f) => (
                     <div key={f} className="flex items-center gap-2">
                       <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
                       <span className="text-sm text-foreground">{f}</span>
                     </div>
                   ))}
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col gap-3">
                   <Link href="/apply" className="w-full">
-                    <Button className="w-full font-heading uppercase tracking-wider font-bold">Apply as Fighter</Button>
+                    <Button className="w-full h-12 font-heading text-lg uppercase tracking-wider font-bold shadow-[0_0_30px_-10px_hsl(var(--primary))]">
+                      Apply Now / Aplicar ahora
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </Link>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Apply first — payment is activated after IFA approval.<br/>
+                    <span className="italic">Aplica primero — el pago se activa tras la aprobación de IFA.</span>
+                  </p>
                 </CardFooter>
               </Card>
+            </div>
 
-              <Card className="bg-zinc-950 border-border">
-                <CardHeader>
-                  <CardTitle className="font-heading text-2xl uppercase">Champion</CardTitle>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest">Elite Annual</p>
-                  <div className="flex items-baseline gap-1 mt-4">
-                    <span className="text-4xl font-bold font-heading">€299</span>
-                    <span className="text-muted-foreground">/year</span>
+            {/* How it works */}
+            <div className="mt-20 max-w-3xl mx-auto">
+              <h3 className="font-heading text-2xl uppercase tracking-wide text-center mb-10">How It Works / Cómo Funciona</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { step: "01", en: "Submit your application at /apply", es: "Envía tu solicitud en /apply" },
+                  { step: "02", en: "IFA reviews your profile (within 48h)", es: "IFA revisa tu perfil (máx. 48h)" },
+                  { step: "03", en: "If approved, you receive your payment link to activate membership", es: "Si eres seleccionado, recibes tu enlace de pago para activar la membresía" },
+                ].map(({ step, en, es }) => (
+                  <div key={step} className="bg-zinc-950 border border-border rounded-md p-6 text-center">
+                    <div className="font-heading text-5xl font-black text-primary/30 mb-3">{step}</div>
+                    <p className="text-sm text-foreground mb-1">{en}</p>
+                    <p className="text-xs text-muted-foreground italic">{es}</p>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {["All Contender benefits", "2 months free", "Dedicated IFA manager", "Unlimited contract reviews", "Featured roster listing", "Media kit production"].map((f) => (
-                    <div key={f} className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                      <span className="text-sm text-muted-foreground">{f}</span>
-                    </div>
-                  ))}
-                </CardContent>
-                <CardFooter>
-                  <Link href="/apply" className="w-full">
-                    <Button variant="outline" className="w-full font-heading uppercase tracking-wider">Apply as Fighter</Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -326,7 +330,7 @@ export default function LandingPage() {
         <section className="py-20 md:py-28 border-b border-border">
           <div className="container">
             <div className="text-center mb-12">
-              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Get in Touch</p>
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">Get in Touch / Contáctanos</p>
               <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tight mb-4">Contact IFA</h2>
               <div className="h-1 w-20 bg-primary mx-auto mb-4" />
               <p className="text-muted-foreground text-lg">Our team is available to help fighters, promoters, and sponsors worldwide.</p>
@@ -366,11 +370,10 @@ export default function LandingPage() {
               <p className="text-xs text-muted-foreground uppercase tracking-widest">International Fighters Association</p>
             </div>
             <nav className="flex gap-6 text-xs text-muted-foreground uppercase tracking-widest font-heading">
-              <Link href="/apply" className="hover:text-primary transition-colors">Apply</Link>
-              <Link href="/sign-in" className="hover:text-primary transition-colors">Login</Link>
-              <a href="mailto:contact@ifa-fighters.org" className="hover:text-primary transition-colors">Contact</a>
+              <Link href="/apply" className="hover:text-primary transition-colors">Apply / Aplicar</Link>
+              <Link href="/sign-in" className="hover:text-primary transition-colors">Log In</Link>
             </nav>
-            <p className="text-muted-foreground text-xs uppercase tracking-widest">IFA © {new Date().getFullYear()} — All Rights Reserved</p>
+            <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} IFA – International Fighters Association</p>
           </div>
         </div>
       </footer>

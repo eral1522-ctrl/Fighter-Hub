@@ -77,11 +77,16 @@ export default function ApplyPage() {
               <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
             <h1 className="font-heading text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">Application Received</h1>
-            <p className="text-muted-foreground text-lg mb-8">
-              Your application has been received. The IFA team will review and contact you within 48 hours.
+            <div className="h-1 w-20 bg-primary mx-auto mb-6" />
+            {/* English */}
+            <p className="text-foreground text-base mb-3">
+              Your application has been received. IFA will review your profile and contact you if selected.
             </p>
-            <div className="h-1 w-20 bg-primary mx-auto mb-8" />
-            <p className="text-muted-foreground text-sm mb-8">In the meantime, follow us on Instagram <span className="text-primary">@ifafighters</span> for the latest news and opportunities.</p>
+            {/* Spanish */}
+            <p className="text-muted-foreground text-sm italic mb-8">
+              Hemos recibido tu solicitud. IFA revisará tu perfil y te contactará si eres seleccionado.
+            </p>
+            <p className="text-muted-foreground text-xs mb-8">In the meantime, follow us on Instagram <span className="text-primary">@ifafighters</span> for the latest news and opportunities.</p>
             <Link href="/">
               <Button variant="outline" className="font-heading uppercase tracking-wider">
                 <ArrowLeft className="mr-2 h-4 w-4" />

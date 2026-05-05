@@ -5,10 +5,12 @@
  * FightersRoom API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminUpdateFighterApplicationBodyPaymentStatus } from "./adminUpdateFighterApplicationBodyPaymentStatus";
 import type { AdminUpdateFighterApplicationBodyStatus } from "./adminUpdateFighterApplicationBodyStatus";
 
 export interface AdminUpdateFighterApplicationBody {
   status?: AdminUpdateFighterApplicationBodyStatus;
   /** @nullable */
   adminNotes?: string | null;
+  paymentStatus?: AdminUpdateFighterApplicationBodyPaymentStatus;
 }

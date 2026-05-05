@@ -5,6 +5,7 @@
  * FightersRoom API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { FighterApplicationPaymentStatus } from "./fighterApplicationPaymentStatus";
 import type { FighterApplicationStatus } from "./fighterApplicationStatus";
 
 export interface FighterApplication {
@@ -20,5 +21,6 @@ export interface FighterApplication {
   status: FighterApplicationStatus;
   /** @nullable */
   adminNotes?: string | null;
+  paymentStatus: FighterApplicationPaymentStatus;
   createdAt: string;
 }

@@ -268,6 +268,14 @@ export const FighterApplicationStatus = {
   rejected: "rejected",
 } as const;
 
+export type FighterApplicationPaymentStatus =
+  (typeof FighterApplicationPaymentStatus)[keyof typeof FighterApplicationPaymentStatus];
+
+export const FighterApplicationPaymentStatus = {
+  not_paid: "not_paid",
+  paid: "paid",
+} as const;
+
 export interface FighterApplication {
   id: number;
   name: string;
@@ -281,6 +289,7 @@ export interface FighterApplication {
   status: FighterApplicationStatus;
   /** @nullable */
   adminNotes?: string | null;
+  paymentStatus: FighterApplicationPaymentStatus;
   createdAt: string;
 }
 
@@ -304,10 +313,19 @@ export const AdminUpdateFighterApplicationBodyStatus = {
   rejected: "rejected",
 } as const;
 
+export type AdminUpdateFighterApplicationBodyPaymentStatus =
+  (typeof AdminUpdateFighterApplicationBodyPaymentStatus)[keyof typeof AdminUpdateFighterApplicationBodyPaymentStatus];
+
+export const AdminUpdateFighterApplicationBodyPaymentStatus = {
+  not_paid: "not_paid",
+  paid: "paid",
+} as const;
+
 export interface AdminUpdateFighterApplicationBody {
   status?: AdminUpdateFighterApplicationBodyStatus;
   /** @nullable */
   adminNotes?: string | null;
+  paymentStatus?: AdminUpdateFighterApplicationBodyPaymentStatus;
 }
 
 export interface AdminStats {

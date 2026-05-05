@@ -8,7 +8,7 @@ import {
   applicationsTable,
   fighterApplicationsTable,
 } from "@workspace/db";
-import { eq, count } from "drizzle-orm";
+import { eq, count, ilike, and, or, SQL } from "drizzle-orm";
 import {
   AdminCreateOpportunityBody,
   AdminCreateEventBody,
@@ -255,6 +255,7 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
   const updates: Record<string, unknown> = {};
   if (parsed.data.status !== undefined) updates.status = parsed.data.status;
   if (parsed.data.adminNotes !== undefined) updates.adminNotes = parsed.data.adminNotes;
+  if (parsed.data.paymentStatus !== undefined) updates.paymentStatus = parsed.data.paymentStatus;
 
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({ error: "No fields to update" });
