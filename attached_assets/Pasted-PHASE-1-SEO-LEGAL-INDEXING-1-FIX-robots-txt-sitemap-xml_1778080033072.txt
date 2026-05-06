@@ -1,0 +1,340 @@
+PHASE 1 — SEO + LEGAL + INDEXING
+
+1. FIX robots.txt + sitemap.xml
+
+URGENT:
+The current robots.txt blocks all search engines.
+
+Replace the robots.txt file so it allows all search engines to crawl the entire site.
+
+Requirements:
+
+* Allow all user agents
+* Allow crawling of all pages
+* Reference the sitemap.xml file
+* Use fightersassociation.com as the main domain
+
+Create a sitemap.xml file listing all public pages of the website.
+
+Include at minimum:
+/
+/association
+/statutes
+/president-message
+/apply
+/contact
+/membership
+/news
+/events
+/privacy-policy
+/legal-notice
+
+Use:
+https://fightersassociation.com
+
+as the base URL for all sitemap entries.
+
+2. COMPLETE SEO META TAGS
+
+Add complete SEO meta tags to the main HTML head.
+
+Requirements:
+
+Title:
+IFA – International Fighters Association | MMA, Boxing, Kickboxing & Combat Sports
+
+Meta description:
+IFA is the International Fighters Association representing fighters across boxing, MMA, kickboxing, Muay Thai and combat sports worldwide.
+
+Max 155 characters.
+
+Add:
+
+* canonical URL
+* Open Graph tags
+* Twitter Card tags
+* og:title
+* og:description
+* og:image
+* og:url
+
+Use:
+https://fightersassociation.com
+
+as the canonical domain.
+
+Use a combat sports themed OG image.
+
+3. PRIVACY POLICY + LEGAL NOTICE
+
+Create these public pages:
+
+/privacy-policy
+/legal-notice
+
+Requirements:
+
+Privacy Policy must include:
+
+* GDPR compliant wording
+* data collected through registration/membership forms
+* purpose of processing
+* user rights
+* cookies
+* data retention
+* international operation disclaimer
+
+Legal Notice must include:
+
+* organization name:
+  IFA – International Fighters Association
+* international operations wording
+* contact email
+* website usage terms
+* liability limitation
+* intellectual property section
+
+Add both links to the footer.
+
+Keep design:
+
+* dark
+* premium
+* consistent with IFA branding
+
+Do not break:
+
+* dashboard
+* login
+* apply form
+* language switcher
+
+==================================================
+
+PHASE 2 — MISSING CORE PAGES
+
+4. HOME PAGE REDESIGN
+
+Redesign the homepage with these sections in order:
+
+1. HERO SECTION
+   Headline:
+   The Global Home of Combat Sports
+
+Subheadline:
+IFA represents fighters across MMA, Boxing, Kickboxing, Muay Thai and combat sports worldwide.
+
+CTAs:
+
+* Join IFA
+* Learn More
+
+Use premium boxing/MMA imagery only.
+
+2. COMBAT SPORTS SECTION
+
+Show all sports covered:
+
+* Boxing
+* MMA
+* Kickboxing
+* Muay Thai
+* Bare Knuckle
+* Grappling
+
+Use icons/cards.
+
+3. WHY JOIN IFA
+
+Create 4 premium benefit cards:
+
+* Fighter Protection
+* Global Network
+* Recognition
+* Events & Opportunities
+
+4. STATS BAR
+
+Display:
+
+* Members
+* Countries
+* Sports
+* Events
+
+Use realistic placeholder numbers.
+
+5. FINAL CTA SECTION
+
+Strong CTA leading to:
+/apply
+
+5. ABOUT PAGE
+
+Create:
+/about
+
+Include:
+
+* IFA mission
+* vision
+* history
+* values
+* leadership section
+* board placeholders
+* timeline of milestones
+
+Design:
+
+* premium
+* institutional
+* editorial
+
+6. MEMBERSHIP PAGE REDESIGN
+
+Redesign membership page with:
+
+Membership tiers:
+
+* Athlete
+* Club/Gym
+* Partner/Sponsor
+
+Each card should include:
+
+* placeholder pricing
+* benefits list
+* CTA button
+
+Add:
+
+* How it works section
+* FAQ section
+* registration form below
+
+Forms should adapt depending on membership type selected.
+
+7. NEWS & EVENTS PAGE
+
+Create:
+/news-events
+
+Features:
+
+* news cards
+* category tags
+* date
+* excerpt
+* read more button
+
+Add 3 placeholder news articles.
+
+Add upcoming events section with:
+
+* date
+* location
+* combat sport
+* register button
+
+8. CONTACT PAGE
+
+Create:
+/contact
+
+Include:
+
+* contact form
+* email
+* Instagram
+* LinkedIn
+* X/Twitter
+
+Add:
+
+* media inquiries section
+* partnership inquiries section
+
+==================================================
+
+PHASE 3 — CREDIBILITY + CONVERSION
+
+9. SOCIAL PROOF SECTION
+
+Add to homepage:
+
+* affiliated federation placeholder logos
+* countries represented
+* world map or flags
+* 3 fictional athlete testimonials
+
+Each testimonial:
+
+* name
+* sport
+* country
+* quote
+
+Do not use real athlete testimonials.
+
+10. FOOTER REDESIGN
+
+Create premium footer with:
+
+* IFA logo
+* tagline
+* navigation columns
+* social icons
+* contact email
+* copyright
+* Privacy Policy link
+* Legal Notice link
+
+Keep dark premium combat sports style.
+
+11. FAVICON + SOCIAL SHARE IMAGE
+
+Create:
+
+* favicon using IFA logo/initials
+* Open Graph image (1200x630)
+
+The OG image should include:
+
+* IFA logo
+* tagline
+* boxing/MMA visual background
+
+Set it as:
+og:image
+
+==================================================
+
+IMPORTANT GLOBAL RULES
+
+Keep:
+
+* dark premium design
+* gold accents
+* mobile responsiveness
+* language switcher EN/ES
+* Stripe membership flow
+* dashboard
+* opportunities system
+
+Do not break:
+
+* authentication
+* admin panel
+* profile system
+* paywall
+* opportunities database
+* public pages
+
+After completion explain:
+
+* which new pages were added
+* how sitemap.xml works
+* where robots.txt is located
+* how SEO tags are configured
+* where favicon and OG image are stored
+* how to edit texts later

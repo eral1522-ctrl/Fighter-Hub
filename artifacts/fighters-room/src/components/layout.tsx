@@ -72,6 +72,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <p className="text-center text-xs leading-loose text-muted-foreground uppercase tracking-widest font-heading">
             {t.footer.copyright}
           </p>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <Link href="/privacy-policy" className="hover:text-primary transition-colors">{t.footer.privacyPolicy}</Link>
+            <span>·</span>
+            <Link href="/legal-notice" className="hover:text-primary transition-colors">{t.footer.legalNotice}</Link>
+          </div>
         </div>
       </footer>
     </div>

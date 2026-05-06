@@ -18,6 +18,12 @@ import AdminApplicationsPage from "@/pages/admin-applications";
 import StatutesPage from "@/pages/statutes";
 import AssociationPage from "@/pages/association";
 import PresidentMessagePage from "@/pages/president-message";
+import AboutPage from "@/pages/about";
+import MembershipPage from "@/pages/membership";
+import NewsEventsPage from "@/pages/news-events";
+import ContactPage from "@/pages/contact";
+import PrivacyPolicyPage from "@/pages/privacy-policy";
+import LegalNoticePage from "@/pages/legal-notice";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -143,6 +149,12 @@ function Router() {
       <Route path="/statutes" component={StatutesPage} />
       <Route path="/association" component={AssociationPage} />
       <Route path="/president-message" component={PresidentMessagePage} />
+      <Route path="/about" component={AboutPage} />
+      <Route path="/membership" component={MembershipPage} />
+      <Route path="/news-events" component={NewsEventsPage} />
+      <Route path="/contact" component={ContactPage} />
+      <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+      <Route path="/legal-notice" component={LegalNoticePage} />
       <Route component={NotFound} />
     </Switch>
   );

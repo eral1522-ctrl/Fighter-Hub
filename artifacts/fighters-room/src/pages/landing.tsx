@@ -62,7 +62,10 @@ export default function LandingPage() {
             <span className="hidden sm:block text-xs text-muted-foreground uppercase tracking-widest font-medium border-l border-border pl-3">International Fighters Association</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-xs font-heading uppercase tracking-widest text-muted-foreground">
+            <Link href="/about" className="hover:text-primary transition-colors">{t.footer.about}</Link>
             <Link href="/association" className="hover:text-primary transition-colors">{t.header.association}</Link>
+            <Link href="/membership" className="hover:text-primary transition-colors">{t.footer.membership}</Link>
+            <Link href="/news-events" className="hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
           </nav>
           <div className="flex items-center gap-4">
             <LangSwitcher />
@@ -113,6 +116,45 @@ export default function LandingPage() {
           </div>
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-30">
             <div className="w-px h-12 bg-primary" />
+          </div>
+        </section>
+
+        {/* ── STATS BAR ── */}
+        <section className="py-6 bg-zinc-950 border-b border-border">
+          <div className="container">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
+              {[
+                { num: t.statsBar.membersNum, label: t.statsBar.membersLabel },
+                { num: t.statsBar.countriesNum, label: t.statsBar.countriesLabel },
+                { num: t.statsBar.sportsNum, label: t.statsBar.sportsLabel },
+                { num: t.statsBar.eventsNum, label: t.statsBar.eventsLabel },
+              ].map(({ num, label }) => (
+                <div key={label} className="py-6 text-center">
+                  <div className="font-heading font-black text-4xl md:text-5xl text-primary mb-1">{num}</div>
+                  <div className="text-[11px] text-muted-foreground font-heading uppercase tracking-widest">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── COMBAT SPORTS ── */}
+        <section className="py-20 md:py-28 border-b border-border">
+          <div className="container">
+            <div className="text-center mb-14">
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">{t.combatSports.label}</p>
+              <h2 className="font-heading text-4xl md:text-7xl font-black uppercase tracking-tighter mb-4">{t.combatSports.heading}</h2>
+              <div className="h-1 w-24 bg-primary mx-auto" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {t.combatSports.sports.map((sport) => (
+                <div key={sport.name} className="group bg-zinc-950 border border-border rounded-md p-7 hover:border-primary/40 transition-all duration-300">
+                  <div className="text-4xl mb-4">{sport.icon}</div>
+                  <h3 className="font-heading text-xl uppercase tracking-wide mb-3 group-hover:text-primary transition-colors">{sport.name}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{sport.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -296,9 +338,22 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {t.testimonials.items.map((item, i) => (
-                <div key={i} className="bg-background border border-border rounded-md p-8 hover:border-primary/30 transition-colors relative">
+                <div key={i} className="bg-background border border-border rounded-md p-8 hover:border-primary/30 transition-colors relative flex flex-col">
                   <Quote className="h-8 w-8 text-primary/30 mb-6" />
-                  <p className="text-foreground/90 text-lg font-medium leading-relaxed italic">"{item.quote}"</p>
+                  <p className="text-foreground/90 text-lg font-medium leading-relaxed italic flex-1">"{item.quote}"</p>
+                  {"name" in item && item.name && (
+                    <div className="mt-8 pt-6 border-t border-border flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                        <span className="font-heading font-black text-primary text-xs">{(item as { name: string }).name.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <div className="font-heading text-sm uppercase tracking-wide">{(item as { name: string }).name}</div>
+                        <div className="text-[11px] text-muted-foreground font-heading uppercase tracking-widest">
+                          {(item as { sport: string; country: string }).sport} · {(item as { sport: string; country: string }).country}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -363,6 +418,32 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── FINAL CTA ── */}
+        <section className="py-24 md:py-40 relative overflow-hidden border-b border-border">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
+          <div className="container relative z-10 text-center max-w-3xl mx-auto">
+            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Join Now</p>
+            <h2 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 leading-[0.85]">Your Career.<br />Your Association.</h2>
+            <div className="h-1 w-20 bg-primary mx-auto mb-10" />
+            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed mb-12">
+              Over 1,200 fighters in 45+ countries have chosen IFA. Apply today and join the global home of combat sports.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/apply">
+                <Button size="lg" className="h-14 px-12 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_50px_-10px_hsl(var(--primary))]">
+                  Apply to Join IFA
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/membership">
+                <Button size="lg" variant="outline" className="h-14 px-12 font-heading text-base uppercase tracking-wider border-white/20 text-white hover:bg-white/5">
+                  View Membership Plans
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── CONTACT ── */}
         <section className="py-20 md:py-28 border-b border-border bg-zinc-950">
           <div className="container">
@@ -373,11 +454,11 @@ export default function LandingPage() {
               <p className="text-muted-foreground text-lg">{t.contact.description}</p>
             </div>
             <div className="flex flex-col sm:flex-row justify-center gap-6 max-w-2xl mx-auto">
-              <a href="mailto:info@fightersroom.com" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href="mailto:info@fightersassociation.com" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <Mail className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">Email</div>
-                  <div className="font-heading tracking-wide text-sm">info@fightersroom.com</div>
+                  <div className="font-heading tracking-wide text-sm">info@fightersassociation.com</div>
                 </div>
               </a>
               <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
@@ -399,22 +480,55 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="py-12 border-t border-border bg-zinc-950">
-        <div className="container flex flex-col items-center gap-8">
-          <img
-            src={ifaLogo}
-            alt="IFA – The International Fighters Association"
-            className="w-full max-w-[220px] md:max-w-[280px] opacity-90"
-          />
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
-            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground uppercase tracking-widest font-heading">
-              <Link href="/apply" className="hover:text-primary transition-colors">{t.footer.apply}</Link>
-              <Link href="/association" className="hover:text-primary transition-colors">{t.footer.association}</Link>
-              <Link href="/statutes" className="hover:text-primary transition-colors">{t.footer.statutes}</Link>
-              <Link href="/president-message" className="hover:text-primary transition-colors">{t.footer.presidentMessage}</Link>
-              <Link href="/sign-in" className="hover:text-primary transition-colors">{t.footer.login}</Link>
-            </nav>
+      <footer className="pt-16 pb-8 border-t border-border bg-zinc-950">
+        <div className="container">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <img src={ifaLogo} alt="IFA" className="w-full max-w-[160px] opacity-90 mb-5" />
+              <p className="text-xs text-muted-foreground leading-relaxed mb-6 max-w-[220px]">{t.footer.tagline}</p>
+              <div className="flex items-center gap-3">
+                <a href="mailto:info@fightersassociation.com" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                  <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                </a>
+                <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                  <Instagram className="h-3.5 w-3.5 text-muted-foreground" />
+                </a>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">For Fighters</h4>
+              <nav className="space-y-3">
+                <Link href="/apply" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.apply}</Link>
+                <Link href="/membership" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.membership}</Link>
+                <Link href="/sign-in" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.login}</Link>
+                <Link href="/news-events" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
+              </nav>
+            </div>
+            <div>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Association</h4>
+              <nav className="space-y-3">
+                <Link href="/about" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.about}</Link>
+                <Link href="/association" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.association}</Link>
+                <Link href="/statutes" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.statutes}</Link>
+                <Link href="/president-message" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.presidentMessage}</Link>
+                <Link href="/contact" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.contact}</Link>
+              </nav>
+            </div>
+            <div>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Legal</h4>
+              <nav className="space-y-3">
+                <Link href="/privacy-policy" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.privacyPolicy}</Link>
+                <Link href="/legal-notice" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.legalNotice}</Link>
+              </nav>
+            </div>
+          </div>
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-muted-foreground">{t.footer.copyright}</p>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <Link href="/privacy-policy" className="hover:text-primary transition-colors">{t.footer.privacyPolicy}</Link>
+              <span className="text-border">·</span>
+              <Link href="/legal-notice" className="hover:text-primary transition-colors">{t.footer.legalNotice}</Link>
+            </div>
           </div>
         </div>
       </footer>
