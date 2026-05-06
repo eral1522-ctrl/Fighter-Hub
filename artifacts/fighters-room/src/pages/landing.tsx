@@ -1,11 +1,74 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ArrowRight, CheckCircle2, Shield, FileText, Globe, Heart, Tv, Users, Mail, Instagram, MessageCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, Shield, FileText, Globe, Heart, Tv, Users, Mail, Instagram, MessageCircle, Lock } from "lucide-react";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
 
 const BENEFIT_ICONS = [Shield, FileText, Globe, Heart, Tv, Users];
+
+const FEATURED_OPPS = [
+  {
+    title: "Dubai International Showcase",
+    country: "UAE",
+    sport: "Boxing",
+    weightClass: "Welterweight",
+    statusKey: "Open",
+    statusClass: "bg-emerald-900/60 text-emerald-300 border-emerald-700/50",
+    accentClass: "bg-emerald-500",
+    purseBlur: "€35,000",
+  },
+  {
+    title: "Riyadh Heavyweight Opportunity",
+    country: "Saudi Arabia",
+    sport: "Boxing",
+    weightClass: "Heavyweight",
+    statusKey: "Recruiting",
+    statusClass: "bg-violet-900/60 text-violet-300 border-violet-700/50",
+    accentClass: "bg-violet-500",
+    purseBlur: "€75,000",
+  },
+  {
+    title: "London International Fight Card",
+    country: "United Kingdom",
+    sport: "Boxing",
+    weightClass: "Middleweight",
+    statusKey: "Scouting",
+    statusClass: "bg-blue-900/60 text-blue-300 border-blue-700/50",
+    accentClass: "bg-blue-500",
+    purseBlur: "€18,000",
+  },
+  {
+    title: "Bangkok Muay Thai Opportunity",
+    country: "Thailand",
+    sport: "Muay Thai",
+    weightClass: "Lightweight",
+    statusKey: "Open",
+    statusClass: "bg-emerald-900/60 text-emerald-300 border-emerald-700/50",
+    accentClass: "bg-emerald-500",
+    purseBlur: "€5,000",
+  },
+  {
+    title: "Abu Dhabi Fight Opportunity",
+    country: "UAE",
+    sport: "Boxing",
+    weightClass: "Light Heavyweight",
+    statusKey: "Open",
+    statusClass: "bg-emerald-900/60 text-emerald-300 border-emerald-700/50",
+    accentClass: "bg-emerald-500",
+    purseBlur: "€40,000",
+  },
+  {
+    title: "Berlin Kickboxing Card",
+    country: "Germany",
+    sport: "Kickboxing",
+    weightClass: "Middleweight",
+    statusKey: "Recruiting",
+    statusClass: "bg-violet-900/60 text-violet-300 border-violet-700/50",
+    accentClass: "bg-violet-500",
+    purseBlur: "€7,500",
+  },
+];
 
 export default function LandingPage() {
   const { t } = useLanguage();
@@ -193,6 +256,78 @@ export default function LandingPage() {
                   </Link>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Live Opportunities Preview */}
+        <section className="py-20 md:py-28 border-b border-border relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
+          <div className="container relative z-10">
+            <div className="text-center mb-12">
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-2 font-heading">{t.liveOpps.label}</p>
+              <h2 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tight mb-4">{t.liveOpps.heading}</h2>
+              <div className="h-1 w-20 bg-primary mx-auto mb-4" />
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t.liveOpps.subheading}</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+              {FEATURED_OPPS.map((opp) => {
+                const statusLabel = (t.liveOpps as Record<string, string>)[`status${opp.statusKey}`] ?? opp.statusKey;
+                return (
+                  <div
+                    key={opp.title}
+                    className="relative group bg-zinc-950 border border-border rounded-md overflow-hidden hover:border-primary/40 transition-colors"
+                  >
+                    {/* Top accent bar */}
+                    <div className={`h-0.5 w-full ${opp.accentClass}`} />
+                    <div className="p-5">
+                      {/* Status + Sport */}
+                      <div className="flex items-center justify-between mb-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-heading font-bold uppercase tracking-wider border ${opp.statusClass}`}>
+                          {statusLabel}
+                        </span>
+                        <span className="text-[11px] font-heading uppercase tracking-wider text-muted-foreground">{opp.sport}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-heading text-lg uppercase tracking-tight leading-tight mb-3">{opp.title}</h3>
+
+                      {/* Meta grid */}
+                      <div className="space-y-2 text-xs text-muted-foreground mb-4">
+                        <div className="flex items-center justify-between">
+                          <span className="uppercase tracking-wider">{t.liveOpps.country}</span>
+                          <span className="font-medium text-foreground/80">{opp.country}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="uppercase tracking-wider">{t.liveOpps.weightClass}</span>
+                          <span className="font-medium text-foreground/80">{opp.weightClass}</span>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-border/50 pt-2 mt-2">
+                          <span className="uppercase tracking-wider">Purse</span>
+                          <span className="font-heading font-bold text-primary/40 text-xs blur-[4px] select-none">{opp.purseBlur}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Lock overlay hint */}
+                    <div className="absolute bottom-0 left-0 right-0 border-t border-border/50 px-5 py-3 flex items-center gap-2 text-[11px] text-muted-foreground/60 bg-zinc-950/80">
+                      <Lock className="w-3 h-3" />
+                      <span className="font-heading uppercase tracking-wider">{t.liveOpps.purseHidden}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* CTA */}
+            <div className="text-center">
+              <Link href="/apply">
+                <Button size="lg" className="h-14 px-10 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
+                  {t.liveOpps.cta}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
