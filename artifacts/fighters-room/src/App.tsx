@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/reac
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { LanguageProvider } from "@/lib/i18n";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import NotFound from "@/pages/not-found";
@@ -146,6 +147,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
       <TooltipProvider>
         <WouterRouter base={basePath}>
           <ClerkProvider
@@ -163,6 +165,7 @@ export default function App() {
           </ClerkProvider>
         </WouterRouter>
       </TooltipProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

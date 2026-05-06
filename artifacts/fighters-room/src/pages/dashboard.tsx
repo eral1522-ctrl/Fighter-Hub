@@ -1,16 +1,18 @@
 import { Layout } from "@/components/layout";
 import { useGetDashboardStats, useListOpportunities, useListEvents, useListMyApplications, useCreateApplication, getListMyApplicationsQueryKey, getGetDashboardStatsQueryKey } from "@workspace/api-client-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Calendar, Scale, Coins, AlertTriangle, Lock, ShieldCheck } from "lucide-react";
+import { MapPin, Calendar, Scale, Coins, AlertTriangle, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { useLanguage } from "@/lib/i18n";
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
   const { data: stats, isLoading: isStatsLoading } = useGetDashboardStats();
   const { data: opportunities, isLoading: isOppLoading } = useListOpportunities();
   const { data: events, isLoading: isEventsLoading } = useListEvents();
@@ -60,8 +62,8 @@ export default function DashboardPage() {
       <div className="container py-8 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">IFA Member Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Manage your career and apply for IFA opportunities.</p>
+            <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">{t.dashboard.heading}</h1>
+            <p className="text-muted-foreground mt-1">{t.dashboard.subtitle}</p>
           </div>
 
           {isStatsLoading ? (
@@ -78,21 +80,18 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Payment wall banner — not_paid */}
+        {/* Payment wall banner */}
         {!isStatsLoading && !isPaid && (
           <div className="bg-primary/10 border border-primary/40 rounded-md p-5 mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Lock className="h-6 w-6 text-primary shrink-0 mt-0.5 sm:mt-0" />
             <div className="flex-1">
               <p className="font-heading font-bold text-base uppercase tracking-wide text-primary mb-0.5">
-                Your membership is not active. Complete your €20/month membership to unlock full access.
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Tu membresía no está activa. Completa tu membresía de €20/mes para desbloquear acceso completo.
+                {t.dashboard.paymentBanner}
               </p>
             </div>
             <a href={membershipCta} target="_blank" rel="noopener noreferrer">
               <Button className="font-heading uppercase tracking-wider font-bold shrink-0 whitespace-nowrap">
-                Complete Membership
+                {t.dashboard.completeMembership}
               </Button>
             </a>
           </div>
@@ -103,8 +102,8 @@ export default function DashboardPage() {
           <div className="bg-yellow-500/10 border border-yellow-500/50 p-4 rounded-md mb-8 flex items-start gap-3 text-yellow-600 dark:text-yellow-500">
             <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" />
             <div>
-              <h3 className="font-bold">Profile Pending Approval</h3>
-              <p className="text-sm opacity-90">Your IFA profile is currently under review by our team. You can still browse opportunities, but applications may be restricted until approved.</p>
+              <h3 className="font-bold">{t.dashboard.pendingTitle}</h3>
+              <p className="text-sm opacity-90">{t.dashboard.pendingDesc}</p>
             </div>
           </div>
         )}
@@ -112,7 +111,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-zinc-950">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">IFA Opportunities</CardTitle>
+              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">{t.dashboard.stats.opportunities}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold font-heading">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.totalOpportunities}</div>
@@ -120,7 +119,7 @@ export default function DashboardPage() {
           </Card>
           <Card className="bg-zinc-950">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">Upcoming Events</CardTitle>
+              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">{t.dashboard.stats.events}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold font-heading">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.totalEvents}</div>
@@ -128,7 +127,7 @@ export default function DashboardPage() {
           </Card>
           <Card className="bg-zinc-950">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">My Applications</CardTitle>
+              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">{t.dashboard.stats.myApplications}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold font-heading">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.myApplications}</div>
@@ -136,7 +135,7 @@ export default function DashboardPage() {
           </Card>
           <Card className="bg-zinc-950">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">Approved Fights</CardTitle>
+              <CardTitle className="text-xs text-muted-foreground uppercase font-heading tracking-wider">{t.dashboard.stats.approvedFights}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold font-heading text-primary">{isStatsLoading ? <Skeleton className="h-8 w-12" /> : stats?.approvedApplications}</div>
@@ -145,18 +144,18 @@ export default function DashboardPage() {
         </div>
 
         <Tabs defaultValue="fights" className="w-full">
-          <TabsList className="w-full justify-start border-b rounded-none h-12 bg-transparent p-0">
-            <TabsTrigger value="fights" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
-              Fight Opportunities
+          <TabsList className="w-full justify-start border-b rounded-none h-12 bg-transparent p-0 overflow-x-auto">
+            <TabsTrigger value="fights" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6 shrink-0">
+              {t.dashboard.tabs.fights}
             </TabsTrigger>
-            <TabsTrigger value="sponsors" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
-              Sponsorships
+            <TabsTrigger value="sponsors" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6 shrink-0">
+              {t.dashboard.tabs.sponsors}
             </TabsTrigger>
-            <TabsTrigger value="events" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
-              Events
+            <TabsTrigger value="events" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6 shrink-0">
+              {t.dashboard.tabs.events}
             </TabsTrigger>
-            <TabsTrigger value="applications" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6">
-              My Applications
+            <TabsTrigger value="applications" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent font-heading uppercase tracking-wider text-base h-full px-6 shrink-0">
+              {t.dashboard.tabs.applications}
             </TabsTrigger>
           </TabsList>
 
@@ -173,7 +172,10 @@ export default function DashboardPage() {
                     closed={opp.status === "closed"}
                     isPending={createApplication.isPending}
                     onApply={() => handleApplyOpportunity(opp.id)}
-                    applyLabel="Apply for Fight"
+                    applyLabel={t.dashboard.applyFight}
+                    appliedLabel={t.dashboard.applied}
+                    closedLabel={t.dashboard.closed}
+                    paywallLabel={t.dashboard.paywallBtn}
                     variant="fight"
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -181,9 +183,7 @@ export default function DashboardPage() {
                       {opp.compensation && <Badge className="bg-green-900 text-green-100 border-green-800"><Coins className="w-3 h-3 mr-1" />{opp.compensation}</Badge>}
                     </div>
                     <CardTitle className="font-heading text-2xl uppercase mb-1">{opp.title}</CardTitle>
-                    <CardDescription className={isPaid ? "line-clamp-2" : "line-clamp-1 blur-[3px] select-none pointer-events-none"}>
-                      {opp.description}
-                    </CardDescription>
+                    <p className={`text-sm text-muted-foreground line-clamp-2 ${!isPaid ? "blur-[3px] select-none pointer-events-none" : ""}`}>{opp.description}</p>
                     {isPaid && (
                       <div className="space-y-2 text-sm text-muted-foreground mt-4">
                         {opp.location && <div className="flex items-center"><MapPin className="w-4 h-4 mr-2" />{opp.location}</div>}
@@ -208,7 +208,10 @@ export default function DashboardPage() {
                   closed={opp.status === "closed"}
                   isPending={createApplication.isPending}
                   onApply={() => handleApplyOpportunity(opp.id)}
-                  applyLabel="Apply for Sponsorship"
+                  applyLabel={t.dashboard.applySponsorship}
+                  appliedLabel={t.dashboard.applied}
+                  closedLabel={t.dashboard.closed}
+                  paywallLabel={t.dashboard.paywallBtn}
                   variant="sponsor"
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -216,9 +219,7 @@ export default function DashboardPage() {
                     {opp.compensation && <Badge className="bg-green-900 text-green-100 border-green-800"><Coins className="w-3 h-3 mr-1" />{opp.compensation}</Badge>}
                   </div>
                   <CardTitle className="font-heading text-2xl uppercase mb-1">{opp.title}</CardTitle>
-                  <CardDescription className={isPaid ? "line-clamp-2" : "line-clamp-1 blur-[3px] select-none pointer-events-none"}>
-                    {opp.description}
-                  </CardDescription>
+                  <p className={`text-sm text-muted-foreground line-clamp-2 ${!isPaid ? "blur-[3px] select-none pointer-events-none" : ""}`}>{opp.description}</p>
                   {isPaid && opp.location && (
                     <div className="space-y-2 text-sm text-muted-foreground mt-4">
                       <div className="flex items-center"><MapPin className="w-4 h-4 mr-2" />{opp.location}</div>
@@ -265,10 +266,10 @@ export default function DashboardPage() {
                           onClick={() => handleApplyEvent(event.id)}
                           disabled={hasAppliedEvent(event.id) || event.status === "cancelled" || event.status === "past" || createApplication.isPending}
                         >
-                          {hasAppliedEvent(event.id) ? "Applied" : "Apply to Fight on Card"}
+                          {hasAppliedEvent(event.id) ? t.dashboard.applied : t.dashboard.applyEvent}
                         </Button>
                       ) : (
-                        <PaywallButton membershipCta={membershipCta} />
+                        <PaywallButton membershipCta={membershipCta} label={t.dashboard.paywallBtn} />
                       )}
                     </CardFooter>
                   </Card>
@@ -281,7 +282,7 @@ export default function DashboardPage() {
             <div className="space-y-4">
               {isAppsLoading ? <Skeleton className="h-40 w-full" /> : applications?.length === 0 ? (
                 <div className="text-center py-12 bg-zinc-950 rounded-md border border-dashed border-border">
-                  <p className="text-muted-foreground">You haven't applied to anything yet.</p>
+                  <p className="text-muted-foreground">{t.dashboard.noApps}</p>
                 </div>
               ) : (
                 applications?.map(app => (
@@ -312,19 +313,17 @@ export default function DashboardPage() {
   );
 }
 
-/* ── Shared paywall CTA button ── */
-function PaywallButton({ membershipCta }: { membershipCta: string }) {
+function PaywallButton({ membershipCta, label }: { membershipCta: string; label: string }) {
   return (
     <a href={membershipCta} target="_blank" rel="noopener noreferrer" className="w-full">
       <Button variant="outline" className="w-full font-heading uppercase tracking-wider font-bold border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground gap-2">
         <Lock className="w-4 h-4" />
-        Unlock full access with IFA Membership (€20/month)
+        {label}
       </Button>
     </a>
   );
 }
 
-/* ── Generic opportunity card with paywall support ── */
 interface OpportunityCardProps {
   isPaid: boolean;
   membershipCta: string;
@@ -333,24 +332,25 @@ interface OpportunityCardProps {
   isPending: boolean;
   onApply: () => void;
   applyLabel: string;
+  appliedLabel: string;
+  closedLabel: string;
+  paywallLabel: string;
   variant: "fight" | "sponsor";
   children: React.ReactNode;
 }
 
-function OpportunityCard({ isPaid, membershipCta, applied, closed, isPending, onApply, applyLabel, variant, children }: OpportunityCardProps) {
-  const isLocked = !isPaid;
-
+function OpportunityCard({ isPaid, membershipCta, applied, closed, isPending, onApply, applyLabel, appliedLabel, closedLabel, paywallLabel, variant, children }: OpportunityCardProps) {
   return (
     <Card className={`flex flex-col relative ${variant === "sponsor" ? "border-primary/20 bg-zinc-950/50" : ""}`}>
       <CardHeader className="flex-1">
         {children}
       </CardHeader>
-      {isLocked && (
+      {!isPaid && (
         <div className="absolute inset-0 rounded-[inherit] bg-zinc-950/40 backdrop-blur-[1px] flex items-end pointer-events-none" />
       )}
       <CardFooter className="relative z-10">
-        {isLocked ? (
-          <PaywallButton membershipCta={membershipCta} />
+        {!isPaid ? (
+          <PaywallButton membershipCta={membershipCta} label={paywallLabel} />
         ) : variant === "sponsor" ? (
           <Button
             variant="outline"
@@ -358,7 +358,7 @@ function OpportunityCard({ isPaid, membershipCta, applied, closed, isPending, on
             onClick={onApply}
             disabled={applied || closed || isPending}
           >
-            {applied ? "Applied" : closed ? "Closed" : applyLabel}
+            {applied ? appliedLabel : closed ? closedLabel : applyLabel}
           </Button>
         ) : (
           <Button
@@ -366,7 +366,7 @@ function OpportunityCard({ isPaid, membershipCta, applied, closed, isPending, on
             onClick={onApply}
             disabled={applied || closed || isPending}
           >
-            {applied ? "Applied" : closed ? "Closed" : applyLabel}
+            {applied ? appliedLabel : closed ? closedLabel : applyLabel}
           </Button>
         )}
       </CardFooter>

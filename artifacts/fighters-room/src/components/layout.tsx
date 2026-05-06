@@ -2,11 +2,13 @@ import { Link, useLocation } from "wouter";
 import { useClerk, useUser } from "@clerk/react";
 import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
+import { useLanguage, LangSwitcher } from "@/lib/i18n";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const [location] = useLocation();
+  const { t } = useLanguage();
 
   const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -22,35 +24,36 @@ export function Layout({ children }: { children: React.ReactNode }) {
               href="/dashboard"
               className={`transition-colors hover:text-foreground/80 uppercase font-heading tracking-wider text-xs ${location === "/dashboard" ? "text-foreground" : "text-foreground/60"}`}
             >
-              My Dashboard
+              {t.layout.dashboard}
             </Link>
             <Link
               href="/profile"
               className={`transition-colors hover:text-foreground/80 uppercase font-heading tracking-wider text-xs ${location === "/profile" ? "text-foreground" : "text-foreground/60"}`}
             >
-              My Profile
+              {t.layout.profile}
             </Link>
             <Link
               href="/admin"
               className={`transition-colors hover:text-foreground/80 uppercase font-heading tracking-wider text-xs ${location === "/admin" ? "text-foreground" : "text-foreground/60"}`}
             >
-              Admin
+              {t.layout.admin}
             </Link>
             <Link
               href="/admin/applications"
               className={`transition-colors hover:text-foreground/80 uppercase font-heading tracking-wider text-xs ${location === "/admin/applications" ? "text-foreground" : "text-foreground/60"}`}
             >
-              Applications
+              {t.layout.applications}
             </Link>
           </nav>
-          <div className="ml-auto flex items-center space-x-4">
-            <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground mr-4">
+          <div className="ml-auto flex items-center gap-4">
+            <LangSwitcher />
+            <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
               <User className="h-4 w-4" />
               <span className="font-heading tracking-wide text-xs uppercase">{user?.firstName || user?.username || "Fighter"}</span>
             </div>
             <Button variant="ghost" size="icon" onClick={() => signOut({ redirectUrl: basePath || "/" })} data-testid="button-signout">
               <LogOut className="h-4 w-4" />
-              <span className="sr-only">Sign out</span>
+              <span className="sr-only">{t.layout.signOut}</span>
             </Button>
           </div>
         </div>
@@ -61,7 +64,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <footer className="border-t py-6 md:py-0 bg-zinc-950">
         <div className="container flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
           <p className="text-center text-xs leading-loose text-muted-foreground md:text-left uppercase tracking-widest font-heading">
-            IFA – International Fighters Association © {new Date().getFullYear()}
+            {t.footer.copyright}
           </p>
         </div>
       </footer>
