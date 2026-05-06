@@ -18,9 +18,28 @@ const T = {
     hero: {
       badge: "International Fighters Association",
       headline: "Fighters are not alone anymore.",
-      subheadline: "Join the International Fighters Association and access protection, career support, fight opportunities and sponsor connections.",
-      joinBtn: "Join IFA",
-      applyBtn: "Apply Now",
+      subheadline: "IFA gives fighters structure, visibility and access. Join the International Fighters Association to unlock fight opportunities, sponsors, career support and a global combat sports network.",
+      joinBtn: "Apply to Join IFA",
+      viewBenefitsBtn: "View Member Benefits",
+    },
+    whyJoin: {
+      label: "Why Join IFA?",
+      heading: "Why Join IFA?",
+      benefits: [
+        "Access international fight opportunities",
+        "Unlock sponsor and brand opportunities",
+        "Build a professional fighter profile",
+        "Receive career support and guidance",
+        "Improve contract awareness",
+        "Gain visibility with promoters and matchmakers",
+        "Join a global fighter network",
+        "Protect your professional position",
+      ],
+    },
+    builtFor: {
+      label: "Built for the Modern Fighter",
+      heading: "Built for the modern fighter",
+      text: "The new generation of combat sports is not only about fighting. It is about protection, visibility, sponsors, media, contracts and international opportunities. IFA is built for fighters who want to manage their careers with a professional structure.",
     },
     fighters: {
       label: "Who We Represent",
@@ -101,23 +120,25 @@ const T = {
       steps: [
         { step: "01", text: "Submit your application at /apply" },
         { step: "02", text: "IFA reviews your profile (within 48h)" },
-        { step: "03", text: "If approved, you receive your payment link to activate membership" },
+        { step: "03", text: "If approved, activate your €20/month membership" },
       ],
     },
     testimonials: {
-      label: "Fighter Voices",
-      heading: "What Members Say",
+      label: "What fighters need today",
+      heading: "What fighters need today",
       items: [
-        { quote: "Before IFA, I was signing contracts I didn't understand. Now I have people in my corner who actually fight for me outside the ring.", name: "Marco R.", record: "18-3-0", country: "Italy 🇮🇹" },
-        { quote: "IFA got me three international bouts in one year. My record went from local to world-ranked. This is the real deal.", name: "Aisha K.", record: "12-1-0", country: "Nigeria 🇳🇬" },
-        { quote: "The sponsorship connections alone paid for my membership ten times over. Every serious fighter should be IFA registered.", name: "Tomás V.", record: "22-4-1", country: "Mexico 🇲🇽" },
+        { quote: "Fighters need more than fights. They need structure, protection and access." },
+        { quote: "Visibility, sponsors and career guidance can change the direction of a fighter's career." },
+        { quote: "The right opportunity at the right time can define everything." },
       ],
     },
     liveOpps: {
-      label: "Live on IFA",
-      heading: "Open Opportunities",
-      subheading: "A selection of active fight opportunities available to IFA members right now.",
-      cta: "Apply to unlock full opportunities",
+      label: "Member Opportunities",
+      heading: "Member Opportunities",
+      subheading: "A selection of active fight opportunities available to IFA members. Join IFA to unlock full access.",
+      ctaApply: "Unlock full access with IFA Membership",
+      ctaUnlock: "Activate Membership to Access Opportunities",
+      ctaDashboard: "View All Opportunities",
       statusOpen: "Open",
       statusScouting: "Scouting",
       statusRecruiting: "Recruiting",
@@ -250,11 +271,30 @@ const T = {
       signOut: "Cerrar sesión",
     },
     hero: {
-      badge: "Asociación Internacional de Fighters",
+      badge: "Asociación Internacional de Luchadores",
       headline: "Los luchadores ya no están solos.",
-      subheadline: "Únete a la International Fighters Association y accede a protección, apoyo profesional, oportunidades de pelea y sponsors.",
-      joinBtn: "Unirme a IFA",
-      applyBtn: "Aplicar Ahora",
+      subheadline: "IFA da estructura, visibilidad y acceso a los luchadores. Únete a la International Fighters Association para desbloquear oportunidades de pelea, sponsors, apoyo profesional y una red global de deportes de combate.",
+      joinBtn: "Aplicar para unirme a IFA",
+      viewBenefitsBtn: "Ver beneficios",
+    },
+    whyJoin: {
+      label: "¿Por qué unirte a IFA?",
+      heading: "¿Por qué unirte a IFA?",
+      benefits: [
+        "Accede a oportunidades internacionales de pelea",
+        "Desbloquea oportunidades con sponsors y marcas",
+        "Crea un perfil profesional de luchador",
+        "Recibe apoyo y orientación profesional",
+        "Mejora tu conocimiento contractual",
+        "Gana visibilidad ante promotores y matchmakers",
+        "Únete a una red global de luchadores",
+        "Protege tu posición profesional",
+      ],
+    },
+    builtFor: {
+      label: "Creada para el Luchador Moderno",
+      heading: "Creada para el luchador moderno",
+      text: "La nueva generación de los deportes de combate no trata solo de pelear. Trata de protección, visibilidad, sponsors, medios, contratos y oportunidades internacionales. IFA está creada para luchadores que quieren gestionar su carrera con una estructura profesional.",
     },
     fighters: {
       label: "A Quién Representamos",
@@ -335,23 +375,25 @@ const T = {
       steps: [
         { step: "01", text: "Envía tu solicitud en /apply" },
         { step: "02", text: "IFA revisa tu perfil (máx. 48h)" },
-        { step: "03", text: "Si eres seleccionado, recibes tu enlace de pago para activar la membresía" },
+        { step: "03", text: "Si eres seleccionado, activa tu membresía de €20/mes" },
       ],
     },
     testimonials: {
-      label: "Voces de Luchadores",
-      heading: "Lo Que Dicen los Miembros",
+      label: "Lo que necesitan los luchadores hoy",
+      heading: "Lo que necesitan los luchadores hoy",
       items: [
-        { quote: "Antes de IFA, firmaba contratos que no entendía. Ahora tengo personas en mi esquina que realmente luchan por mí fuera del ring.", name: "Marco R.", record: "18-3-0", country: "Italia 🇮🇹" },
-        { quote: "IFA me consiguió tres combates internacionales en un año. Mi récord pasó de local a clasificado mundial. Esto es lo real.", name: "Aisha K.", record: "12-1-0", country: "Nigeria 🇳🇬" },
-        { quote: "Las conexiones con patrocinadores solas pagaron mi membresía diez veces. Todo luchador serio debería estar registrado en IFA.", name: "Tomás V.", record: "22-4-1", country: "Mexico 🇲🇽" },
+        { quote: "Los luchadores necesitan más que peleas. Necesitan estructura, protección y acceso." },
+        { quote: "La visibilidad, los sponsors y la orientación profesional pueden cambiar la dirección de la carrera de un luchador." },
+        { quote: "La oportunidad correcta en el momento correcto puede definirlo todo." },
       ],
     },
     liveOpps: {
-      label: "En Vivo en IFA",
-      heading: "Oportunidades Abiertas",
-      subheading: "Una selección de oportunidades de pelea activas disponibles para miembros de IFA ahora mismo.",
-      cta: "Aplica para desbloquear todas las oportunidades",
+      label: "Oportunidades para Miembros",
+      heading: "Oportunidades para miembros",
+      subheading: "Una selección de oportunidades activas disponibles para miembros de IFA. Únete para desbloquear acceso completo.",
+      ctaApply: "Desbloquea acceso completo con la Membresía IFA",
+      ctaUnlock: "Activa tu Membresía para Acceder a Oportunidades",
+      ctaDashboard: "Ver Todas las Oportunidades",
       statusOpen: "Abierta",
       statusScouting: "Scouting",
       statusRecruiting: "Buscando luchadores",
@@ -473,35 +515,20 @@ const T = {
   },
 };
 
-export type Translations = typeof T.en;
+export type TranslationShape = typeof T.en;
 
 const LanguageContext = createContext<{
   lang: Lang;
+  t: TranslationShape;
   setLang: (l: Lang) => void;
-  t: Translations;
-}>({
-  lang: "en",
-  setLang: () => {},
-  t: T.en,
-});
+}>({ lang: "en", t: T.en, setLang: () => {} });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => {
-    try {
-      const saved = localStorage.getItem("ifa-lang");
-      return saved === "es" ? "es" : "en";
-    } catch {
-      return "en";
-    }
-  });
-
-  const setLang = useCallback((l: Lang) => {
-    try { localStorage.setItem("ifa-lang", l); } catch {}
-    setLangState(l);
-  }, []);
-
+  const [lang, setLangState] = useState<Lang>("en");
+  const setLang = useCallback((l: Lang) => setLangState(l), []);
+  const t = T[lang] as TranslationShape;
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t: T[lang] }}>
+    <LanguageContext.Provider value={{ lang, t, setLang }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -511,22 +538,20 @@ export function useLanguage() {
   return useContext(LanguageContext);
 }
 
-export function LangSwitcher({ className = "" }: { className?: string }) {
+export function LangSwitcher() {
   const { lang, setLang } = useLanguage();
   return (
-    <div className={`flex items-center gap-1 font-heading font-bold text-xs uppercase tracking-wider ${className}`}>
+    <div className="flex items-center gap-1 text-xs font-heading uppercase tracking-widest">
       <button
         onClick={() => setLang("en")}
-        className={`transition-colors ${lang === "en" ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        aria-label="Switch to English"
+        className={lang === "en" ? "text-primary font-bold" : "text-muted-foreground hover:text-white transition-colors"}
       >
         EN
       </button>
-      <span className="text-muted-foreground/40 select-none">|</span>
+      <span className="text-muted-foreground">|</span>
       <button
         onClick={() => setLang("es")}
-        className={`transition-colors ${lang === "es" ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        aria-label="Cambiar a Español"
+        className={lang === "es" ? "text-primary font-bold" : "text-muted-foreground hover:text-white transition-colors"}
       >
         ES
       </button>

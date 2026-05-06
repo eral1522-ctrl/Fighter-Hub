@@ -40,7 +40,7 @@ export default function DashboardPage() {
   const qc = useQueryClient();
 
   const isPaid = stats?.paymentStatus === "paid";
-  const membershipCta = stats?.paymentLink || "https://wa.me/34603304636";
+  const membershipCta = stats?.paymentLink || "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
   // Filter state
   const [sportFilter, setSportFilter] = useState("all");

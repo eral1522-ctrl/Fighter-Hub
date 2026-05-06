@@ -1,0 +1,246 @@
+Update the IFA website with the following changes.
+
+IMPORTANT:
+Do not make false claims.
+Do not say that Canelo Alvarez, Terence Crawford, Tyson Fury, Junior Dos Santos or any famous athlete supports, endorses, joined or gave an opinion about IFA unless there is explicit proof.
+Do not create fake testimonials from real athletes.
+Use them only as inspiration for the visual direction, or use licensed/placeholder combat sports images.
+
+====================================
+1. UPDATE MEMBERSHIP PAYMENT LINK
+====================================
+
+Replace every current membership payment CTA that goes to WhatsApp with this Stripe payment link:
+
+https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05
+
+Buttons that should use this link:
+- Complete Membership
+- Activate Membership
+- Unlock Full Access
+- Join IFA
+- Pay Membership
+- Any €20/month membership CTA
+
+Open the Stripe link in a new tab.
+
+Keep /apply buttons pointing to /apply when the user has not registered yet.
+
+Logic:
+- Public visitors: Join IFA goes to /apply
+- Accepted/registered but not paid users: Complete Membership goes to Stripe link
+- Paid users: Full access
+
+====================================
+2. MAKE HOMEPAGE MORE VISUAL AND IMPACTFUL
+====================================
+
+Improve the homepage so it feels like a serious global combat sports association.
+
+Make it bigger, more visual, more premium and more emotional.
+
+The homepage should clearly explain why fighters should join IFA.
+
+Add a large section after the hero:
+
+English title:
+Why Join IFA?
+
+Spanish title:
+¿Por qué unirte a IFA?
+
+Benefits:
+
+English:
+- Access international fight opportunities
+- Unlock sponsor and brand opportunities
+- Build a professional fighter profile
+- Receive career support and guidance
+- Improve contract awareness
+- Gain visibility with promoters and matchmakers
+- Join a global fighter network
+- Protect your professional position
+
+Spanish:
+- Accede a oportunidades internacionales de pelea
+- Desbloquea oportunidades con sponsors y marcas
+- Crea un perfil profesional de luchador
+- Recibe apoyo y orientación profesional
+- Mejora tu conocimiento contractual
+- Gana visibilidad ante promotores y matchmakers
+- Únete a una red global de luchadores
+- Protege tu posición profesional
+
+Make this section very visual:
+- large cards
+- icons
+- gold accents
+- dark premium styling
+- strong spacing
+- mobile first
+
+====================================
+3. ADD POWERFUL HERO COPY
+====================================
+
+Update hero if needed.
+
+English:
+Headline:
+Fighters are not alone anymore.
+
+Subheadline:
+IFA gives fighters structure, visibility and access. Join the International Fighters Association to unlock fight opportunities, sponsors, career support and a global combat sports network.
+
+Spanish:
+Headline:
+Los luchadores ya no están solos.
+
+Subheadline:
+IFA da estructura, visibilidad y acceso a los luchadores. Únete a la International Fighters Association para desbloquear oportunidades de pelea, sponsors, apoyo profesional y una red global de deportes de combate.
+
+CTA 1:
+Apply to Join IFA / Aplicar para unirme a IFA
+
+CTA 2:
+View Member Benefits / Ver beneficios
+
+====================================
+4. ADD ELITE FIGHTER INSPIRATION SECTION
+====================================
+
+Create a section called:
+
+English:
+Built for the modern fighter
+
+Spanish:
+Creada para el luchador moderno
+
+Text English:
+The new generation of combat sports is not only about fighting. It is about protection, visibility, sponsors, media, contracts and international opportunities. IFA is built for fighters who want to manage their careers with a professional structure.
+
+Text Spanish:
+La nueva generación de los deportes de combate no trata solo de pelear. Trata de protección, visibilidad, sponsors, medios, contratos y oportunidades internacionales. IFA está creada para luchadores que quieren gestionar su carrera con una estructura profesional.
+
+Visual direction:
+Use premium combat sports imagery inspired by elite boxing and MMA.
+Do not use photos of famous fighters unless the assets are licensed or already legally available in the project.
+Do not imply endorsement by any athlete.
+Do not write testimonials from Canelo Alvarez, Terence Crawford, Tyson Fury, Junior Dos Santos or any other real athlete.
+
+====================================
+5. ADD TESTIMONIAL STYLE SECTION WITHOUT FAKE NAMES
+====================================
+
+Add a section:
+
+English title:
+What fighters need today
+
+Spanish title:
+Lo que necesitan los luchadores hoy
+
+Create 3 anonymous testimonial-style cards, clearly generic:
+
+Card 1:
+English:
+"Fighters need more than fights. They need structure, protection and access."
+Spanish:
+"Los luchadores necesitan más que peleas. Necesitan estructura, protección y acceso."
+
+Card 2:
+English:
+"Visibility, sponsors and career guidance can change the direction of a fighter’s career."
+Spanish:
+"La visibilidad, los sponsors y la orientación profesional pueden cambiar la dirección de la carrera de un luchador."
+
+Card 3:
+English:
+"The right opportunity at the right time can define everything."
+Spanish:
+"La oportunidad correcta en el momento correcto puede definirlo todo."
+
+Do not attribute these quotes to real fighters.
+
+====================================
+6. ADD PUBLIC OPPORTUNITY PREVIEW
+====================================
+
+Add a homepage section showing a preview of 6 opportunities.
+
+Title English:
+Member Opportunities
+
+Title Spanish:
+Oportunidades para miembros
+
+Show only:
+- Title
+- Country
+- Sport
+- Weight class
+- Status
+
+Do not show purse publicly.
+
+CTA:
+Unlock full access with IFA Membership
+Desbloquea acceso completo con la Membresía IFA
+
+CTA link:
+If user is not logged in: /apply
+If user is logged in but not paid: Stripe link
+If user is paid: /dashboard
+
+====================================
+7. LANGUAGE SUPPORT
+====================================
+
+Everything must work with EN / ES switcher.
+
+Do not show English and Spanish at the same time.
+Only show selected language.
+
+Use "luchadores" in Spanish, not "fighters".
+
+====================================
+8. DESIGN
+====================================
+
+Make the homepage:
+- more visual
+- more premium
+- more powerful
+- more global
+- more association-level
+- less empty
+- better centered
+- balanced margins left and right
+
+Keep:
+- dark background
+- gold accents
+- boxing / MMA premium atmosphere
+- strong typography
+- mobile first layout
+
+====================================
+9. DO NOT BREAK
+====================================
+
+Do not break:
+- /apply
+- dashboard
+- admin panel
+- payment status
+- paywall
+- language switcher
+- login
+- opportunity applications
+
+After completion, explain:
+- which CTA buttons now go to Stripe
+- what homepage sections were added
+- how to change images later
+- how to edit benefits text later
