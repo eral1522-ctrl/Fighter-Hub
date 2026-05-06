@@ -1,11 +1,12 @@
 import nodemailer from "nodemailer";
 import { logger } from "./logger";
 
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-const SMTP_FROM = process.env.SMTP_FROM || "IFA – International Fighters Association <no-reply@ifa-fighters.org>";
+// Trim all SMTP variables to remove accidental whitespace/newlines
+const SMTP_HOST = (process.env.SMTP_HOST ?? "").trim() || undefined;
+const SMTP_PORT = parseInt((process.env.SMTP_PORT ?? "587").trim(), 10);
+const SMTP_USER = (process.env.SMTP_USER ?? "").trim() || undefined;
+const SMTP_PASS = (process.env.SMTP_PASS ?? "").trim() || undefined;
+const SMTP_FROM = (process.env.SMTP_FROM ?? "").trim() || "IFA – International Fighters Association <no-reply@ifa-fighters.org>";
 
 export type SmtpErrorType =
   | "Missing SMTP variable"
@@ -75,21 +76,76 @@ function sanitizeError(err: unknown): string {
   return msg;
 }
 
-function createTransport() {
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+function buildTransport(authMethod: "LOGIN" | "PLAIN") {
   const secure = SMTP_PORT === 465;
-  logger.info(
-    { host: SMTP_HOST, port: SMTP_PORT, secure },
-    "Using SMTP config",
-  );
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
-    secure,                        // true on 465 (implicit TLS), false on 587 (STARTTLS)
+    secure,                        // true = implicit TLS (465), false = STARTTLS (587)
     requireTLS: SMTP_PORT === 587, // enforce STARTTLS upgrade on port 587
+    authMethod,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
-    tls: { rejectUnauthorized: false }, // accept self-signed / IONOS certs
+    tls: { rejectUnauthorized: false }, // tolerate IONOS / self-signed certs
   });
+}
+
+/**
+ * Returns a verified nodemailer transporter.
+ * Tries LOGIN first; falls back to PLAIN if auth fails.
+ * Throws SmtpDeliveryError with the exact server message on failure.
+ */
+async function getVerifiedTransport(): Promise<nodemailer.Transporter> {
+  const secure = SMTP_PORT === 465;
+
+  for (const authMethod of ["LOGIN", "PLAIN"] as const) {
+    const transport = buildTransport(authMethod);
+
+    logger.info(
+      {
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure,
+        authMethod,
+        userLength: SMTP_USER?.length ?? 0,
+        passLength: SMTP_PASS?.length ?? 0,
+        from: SMTP_FROM,
+      },
+      "Using SMTP config",
+    );
+
+    try {
+      await transport.verify();
+      logger.info({ authMethod }, "SMTP verify() succeeded");
+      return transport;
+    } catch (err) {
+      const errorType = classifySmtpError(err);
+      const msg = sanitizeError(err);
+      logger.warn({ authMethod, errorType, err: msg }, "SMTP verify() failed");
+
+      // Only retry on auth failure; propagate all other errors immediately
+      if (errorType !== "Authentication failed") {
+        throw new SmtpDeliveryError(msg, errorType);
+      }
+      // If this was the last method, throw
+      if (authMethod === "PLAIN") {
+        throw new SmtpDeliveryError(msg, "Authentication failed");
+      }
+      // Otherwise loop to try PLAIN
+    }
+  }
+
+  // Unreachable, but satisfies TypeScript
+  throw new SmtpDeliveryError("No auth method succeeded", "Authentication failed");
+}
+
+/** Verifies connection then sends. Throws SmtpDeliveryError on any failure. */
+async function deliver(opts: nodemailer.SendMailOptions) {
+  const transport = await getVerifiedTransport();
+  try {
+    await transport.sendMail(opts);
+  } catch (err) {
+    throw new SmtpDeliveryError(sanitizeError(err), classifySmtpError(err));
+  }
 }
 
 function header() {
@@ -109,15 +165,6 @@ function footer() {
   `;
 }
 
-/** Throws a SmtpDeliveryError with sanitized message and classified error type. */
-async function deliver(transport: nodemailer.Transporter, opts: nodemailer.SendMailOptions) {
-  try {
-    await transport.sendMail(opts);
-  } catch (err) {
-    const errorType = classifySmtpError(err);
-    throw new SmtpDeliveryError(sanitizeError(err), errorType);
-  }
-}
 
 /** Escapes user-provided text for safe interpolation into HTML email bodies. */
 function esc(value: string): string {
@@ -130,8 +177,7 @@ function esc(value: string): string {
 }
 
 export async function sendApplicationConfirmation(details: ApplicationDetails): Promise<void> {
-  const transport = createTransport();
-  if (!transport) return; // silently skip — confirmation is best-effort
+  if (!getSmtpDiagnostics().configured) return; // silently skip — confirmation is best-effort
 
   const fieldRow = (label: string, value: string) => `
     <tr>
@@ -179,7 +225,7 @@ export async function sendApplicationConfirmation(details: ApplicationDetails): 
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to: details.email,
     subject: "IFA Application Received / Solicitud Recibida",
@@ -201,8 +247,7 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
   const adminEmail = process.env.ADMIN_EMAIL;
   if (!adminEmail) return; // silently skip — ADMIN_EMAIL not configured
 
-  const transport = createTransport();
-  if (!transport) return; // silently skip — SMTP not configured
+  if (!getSmtpDiagnostics().configured) return; // silently skip — SMTP not configured
 
   const fieldRow = (label: string, value: string) => `
     <tr>
@@ -243,7 +288,7 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to: adminEmail,
     subject: `IFA – New Application: ${details.name}`,
@@ -266,7 +311,6 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
     );
   }
 
-  const transport = createTransport()!;
   const html = `
 <!DOCTYPE html>
 <html>
@@ -310,7 +354,7 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to,
     subject: "IFA Membership Payment Link / Enlace de Pago IFA",
@@ -319,8 +363,7 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
 }
 
 export async function sendApplicationApproved(name: string, email: string): Promise<void> {
-  const transport = createTransport();
-  if (!transport) return; // silently skip — best-effort
+  if (!getSmtpDiagnostics().configured) return; // silently skip — best-effort
 
   const loginUrl = esc(`${process.env.APP_URL || "https://ifa-fighters.org"}/sign-in`);
 
@@ -356,7 +399,7 @@ export async function sendApplicationApproved(name: string, email: string): Prom
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to: email,
     subject: "IFA Application Approved / Solicitud Aprobada",
@@ -365,8 +408,7 @@ export async function sendApplicationApproved(name: string, email: string): Prom
 }
 
 export async function sendApplicationRejected(name: string, email: string): Promise<void> {
-  const transport = createTransport();
-  if (!transport) return; // silently skip — best-effort
+  if (!getSmtpDiagnostics().configured) return; // silently skip — best-effort
 
   const html = `
 <!DOCTYPE html>
@@ -397,7 +439,7 @@ export async function sendApplicationRejected(name: string, email: string): Prom
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to: email,
     subject: "IFA Application Update / Actualización de Solicitud",
@@ -420,7 +462,6 @@ export async function sendTestEmail(to: string): Promise<void> {
     );
   }
 
-  const transport = createTransport()!;
   const html = `
 <!DOCTYPE html>
 <html>
@@ -448,7 +489,7 @@ export async function sendTestEmail(to: string): Promise<void> {
 </body>
 </html>`.trim();
 
-  await deliver(transport, {
+  await deliver({
     from: SMTP_FROM,
     to,
     subject: "IFA Admin — Email Test",
