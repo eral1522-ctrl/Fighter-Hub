@@ -21,12 +21,15 @@ FightersRoom is a membership platform for professional boxers. Fighters register
 ## App Structure
 
 ### Pages
-- `/` — Landing page (hero, how it works, benefits, pricing plans, CTA)
+- `/` — Landing page (hero, why join, live API opportunities, membership CTA)
 - `/sign-in` — Clerk sign-in page (dark gold theme)
 - `/sign-up` — Clerk sign-up page
 - `/dashboard` — Fighter dashboard (opportunities, events, applications, stats)
 - `/profile` — Fighter profile form (create/edit)
 - `/admin` — Admin dashboard (manage fighters, opportunities, events, applications)
+- `/association` — What IFA Does (8 pillar sections + CTA)
+- `/statutes` — IFA Statutes (9 sections, bilingual)
+- `/president-message` — Erik Alonso president page (photo/message placeholder)
 
 ### Key Features
 1. **Landing page** with hero "Access fights, sponsors and global boxing opportunities."

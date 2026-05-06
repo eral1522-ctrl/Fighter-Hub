@@ -7,6 +7,7 @@ const T = {
     header: {
       login: "Log In",
       join: "Join IFA",
+      association: "Association",
     },
     layout: {
       dashboard: "My Dashboard",
@@ -143,10 +144,13 @@ const T = {
       statusScouting: "Scouting",
       statusRecruiting: "Recruiting",
       statusExpected: "Expected",
+      statusActive: "Active",
       sport: "Sport",
       weightClass: "Weight Class",
       country: "Country",
+      city: "City",
       purseHidden: "Members only",
+      noOpps: "Opportunities loading…",
     },
     contact: {
       label: "Get in Touch",
@@ -156,6 +160,10 @@ const T = {
     footer: {
       apply: "Apply",
       login: "Log In",
+      association: "Association",
+      statutes: "Statutes",
+      presidentMessage: "President Message",
+      contact: "Contact",
       copyright: `© ${new Date().getFullYear()} IFA – International Fighters Association`,
     },
     apply: {
@@ -257,11 +265,105 @@ const T = {
       alreadyApplied: "You have already applied to this opportunity.",
       appErrorFallback: "An unexpected error occurred. Please try again.",
     },
+    statutes: {
+      label: "Official Documents",
+      title: "IFA Statutes",
+      note: "These statutes are a working framework and may be updated as the association develops.",
+      sections: [
+        {
+          title: "1. Name and Purpose",
+          text: "The International Fighters Association (IFA) is a global independent membership association dedicated to representing and supporting professional and amateur combat sports athletes worldwide. IFA operates as a neutral body serving fighters across boxing, MMA, kickboxing, Muay Thai, and all related disciplines.",
+        },
+        {
+          title: "2. Mission",
+          text: "IFA's mission is to provide combat sports athletes with the structure, visibility, and resources they need to build sustainable and protected professional careers. We believe every fighter deserves access to legitimate opportunities, fair contracts, career guidance, and an international network that works in their interest.",
+        },
+        {
+          title: "3. Membership",
+          text: "IFA membership is open to any licensed or active professional or amateur combat sports athlete. Members must apply through the official IFA registration process and maintain an active membership subscription to access the full range of association services and opportunities.",
+        },
+        {
+          title: "4. Rights and Responsibilities",
+          text: "All IFA members have the right to access fight opportunities, sponsor connections, career support, and guidance provided by the association. Members are responsible for maintaining accurate profile information, conducting themselves professionally, and complying with IFA's code of conduct and ethical standards.",
+        },
+        {
+          title: "5. Governance",
+          text: "IFA is led by its President and a working council responsible for strategic direction, member services, and operational management. All governance decisions are made with the long-term welfare and interests of IFA members as the primary consideration.",
+        },
+        {
+          title: "6. Ethics and Integrity",
+          text: "IFA members are expected to maintain the highest standards of professionalism and integrity. IFA does not tolerate dishonest conduct, discrimination, or behavior that harms fellow members or the reputation of the association. Any breach of ethical standards may result in suspension or removal of membership.",
+        },
+        {
+          title: "7. Fighter Protection",
+          text: "IFA is committed to protecting the rights of all members. This includes fair representation in contract discussions, support in disputes with promoters or management, access to legal guidance, and advocacy for safe and fair working conditions across professional combat sports.",
+        },
+        {
+          title: "8. Opportunities and Services",
+          text: "IFA provides members with access to fight opportunities, sponsorship listings, event participation, professional profiles distributed to the combat sports industry, career support, and guidance on contracts and career management.",
+        },
+        {
+          title: "9. Amendments",
+          text: "These statutes represent the current working framework of IFA and may be revised as the association grows. Members will be informed of significant changes through official association communications.",
+        },
+      ],
+    },
+    association: {
+      label: "About IFA",
+      title: "What IFA Does",
+      intro: "IFA was built to solve a real problem: fighters have always been the most important people in combat sports, but also the most underrepresented. IFA exists to change that.",
+      sections: [
+        {
+          title: "Fighter Protection",
+          text: "IFA works to ensure every member has access to legal guidance and fair representation. We stand with fighters in contract disputes, promoter negotiations, and any situation where their professional rights are at stake. No fighter should face these challenges alone.",
+        },
+        {
+          title: "Access to Opportunities",
+          text: "IFA connects members with fight opportunities, international bouts, and competitive events across the world. Members receive priority access to listings before they go public, ensuring IFA fighters are always first in line for the best opportunities.",
+        },
+        {
+          title: "Sponsor Visibility",
+          text: "IFA promotes members to a network of brands and sponsors looking to partner with combat sports athletes. From gear deals to appearance fees and social content partnerships, IFA opens sponsorship doors that fighters could not access on their own.",
+        },
+        {
+          title: "Career Support",
+          text: "IFA provides career guidance, milestone advice, and direct support to members navigating the professional combat sports landscape. Our team helps fighters make informed decisions at every stage of their career.",
+        },
+        {
+          title: "Contract Awareness",
+          text: "Understanding contracts is critical for any professional fighter. IFA educates members on standard terms, red flags, and best practices so they can approach every agreement with confidence and protect their interests.",
+        },
+        {
+          title: "International Network",
+          text: "IFA connects fighters with promoters, gyms, managers, and fellow athletes across the world. Being part of IFA means being part of a global community that opens international doors and creates real career opportunities.",
+        },
+        {
+          title: "Professional Profile",
+          text: "Every IFA member receives a professional digital profile shared with the combat sports industry — promoters, matchmakers, sponsors, and media. Your profile is your calling card and your visibility tool.",
+        },
+        {
+          title: "Member Services",
+          text: "IFA members receive priority support, access to the member portal, fight and sponsor opportunity listings, event participation rights, and a direct line to IFA's operations team whenever they need it.",
+        },
+      ],
+      cta: "Apply to Join IFA",
+    },
+    presidentMessage: {
+      label: "Leadership",
+      title: "Message from the President",
+      name: "Erik Alonso",
+      role: "President, International Fighters Association",
+      photoLabel: "Photo of Erik Alonso",
+      photoPlaceholder: "Photo coming soon",
+      placeholder: "Message from Erik Alonso, President of IFA, coming soon.",
+      signaturePlaceholder: "Signature coming soon",
+    },
   },
   es: {
     header: {
       login: "Iniciar Sesión",
       join: "Unirme a IFA",
+      association: "Asociación",
     },
     layout: {
       dashboard: "Mi Panel",
@@ -398,10 +500,13 @@ const T = {
       statusScouting: "Scouting",
       statusRecruiting: "Buscando luchadores",
       statusExpected: "Prevista",
+      statusActive: "Activa",
       sport: "Deporte",
       weightClass: "Categoría de Peso",
       country: "País",
+      city: "Ciudad",
       purseHidden: "Solo miembros",
+      noOpps: "Cargando oportunidades…",
     },
     contact: {
       label: "Contáctanos",
@@ -411,6 +516,10 @@ const T = {
     footer: {
       apply: "Aplicar",
       login: "Iniciar Sesión",
+      association: "Asociación",
+      statutes: "Estatutos",
+      presidentMessage: "Mensaje del Presidente",
+      contact: "Contacto",
       copyright: `© ${new Date().getFullYear()} IFA – International Fighters Association`,
     },
     apply: {
@@ -511,6 +620,99 @@ const T = {
       notPaidApply: "Activa tu Membresía IFA para aplicar a oportunidades.",
       alreadyApplied: "Ya has aplicado a esta oportunidad.",
       appErrorFallback: "Ocurrió un error inesperado. Por favor inténtalo de nuevo.",
+    },
+    statutes: {
+      label: "Documentos Oficiales",
+      title: "Estatutos de IFA",
+      note: "Estos estatutos son un marco de trabajo y podrán actualizarse a medida que la asociación se desarrolle.",
+      sections: [
+        {
+          title: "1. Nombre y finalidad",
+          text: "La International Fighters Association (IFA) es una asociación de membresía global e independiente dedicada a representar y apoyar a atletas profesionales y amateur de deportes de combate en todo el mundo. IFA opera como un organismo neutral al servicio de luchadores en boxeo, MMA, kickboxing, Muay Thai y todas las disciplinas relacionadas.",
+        },
+        {
+          title: "2. Misión",
+          text: "La misión de IFA es proporcionar a los atletas de deportes de combate la estructura, visibilidad y recursos que necesitan para construir carreras profesionales sostenibles y protegidas. Creemos que todo luchador merece acceso a oportunidades legítimas, contratos justos, orientación profesional y una red internacional que trabaje en su interés.",
+        },
+        {
+          title: "3. Membresía",
+          text: "La membresía de IFA está abierta a cualquier atleta de deportes de combate profesional o amateur con licencia activa. Los miembros deben solicitar el ingreso a través del proceso oficial de registro de IFA y mantener una suscripción de membresía activa para acceder a todos los servicios y oportunidades de la asociación.",
+        },
+        {
+          title: "4. Derechos y responsabilidades",
+          text: "Todos los miembros de IFA tienen derecho a acceder a oportunidades de pelea, conexiones con sponsors, apoyo profesional y orientación proporcionada por la asociación. Los miembros son responsables de mantener información de perfil precisa, conducirse profesionalmente y cumplir con el código de conducta y los estándares éticos de IFA.",
+        },
+        {
+          title: "5. Gobierno",
+          text: "IFA está liderada por su Presidente y un consejo de trabajo responsable de la dirección estratégica, los servicios a miembros y la gestión operativa. Todas las decisiones de gobierno se toman teniendo como prioridad el bienestar e intereses a largo plazo de los miembros de IFA.",
+        },
+        {
+          title: "6. Ética e integridad",
+          text: "Se espera que los miembros de IFA mantengan los más altos estándares de profesionalismo e integridad. IFA no tolera conductas deshonestas, discriminación ni comportamientos que dañen a otros miembros o la reputación de la asociación. Cualquier incumplimiento de los estándares éticos puede resultar en la suspensión o eliminación de la membresía.",
+        },
+        {
+          title: "7. Protección del luchador",
+          text: "IFA está comprometida con la protección de los derechos de todos sus miembros. Esto incluye representación justa en negociaciones contractuales, apoyo en disputas con promotores o agentes, acceso a orientación legal y defensa de condiciones de trabajo seguras y justas en los deportes de combate profesionales.",
+        },
+        {
+          title: "8. Oportunidades y servicios",
+          text: "IFA proporciona a sus miembros acceso a oportunidades de pelea, listados de patrocinio, participación en eventos, perfiles profesionales distribuidos en la industria de los deportes de combate, apoyo profesional y orientación sobre contratos y gestión de carrera.",
+        },
+        {
+          title: "9. Modificaciones",
+          text: "Estos estatutos representan el marco de trabajo actual de IFA y podrán revisarse a medida que la asociación crezca. Los miembros serán informados de cambios significativos a través de las comunicaciones oficiales de la asociación.",
+        },
+      ],
+    },
+    association: {
+      label: "Sobre IFA",
+      title: "Qué hace IFA",
+      intro: "IFA fue creada para resolver un problema real: los luchadores siempre han sido las personas más importantes en los deportes de combate, pero también las más infrarrepresentadas. IFA existe para cambiar eso.",
+      sections: [
+        {
+          title: "Protección del luchador",
+          text: "IFA trabaja para garantizar que cada miembro tenga acceso a orientación legal y representación justa. Apoyamos a los luchadores en disputas contractuales, negociaciones con promotores y cualquier situación en la que sus derechos profesionales estén en juego. Ningún luchador debería enfrentar estos desafíos solo.",
+        },
+        {
+          title: "Acceso a oportunidades",
+          text: "IFA conecta a los miembros con oportunidades de pelea, combates internacionales y eventos competitivos en todo el mundo. Los miembros reciben acceso prioritario a los listados antes de que sean públicos, asegurando que los luchadores de IFA siempre estén en primera fila para las mejores oportunidades.",
+        },
+        {
+          title: "Visibilidad ante sponsors",
+          text: "IFA promociona a sus miembros ante una red de marcas y sponsors que buscan asociarse con atletas de deportes de combate. Desde acuerdos de material hasta cachés por aparición y colaboraciones de contenido en redes sociales, IFA abre puertas de patrocinio que los luchadores no podrían acceder por sí solos.",
+        },
+        {
+          title: "Apoyo profesional",
+          text: "IFA proporciona orientación profesional, consejos en momentos clave y apoyo directo a los miembros que navegan el panorama profesional de los deportes de combate. Nuestro equipo ayuda a los luchadores a tomar decisiones informadas en cada etapa de su carrera.",
+        },
+        {
+          title: "Conocimiento contractual",
+          text: "Entender los contratos es fundamental para cualquier luchador profesional. IFA educa a sus miembros sobre términos estándar, señales de alerta y mejores prácticas para que puedan abordar cada acuerdo con confianza y proteger sus intereses.",
+        },
+        {
+          title: "Red internacional",
+          text: "IFA conecta a los luchadores con promotores, gimnasios, agentes y compañeros atletas de todo el mundo. Ser parte de IFA significa ser parte de una comunidad global que abre puertas internacionales y crea oportunidades reales de carrera.",
+        },
+        {
+          title: "Perfil profesional",
+          text: "Cada miembro de IFA recibe un perfil digital profesional compartido con la industria de los deportes de combate — promotores, matchmakers, sponsors y medios de comunicación. Tu perfil es tu tarjeta de presentación y tu herramienta de visibilidad.",
+        },
+        {
+          title: "Servicios para miembros",
+          text: "Los miembros de IFA reciben soporte prioritario, acceso al portal de miembros, listados de oportunidades de pelea y patrocinio, derechos de participación en eventos y una línea directa con el equipo de operaciones de IFA cuando lo necesiten.",
+        },
+      ],
+      cta: "Aplicar para unirme a IFA",
+    },
+    presidentMessage: {
+      label: "Liderazgo",
+      title: "Mensaje del Presidente",
+      name: "Erik Alonso",
+      role: "Presidente, International Fighters Association",
+      photoLabel: "Foto de Erik Alonso",
+      photoPlaceholder: "Foto próximamente",
+      placeholder: "Mensaje de Erik Alonso, Presidente de IFA, próximamente.",
+      signaturePlaceholder: "Firma próximamente",
     },
   },
 };

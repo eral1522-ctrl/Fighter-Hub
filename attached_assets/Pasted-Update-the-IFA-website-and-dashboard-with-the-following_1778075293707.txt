@@ -1,0 +1,299 @@
+Update the IFA website and dashboard with the following changes.
+
+IMPORTANT:
+Do not break the apply form.
+Do not break login.
+Do not break admin panel.
+Do not break paywall.
+Do not break language switcher.
+Keep the same dark premium boxing design.
+
+====================================
+1. REPLACE HOMEPAGE HERO IMAGE
+====================================
+
+Problem:
+The current homepage hero/visual section image shows yellow pants or a visual that does not feel clearly boxing related.
+
+Replace it with a stronger boxing/combat sports image.
+
+Requirements:
+- Use a dark premium boxing image
+- Gloves, ring, fighter silhouette, training, fight night or boxing arena atmosphere
+- No random yellow clothing
+- No celebrity images unless legally available
+- Keep the same dark overlay
+- Keep text readable
+- Keep mobile responsive
+
+====================================
+2. FIX IFA LOGO CLICK IN DASHBOARD
+====================================
+
+Problem:
+In the dashboard, clicking the IFA logo does not go back to the homepage.
+
+Fix:
+- On dashboard
+- On profile
+- On admin
+- On applications pages
+
+Clicking the IFA logo must navigate to:
+/ 
+
+It should always take the user back to the public homepage.
+
+Do not log the user out.
+
+====================================
+3. MATCH PUBLIC OPPORTUNITIES WITH DASHBOARD OPPORTUNITIES
+====================================
+
+Problem:
+The opportunities shown on the public homepage before registration are not the same as the opportunities inside the dashboard. This can look suspicious.
+
+Fix:
+- The public homepage opportunity preview must pull from the same database/API as the dashboard opportunities.
+- Show 6 real opportunities from the database.
+- Do not use separate hardcoded public opportunity cards if they do not match the dashboard.
+
+Public preview should show:
+- Title
+- Country
+- City
+- Sport
+- Weight class
+- Status
+
+Do not show purse publicly.
+
+CTA:
+"Apply to unlock full opportunities"
+
+Spanish:
+"Aplica para desbloquear todas las oportunidades"
+
+CTA link:
+/apply
+
+====================================
+4. ADD PAST OPPORTUNITIES TO DASHBOARD
+====================================
+
+Problem:
+Past opportunities section currently says:
+"No past opportunities to display."
+
+Fix:
+- Make Past Opportunities display the 20 closed/completed opportunities from the database.
+- Past statuses:
+closed
+completed
+
+Upcoming statuses:
+open
+scouting
+recruiting
+expected
+active if currently used
+
+Make sure filters do not accidentally hide past opportunities.
+
+Past opportunity cards should show:
+- Title
+- Country
+- City
+- Sport
+- Weight class
+- Status
+- Purse only if user is paid
+- If user is not paid, blur/hide purse using existing paywall logic
+
+====================================
+5. ADD ASSOCIATION STATUTES PAGE
+====================================
+
+Add a new public page:
+
+Route:
+/statutes
+
+English title:
+IFA Statutes
+
+Spanish title:
+Estatutos de IFA
+
+Purpose:
+This page explains the basic institutional framework of the International Fighters Association.
+
+Add placeholder professional content with sections:
+
+English:
+1. Name and Purpose
+2. Mission
+3. Membership
+4. Rights and Responsibilities
+5. Governance
+6. Ethics and Integrity
+7. Fighter Protection
+8. Opportunities and Services
+9. Amendments
+
+Spanish:
+1. Nombre y finalidad
+2. Misión
+3. Membresía
+4. Derechos y responsabilidades
+5. Gobierno
+6. Ética e integridad
+7. Protección del luchador
+8. Oportunidades y servicios
+9. Modificaciones
+
+Important:
+Keep wording general and non-legal.
+Add note:
+"These statutes are a working framework and may be updated as the association develops."
+
+Spanish:
+"Estos estatutos son un marco de trabajo y podrán actualizarse a medida que la asociación se desarrolle."
+
+Add footer link:
+Statutes / Estatutos
+
+====================================
+6. ADD ABOUT THE ASSOCIATION PAGE
+====================================
+
+Add a new public page:
+
+Route:
+/association
+
+English title:
+What IFA Does
+
+Spanish title:
+Qué hace IFA
+
+This page must explain what the association does and the benefits of joining.
+
+Sections:
+
+English:
+- Fighter protection
+- Access to opportunities
+- Sponsor visibility
+- Career support
+- Contract awareness
+- International network
+- Professional profile
+- Member services
+
+Spanish:
+- Protección del luchador
+- Acceso a oportunidades
+- Visibilidad ante sponsors
+- Apoyo profesional
+- Conocimiento contractual
+- Red internacional
+- Perfil profesional
+- Servicios para miembros
+
+Add strong CTA:
+Apply to Join IFA
+
+Spanish:
+Aplicar para unirme a IFA
+
+CTA link:
+/apply
+
+Add this page to the main navigation:
+Association / Asociación
+
+====================================
+7. ADD PRESIDENT MESSAGE PAGE
+====================================
+
+Add a new public page:
+
+Route:
+/president-message
+
+English title:
+Message from the President
+
+Spanish title:
+Mensaje del Presidente
+
+President:
+Erik Alonso
+
+For now, add placeholder section:
+
+English:
+"Message from Erik Alonso, President of IFA, coming soon."
+
+Spanish:
+"Mensaje de Erik Alonso, Presidente de IFA, próximamente."
+
+Add placeholder area for:
+- President photo
+- President signature
+- Long text message
+
+Add footer link:
+President Message / Mensaje del Presidente
+
+Keep layout premium, institutional and editorial.
+
+====================================
+8. FOOTER LINKS
+====================================
+
+At the bottom of the website, add footer links:
+
+- Association / Asociación → /association
+- Statutes / Estatutos → /statutes
+- President Message / Mensaje del Presidente → /president-message
+- Contact / Contacto → contact section or /contact if exists
+
+Keep footer clean and premium.
+
+====================================
+9. LANGUAGE SUPPORT
+====================================
+
+All new pages must support EN / ES language switcher.
+
+Do not show both languages at the same time.
+Use "luchadores" in Spanish, not "fighters".
+
+====================================
+10. DESIGN REQUIREMENTS
+====================================
+
+All new pages must use:
+- same header
+- same footer
+- same dark premium style
+- same gold accents
+- same centered container system
+- strong spacing
+- mobile first layout
+
+====================================
+11. FINAL CHECK
+====================================
+
+After completion, explain:
+- which image was replaced
+- how logo navigation was fixed
+- how public opportunities now match dashboard opportunities
+- why past opportunities now display
+- where the new pages are located
+- how to edit statutes text later
+- how to add Erik Alonso photo and message later

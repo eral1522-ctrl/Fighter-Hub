@@ -15,6 +15,9 @@ import ProfilePage from "@/pages/profile";
 import AdminPage from "@/pages/admin";
 import ApplyPage from "@/pages/apply";
 import AdminApplicationsPage from "@/pages/admin-applications";
+import StatutesPage from "@/pages/statutes";
+import AssociationPage from "@/pages/association";
+import PresidentMessagePage from "@/pages/president-message";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -137,6 +140,9 @@ function Router() {
       <Route path="/admin"><ProtectedRoute component={AdminPage} /></Route>
       <Route path="/admin/applications"><ProtectedRoute component={AdminApplicationsPage} /></Route>
       <Route path="/apply" component={ApplyPage} />
+      <Route path="/statutes" component={StatutesPage} />
+      <Route path="/association" component={AssociationPage} />
+      <Route path="/president-message" component={PresidentMessagePage} />
       <Route component={NotFound} />
     </Switch>
   );
