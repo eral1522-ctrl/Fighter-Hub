@@ -336,25 +336,25 @@ export default function LandingPage() {
               <p className="text-muted-foreground text-lg">Our team is available to help fighters, promoters, and sponsors worldwide.</p>
             </div>
             <div className="flex flex-col sm:flex-row justify-center gap-6 max-w-2xl mx-auto">
-              <a href="mailto:contact@ifa-fighters.org" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href="mailto:info@fightersroom.com" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <Mail className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">Email</div>
-                  <div className="font-heading tracking-wide text-sm">contact@ifa-fighters.org</div>
+                  <div className="font-heading tracking-wide text-sm">info@fightersroom.com</div>
                 </div>
               </a>
-              <a href="https://instagram.com/ifafighters" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <Instagram className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">Instagram</div>
-                  <div className="font-heading tracking-wide text-sm">@ifafighters</div>
+                  <div className="font-heading tracking-wide text-sm">@fighters_room</div>
                 </div>
               </a>
-              <a href="https://wa.me/15550001234" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <MessageCircle className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">WhatsApp</div>
-                  <div className="font-heading tracking-wide text-sm">+1 555 000 1234</div>
+                  <div className="font-heading tracking-wide text-sm">+34 603 304 636</div>
                 </div>
               </a>
             </div>
