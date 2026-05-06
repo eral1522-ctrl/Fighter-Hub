@@ -1,0 +1,304 @@
+Pega esto en Replit para cerrar la web:
+
+```text
+FINAL IFA WEBSITE COMPLETION AUDIT AND FIXES
+
+Goal:
+Finish the IFA website so it is ready for public launch, member acquisition and paid membership conversion.
+
+IMPORTANT:
+Do not break:
+- login
+- apply form
+- dashboard
+- admin panel
+- language switcher
+- Stripe payment link
+- paywall
+- profile prefill
+- opportunities database
+
+Keep:
+- dark premium boxing/combat sports design
+- gold accents
+- mobile-first layout
+- EN/ES language switcher
+
+====================================
+1. FIX APPLY FORM
+====================================
+
+Audit and fix /apply form.
+
+Required fields:
+- Full name / ring name
+- Email
+- Country
+- Discipline
+- Weight class
+- Professional record
+- Short bio
+- WhatsApp or Instagram
+- BoxRec link if discipline = Boxing
+
+The form must not submit if required fields are empty.
+
+Fix all dropdown/select issues on mobile and desktop.
+
+Make sure all data saves correctly into fighter_applications.
+
+====================================
+2. REGISTRATION LOGIC
+====================================
+
+When a fighter submits /apply:
+
+- status = approved
+- payment_status = not_paid
+
+Everyone who registers is accepted into the IFA registration system.
+
+Only paid users unlock full access.
+
+Update success message:
+
+English:
+Your IFA registration has been received and your profile is now active in the International Fighters Association system.
+
+To become an official paying member and unlock full access to fight opportunities, sponsor opportunities, career support, member services and premium benefits, activate your €20/month membership.
+
+Spanish:
+Tu registro en IFA ha sido recibido y tu perfil ya está activo dentro del sistema de International Fighters Association.
+
+Para convertirte en miembro oficial de pago y desbloquear acceso completo a oportunidades de pelea, sponsors, apoyo profesional, servicios para miembros y beneficios premium, activa tu membresía de €20/mes.
+
+Buttons:
+- Create Account / Log In → /sign-in
+- Activate Membership → https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05
+
+====================================
+3. FIX HOMEPAGE IMAGES
+====================================
+
+Replace all non-boxing/lifestyle images.
+
+Remove:
+- yellow pants image
+- woman/lifestyle image
+- random fashion visuals
+
+Use only:
+- boxing gloves
+- boxing ring
+- fighter silhouette
+- boxer wrapping hands
+- boxing gym
+- fight night atmosphere
+- MMA/combat sports training imagery
+
+Keep dark overlay and readability.
+
+====================================
+4. HOME PAGE FINAL STRUCTURE
+====================================
+
+Homepage sections should be:
+
+1. Hero
+Headline:
+The Global Home of Combat Sports
+
+Subheadline:
+IFA represents luchadores and fighters across boxing, MMA, kickboxing, Muay Thai and combat sports worldwide.
+
+CTA:
+Apply to Join IFA
+Learn More
+
+2. Combat Sports Covered
+Boxing, MMA, Kickboxing, Muay Thai, Bare Knuckle, Grappling
+
+3. Why Join IFA
+Cards:
+- Fighter protection
+- International opportunities
+- Sponsor visibility
+- Career support
+- Contract awareness
+- Global network
+- Professional profile
+- Events and member services
+
+4. Member Opportunities Preview
+Pull 6 opportunities from the same database/API as dashboard.
+Show:
+- title
+- country
+- city
+- sport
+- weight class
+- status
+Do not show purse publicly.
+CTA:
+Apply to unlock full opportunities → /apply
+
+5. Social Proof
+Use placeholder federation logos, flag grid and generic testimonials.
+Do not use fake real athlete endorsements.
+
+6. Final CTA
+Apply to Join IFA
+
+====================================
+5. DASHBOARD + PAYWALL
+====================================
+
+Registered but not paid:
+- can access dashboard
+- can see preview opportunities
+- purse blurred or hidden
+- cannot apply to opportunities
+- sees Activate Membership CTA linked to Stripe
+
+Paid users:
+- can see purse
+- can apply to opportunities
+- can access premium services
+
+Make sure public opportunity previews match dashboard opportunities.
+
+Past Opportunities must display closed/completed opportunities.
+
+====================================
+6. PROFILE PREFILL
+====================================
+
+When a user logs in with the same email used in /apply:
+
+- My Profile must prefill from registration data
+- user should not re-enter the same information
+- do not overwrite edited profile fields unless empty
+
+Fields:
+- name
+- email
+- country
+- city
+- discipline
+- weight class
+- record
+- BoxRec link
+- bio
+- Instagram
+- WhatsApp
+
+====================================
+7. PUBLIC INSTITUTIONAL PAGES
+====================================
+
+Ensure these pages exist and are public:
+
+/association
+/statutes
+/president-message
+/about
+/contact
+/privacy-policy
+/legal-notice
+/news-events
+/membership
+
+They must:
+- not require login
+- support EN/ES
+- use same header/footer
+- be linked in footer
+
+====================================
+8. LEGAL + SEO
+====================================
+
+Create or fix:
+
+robots.txt:
+- allow all search engines
+- point to sitemap
+
+sitemap.xml:
+include all public pages using:
+https://fightersassociation.com
+
+SEO meta tags:
+Title:
+IFA – International Fighters Association | MMA, Boxing, Kickboxing & Combat Sports
+
+Meta description max 155 chars:
+IFA represents fighters across boxing, MMA, kickboxing, Muay Thai and combat sports worldwide through protection, opportunities and support.
+
+Add:
+- canonical
+- Open Graph
+- Twitter Card
+- og:image
+- favicon
+
+====================================
+9. FOOTER
+====================================
+
+Footer must include:
+
+- IFA logo
+- tagline
+- Association
+- Statutes
+- President Message
+- Membership
+- News & Events
+- Contact
+- Privacy Policy
+- Legal Notice
+- Instagram: https://instagram.com/fighters_room
+- Email: info@fightersroom.com
+- WhatsApp: https://wa.me/34603304636
+
+====================================
+10. LOGO NAVIGATION
+====================================
+
+Clicking IFA logo from:
+- dashboard
+- profile
+- admin
+- applications
+- public pages
+
+must go to:
+/ 
+
+It must not keep user stuck in dashboard.
+
+====================================
+11. FINAL QA
+====================================
+
+After completion, test and report:
+
+1. /apply form validation
+2. new registration status approved + not_paid
+3. Stripe membership link works
+4. dashboard paywall works
+5. paid vs unpaid access
+6. profile prefill works
+7. public pages work
+8. footer links work
+9. robots.txt and sitemap.xml work
+10. SEO meta tags exist
+11. homepage images are boxing/combat only
+
+After finishing, explain:
+- what was fixed
+- what files were changed
+- what still needs manual configuration if any
+- exact steps to test before launch
+```

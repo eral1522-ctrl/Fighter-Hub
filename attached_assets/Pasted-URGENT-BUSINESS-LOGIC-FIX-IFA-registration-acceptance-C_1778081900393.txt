@@ -1,0 +1,154 @@
+URGENT BUSINESS LOGIC FIX — IFA registration acceptance.
+
+Current problem:
+After submitting the form, the user receives a message that implies IFA will contact them later and that acceptance is conditional.
+
+Business rule:
+Everyone who registers is automatically accepted into IFA as a registered applicant/member profile.
+However, only users who pay the €20/month membership can access premium services, full opportunities, sponsors, applications and member benefits.
+
+====================================
+1. UPDATE APPLICATION STATUS LOGIC
+====================================
+
+When a user submits /apply:
+
+- automatically create the fighter application
+- automatically set status = approved
+- payment_status = not_paid
+
+Do not leave new applications as pending.
+
+Admin should still be able to review and edit applications, but default new registrations must be approved.
+
+====================================
+2. UPDATE SUCCESS MESSAGE AFTER /apply
+====================================
+
+Replace the current success message with this:
+
+ENGLISH:
+
+Title:
+REGISTRATION RECEIVED
+
+Body:
+"Your IFA registration has been received and your profile is now active in the International Fighters Association system.
+
+You are now registered with IFA.
+
+To become an official paying member and unlock full access to fight opportunities, sponsor opportunities, career support, member services and premium benefits, activate your €20/month membership."
+
+Secondary text:
+"You can now create your account, log in and complete your IFA member profile."
+
+Instagram:
+"Follow us on Instagram @fighters_room for the latest news and opportunities."
+
+Button 1:
+Create Account / Log In
+
+Button 2:
+Activate Membership
+
+====================================
+
+SPANISH:
+
+Title:
+REGISTRO RECIBIDO
+
+Body:
+"Tu registro en IFA ha sido recibido y tu perfil ya está activo dentro del sistema de International Fighters Association.
+
+Ya estás registrado en IFA.
+
+Para convertirte en miembro oficial de pago y desbloquear acceso completo a oportunidades de pelea, oportunidades con sponsors, apoyo profesional, servicios para miembros y beneficios premium, activa tu membresía de €20/mes."
+
+Secondary text:
+"Ahora puedes crear tu cuenta, iniciar sesión y completar tu perfil de miembro IFA."
+
+Instagram:
+"Síguenos en Instagram @fighters_room para ver las últimas noticias y oportunidades."
+
+Button 1:
+Crear cuenta / Iniciar sesión
+
+Button 2:
+Activar membresía
+
+====================================
+3. BUTTON LINKS
+====================================
+
+Create Account / Log In should link to:
+/sign-in
+
+Activate Membership should link to:
+https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05
+
+Open Stripe link in a new tab.
+
+====================================
+4. PAYWALL LOGIC
+====================================
+
+Registered but not paid users:
+- can log in
+- can access dashboard
+- can see preview opportunities
+- cannot see purse
+- cannot apply for opportunities
+- cannot access premium sponsor opportunities
+- must see CTA:
+"Activate Membership"
+
+Paid users:
+- full access
+- can see purse
+- can apply
+- can access premium benefits
+
+====================================
+5. ADMIN PANEL
+====================================
+
+New registrations should appear as:
+
+Status:
+Approved
+
+Payment:
+Not Paid
+
+Do not default new users to Pending.
+
+====================================
+6. LANGUAGE
+====================================
+
+In Spanish use:
+"luchadores"
+not:
+"fighters"
+
+Use formal, professional Spanish.
+
+====================================
+7. DO NOT BREAK
+====================================
+
+Do not break:
+- apply form
+- admin panel
+- dashboard
+- profile prefill
+- language switcher
+- Stripe link
+- opportunities paywall
+
+After completion, explain:
+- what the new default registration status is
+- what unpaid users can access
+- what paid users can access
+- how to test with a new registration

@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useSubmitFighterApplication } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
@@ -90,22 +90,29 @@ export default function ApplyPage() {
       <main className="flex-1">
         {submitted ? (
           /* Confirmation State */
-          <div className="container py-20 flex flex-col items-center justify-center text-center max-w-lg mx-auto min-h-[70vh]">
+          <div className="container py-20 flex flex-col items-center justify-center text-center max-w-xl mx-auto min-h-[70vh]">
             <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center mb-6">
               <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
             <h1 className="font-heading text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">{t.apply.successTitle}</h1>
-            <div className="h-1 w-20 bg-primary mx-auto mb-6" />
-            <p className="text-foreground text-base mb-4">{t.apply.successMsg}</p>
-            <p className="text-foreground/80 text-sm mb-4 border border-primary/30 bg-primary/5 rounded-md px-4 py-3">{(t.apply as any).successMsg2}</p>
-            <p className="text-muted-foreground text-sm mb-6">{(t.apply as any).successMsg3}</p>
-            <p className="text-muted-foreground text-xs mb-8">{t.apply.successNote}</p>
-            <Link href="/">
-              <Button variant="outline" className="font-heading uppercase tracking-wider">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                {t.apply.backBtn}
-              </Button>
-            </Link>
+            <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+            <p className="text-foreground/90 text-base leading-relaxed mb-4">{t.apply.successMsg}</p>
+            <p className="font-bold text-primary text-lg mb-5">{(t.apply as any).successMsg2}</p>
+            <p className="text-foreground/80 text-sm mb-8 border border-primary/30 bg-primary/5 rounded-md px-5 py-4 leading-relaxed">{(t.apply as any).successMsg3}</p>
+            <p className="text-muted-foreground text-sm mb-2">{t.apply.successNote}</p>
+            <p className="text-muted-foreground text-xs mb-10">{(t.apply as any).successInstagram}</p>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:justify-center">
+              <Link href="/sign-in">
+                <Button size="lg" className="w-full sm:w-auto font-heading uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
+                  {(t.apply as any).successBtn1}
+                </Button>
+              </Link>
+              <a href="https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-heading uppercase tracking-wider border-primary/40 text-primary hover:bg-primary/5">
+                  {(t.apply as any).successBtn2}
+                </Button>
+              </a>
+            </div>
           </div>
         ) : (
           <>

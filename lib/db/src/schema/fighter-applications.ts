@@ -17,7 +17,7 @@ export const fighterApplicationsTable = pgTable("fighter_applications", {
   record: text("record").notNull(),
   bio: text("bio"),
   // pending | approved | rejected
-  status: text("status").notNull().default("pending"),
+  status: text("status").notNull().default("approved"),
   adminNotes: text("admin_notes"),
   // not_paid | paid
   paymentStatus: text("payment_status").notNull().default("not_paid"),
