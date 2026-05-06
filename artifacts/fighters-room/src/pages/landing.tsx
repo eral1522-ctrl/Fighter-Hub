@@ -82,7 +82,7 @@ export default function LandingPage() {
         <section className="relative pt-32 pb-24 md:pt-52 md:pb-40 overflow-hidden border-b border-border min-h-[95vh] flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&q=80')" }}
+            style={{ backgroundImage: "url('https://images.stockcake.com/public/c/3/4/c346eb8f-60fa-47fb-a84b-3d1f7e5a98b2_large/boxing-ring-spotlight-stockcake.jpg')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/75 to-background" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent" />
@@ -156,7 +156,7 @@ export default function LandingPage() {
         <section className="py-24 md:py-36 border-b border-border relative overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517438476312-10d79c077509?w=1600&q=80')" }}
+            style={{ backgroundImage: "url('https://images.pexels.com/photos/6295869/pexels-photo-6295869.jpeg?auto=compress&cs=tinysrgb&w=1920&q=80')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/40" />
           <div className="container relative z-10">
