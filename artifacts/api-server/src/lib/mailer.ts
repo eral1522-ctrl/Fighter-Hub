@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { logger } from "./logger";
+import { db, emailLogTable } from "@workspace/db";
 
 // Trim all SMTP variables to remove accidental whitespace/newlines
 const SMTP_HOST = (process.env.SMTP_HOST ?? "").trim() || undefined;
@@ -176,8 +177,35 @@ function esc(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export async function sendApplicationConfirmation(details: ApplicationDetails): Promise<void> {
-  if (!getSmtpDiagnostics().configured) return; // silently skip — confirmation is best-effort
+/**
+ * Best-effort: write an email delivery record to the database.
+ * Never throws — failures are silently swallowed so logging never breaks email delivery.
+ */
+async function logEmail(opts: {
+  applicationId?: number | null;
+  emailType: string;
+  recipientEmail: string;
+  success: boolean;
+  errorMessage?: string | null;
+}): Promise<void> {
+  try {
+    await db.insert(emailLogTable).values({
+      applicationId: opts.applicationId ?? null,
+      emailType: opts.emailType,
+      recipientEmail: opts.recipientEmail,
+      success: opts.success,
+      errorMessage: opts.errorMessage ?? null,
+    });
+  } catch {
+    // Logging is best-effort — never propagate errors
+  }
+}
+
+export async function sendApplicationConfirmation(details: ApplicationDetails, applicationId?: number | null): Promise<void> {
+  if (!getSmtpDiagnostics().configured) {
+    await logEmail({ applicationId, emailType: "confirmation", recipientEmail: details.email, success: false, errorMessage: "Skipped: SMTP not configured" });
+    return;
+  }
 
   const fieldRow = (label: string, value: string) => `
     <tr>
@@ -225,12 +253,24 @@ export async function sendApplicationConfirmation(details: ApplicationDetails): 
 </body>
 </html>`.trim();
 
-  await deliver({
-    from: SMTP_FROM,
-    to: details.email,
-    subject: "IFA Application Received / Solicitud Recibida",
-    html,
-  });
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to: details.email,
+      subject: "IFA Application Received / Solicitud Recibida",
+      html,
+    });
+    await logEmail({ applicationId, emailType: "confirmation", recipientEmail: details.email, success: true });
+  } catch (err) {
+    await logEmail({
+      applicationId,
+      emailType: "confirmation",
+      recipientEmail: details.email,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
 }
 
 export interface ApplicationDetails {
@@ -243,11 +283,17 @@ export interface ApplicationDetails {
   bio?: string | null;
 }
 
-export async function sendAdminNewApplicationNotification(details: ApplicationDetails): Promise<void> {
+export async function sendAdminNewApplicationNotification(details: ApplicationDetails, applicationId?: number | null): Promise<void> {
   const adminEmail = process.env.ADMIN_EMAIL;
-  if (!adminEmail) return; // silently skip — ADMIN_EMAIL not configured
+  if (!adminEmail) {
+    await logEmail({ applicationId, emailType: "admin_notification", recipientEmail: "not configured", success: false, errorMessage: "Skipped: ADMIN_EMAIL not configured" });
+    return;
+  }
 
-  if (!getSmtpDiagnostics().configured) return; // silently skip — SMTP not configured
+  if (!getSmtpDiagnostics().configured) {
+    await logEmail({ applicationId, emailType: "admin_notification", recipientEmail: adminEmail, success: false, errorMessage: "Skipped: SMTP not configured" });
+    return;
+  }
 
   const fieldRow = (label: string, value: string) => `
     <tr>
@@ -288,27 +334,38 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
 </body>
 </html>`.trim();
 
-  await deliver({
-    from: SMTP_FROM,
-    to: adminEmail,
-    subject: `IFA – New Application: ${details.name}`,
-    html,
-  });
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to: adminEmail,
+      subject: `IFA – New Application: ${details.name}`,
+      html,
+    });
+    await logEmail({ applicationId, emailType: "admin_notification", recipientEmail: adminEmail, success: true });
+  } catch (err) {
+    await logEmail({
+      applicationId,
+      emailType: "admin_notification",
+      recipientEmail: adminEmail,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
 }
 
-export async function sendPaymentLink(to: string, name: string, paymentLink: string): Promise<void> {
+export async function sendPaymentLink(to: string, name: string, paymentLink: string, applicationId?: number | null): Promise<void> {
   const diag = getSmtpDiagnostics();
   if (!diag.configured) {
-    throw new SmtpDeliveryError(
-      `Missing SMTP variable: ${[
-        !SMTP_HOST && "SMTP_HOST",
-        !SMTP_USER && "SMTP_USER",
-        !SMTP_PASS && "SMTP_PASS",
-      ]
-        .filter(Boolean)
-        .join(", ")} not set.`,
-      "Missing SMTP variable",
-    );
+    const errorMessage = `Missing SMTP variable: ${[
+      !SMTP_HOST && "SMTP_HOST",
+      !SMTP_USER && "SMTP_USER",
+      !SMTP_PASS && "SMTP_PASS",
+    ]
+      .filter(Boolean)
+      .join(", ")} not set.`;
+    await logEmail({ applicationId, emailType: "payment_link", recipientEmail: to, success: false, errorMessage });
+    throw new SmtpDeliveryError(errorMessage, "Missing SMTP variable");
   }
 
   const html = `
@@ -354,16 +411,31 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
 </body>
 </html>`.trim();
 
-  await deliver({
-    from: SMTP_FROM,
-    to,
-    subject: "IFA Membership Payment Link / Enlace de Pago IFA",
-    html,
-  });
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to,
+      subject: "IFA Membership Payment Link / Enlace de Pago IFA",
+      html,
+    });
+    await logEmail({ applicationId, emailType: "payment_link", recipientEmail: to, success: true });
+  } catch (err) {
+    await logEmail({
+      applicationId,
+      emailType: "payment_link",
+      recipientEmail: to,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
 }
 
-export async function sendApplicationApproved(name: string, email: string): Promise<void> {
-  if (!getSmtpDiagnostics().configured) return; // silently skip — best-effort
+export async function sendApplicationApproved(name: string, email: string, applicationId?: number | null): Promise<void> {
+  if (!getSmtpDiagnostics().configured) {
+    await logEmail({ applicationId, emailType: "approval", recipientEmail: email, success: false, errorMessage: "Skipped: SMTP not configured" });
+    return;
+  }
 
   const loginUrl = esc(`${process.env.APP_URL || "https://ifa-fighters.org"}/sign-in`);
 
@@ -399,16 +471,31 @@ export async function sendApplicationApproved(name: string, email: string): Prom
 </body>
 </html>`.trim();
 
-  await deliver({
-    from: SMTP_FROM,
-    to: email,
-    subject: "IFA Application Approved / Solicitud Aprobada",
-    html,
-  });
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to: email,
+      subject: "IFA Application Approved / Solicitud Aprobada",
+      html,
+    });
+    await logEmail({ applicationId, emailType: "approval", recipientEmail: email, success: true });
+  } catch (err) {
+    await logEmail({
+      applicationId,
+      emailType: "approval",
+      recipientEmail: email,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
 }
 
-export async function sendApplicationRejected(name: string, email: string): Promise<void> {
-  if (!getSmtpDiagnostics().configured) return; // silently skip — best-effort
+export async function sendApplicationRejected(name: string, email: string, applicationId?: number | null): Promise<void> {
+  if (!getSmtpDiagnostics().configured) {
+    await logEmail({ applicationId, emailType: "rejection", recipientEmail: email, success: false, errorMessage: "Skipped: SMTP not configured" });
+    return;
+  }
 
   const html = `
 <!DOCTYPE html>
@@ -439,12 +526,24 @@ export async function sendApplicationRejected(name: string, email: string): Prom
 </body>
 </html>`.trim();
 
-  await deliver({
-    from: SMTP_FROM,
-    to: email,
-    subject: "IFA Application Update / Actualización de Solicitud",
-    html,
-  });
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to: email,
+      subject: "IFA Application Update / Actualización de Solicitud",
+      html,
+    });
+    await logEmail({ applicationId, emailType: "rejection", recipientEmail: email, success: true });
+  } catch (err) {
+    await logEmail({
+      applicationId,
+      emailType: "rejection",
+      recipientEmail: email,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
 }
 
 export async function sendTestEmail(to: string): Promise<void> {

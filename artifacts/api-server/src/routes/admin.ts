@@ -7,8 +7,9 @@ import {
   eventsTable,
   applicationsTable,
   fighterApplicationsTable,
+  emailLogTable,
 } from "@workspace/db";
-import { eq, count, ilike, and, or, SQL } from "drizzle-orm";
+import { eq, count, ilike, and, or, desc, SQL } from "drizzle-orm";
 import {
   AdminCreateOpportunityBody,
   AdminCreateEventBody,
@@ -324,11 +325,11 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
     const newStatus = parsed.data.status;
     if (newStatus !== undefined && newStatus !== priorStatus) {
       if (newStatus === "approved") {
-        sendApplicationApproved(application.name, application.email).catch((err) => {
+        sendApplicationApproved(application.name, application.email, id).catch((err) => {
           req.log.warn({ err, id }, "Admin: failed to send approval email");
         });
       } else if (newStatus === "rejected") {
-        sendApplicationRejected(application.name, application.email).catch((err) => {
+        sendApplicationRejected(application.name, application.email, id).catch((err) => {
           req.log.warn({ err, id }, "Admin: failed to send rejection email");
         });
       }
@@ -363,7 +364,7 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
     if (!application) return res.status(404).json({ error: "Application not found" });
 
     // Send bilingual payment email — surfaces real SMTP error to caller
-    await mailerSendPaymentLink(application.email, application.name, parsed.data.paymentLink);
+    await mailerSendPaymentLink(application.email, application.name, parsed.data.paymentLink, id);
 
     req.log.info({ id, email: application.email }, "Admin: payment link email sent");
     return res.json(application);
@@ -376,6 +377,25 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
       "Admin: failed to send payment link",
     );
     return res.status(502).json({ error: message, errorType, smtpConfig: diag });
+  }
+});
+
+// GET /api/admin/fighter-applications/:id/email-log — fetch email delivery history for an application
+router.get("/fighter-applications/:id/email-log", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  try {
+    const logs = await db
+      .select()
+      .from(emailLogTable)
+      .where(eq(emailLogTable.applicationId, id))
+      .orderBy(desc(emailLogTable.sentAt));
+
+    return res.json(logs);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to fetch email log");
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

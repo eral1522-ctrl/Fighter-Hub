@@ -505,6 +505,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/FighterApplication"
 
+  /admin/fighter-applications/{id}/email-log:
+    get:
+      operationId: adminGetFighterApplicationEmailLog
+      tags: [admin]
+      summary: Get email delivery history for a fighter application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Email log entries ordered newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmailLogEntry"
+
   /admin/stats:
     get:
       operationId: adminGetStats
@@ -1000,6 +1021,30 @@ components:
           type: string
       required:
         - paymentLink
+
+    EmailLogEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        applicationId:
+          type: ["integer", "null"]
+        emailType:
+          type: string
+        recipientEmail:
+          type: string
+        success:
+          type: boolean
+        errorMessage:
+          type: ["string", "null"]
+        sentAt:
+          type: string
+      required:
+        - id
+        - emailType
+        - recipientEmail
+        - success
+        - sentAt
 
     AdminStats:
       type: object

@@ -547,6 +547,26 @@ export const AdminSendPaymentLinkResponse = zod.object({
 });
 
 /**
+ * @summary Get email delivery history for a fighter application
+ */
+export const AdminGetFighterApplicationEmailLogParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminGetFighterApplicationEmailLogResponseItem = zod.object({
+  id: zod.number(),
+  applicationId: zod.number().nullish(),
+  emailType: zod.string(),
+  recipientEmail: zod.string(),
+  success: zod.boolean(),
+  errorMessage: zod.string().nullish(),
+  sentAt: zod.string(),
+});
+export const AdminGetFighterApplicationEmailLogResponse = zod.array(
+  AdminGetFighterApplicationEmailLogResponseItem,
+);
+
+/**
  * @summary Get admin overview stats
  */
 export const AdminGetStatsResponse = zod.object({

@@ -351,6 +351,18 @@ export interface AdminSendPaymentLinkBody {
   paymentLink: string;
 }
 
+export interface EmailLogEntry {
+  id: number;
+  /** @nullable */
+  applicationId?: number | null;
+  emailType: string;
+  recipientEmail: string;
+  success: boolean;
+  /** @nullable */
+  errorMessage?: string | null;
+  sentAt: string;
+}
+
 export interface AdminStats {
   totalFighters: number;
   pendingApproval: number;

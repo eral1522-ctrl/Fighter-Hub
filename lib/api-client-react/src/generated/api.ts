@@ -28,6 +28,7 @@ import type {
   CreateFighterBody,
   CreateOpportunityBody,
   DashboardStats,
+  EmailLogEntry,
   ErrorResponse,
   Event,
   Fighter,
@@ -2142,6 +2143,101 @@ export const useAdminSendPaymentLink = <
 > => {
   return useMutation(getAdminSendPaymentLinkMutationOptions(options));
 };
+
+/**
+ * @summary Get email delivery history for a fighter application
+ */
+export const getAdminGetFighterApplicationEmailLogUrl = (id: number) => {
+  return `/api/admin/fighter-applications/${id}/email-log`;
+};
+
+export const adminGetFighterApplicationEmailLog = async (
+  id: number,
+  options?: RequestInit,
+): Promise<EmailLogEntry[]> => {
+  return customFetch<EmailLogEntry[]>(
+    getAdminGetFighterApplicationEmailLogUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getAdminGetFighterApplicationEmailLogQueryKey = (id: number) => {
+  return [`/api/admin/fighter-applications/${id}/email-log`] as const;
+};
+
+export const getAdminGetFighterApplicationEmailLogQueryOptions = <
+  TData = Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>,
+  TError = ErrorType<unknown>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getAdminGetFighterApplicationEmailLogQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>
+  > = ({ signal }) =>
+    adminGetFighterApplicationEmailLog(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type AdminGetFighterApplicationEmailLogQueryResult = NonNullable<
+  Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>
+>;
+export type AdminGetFighterApplicationEmailLogQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get email delivery history for a fighter application
+ */
+
+export function useAdminGetFighterApplicationEmailLog<
+  TData = Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>,
+  TError = ErrorType<unknown>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof adminGetFighterApplicationEmailLog>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getAdminGetFighterApplicationEmailLogQueryOptions(
+    id,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Get admin overview stats

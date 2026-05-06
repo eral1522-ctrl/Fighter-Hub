@@ -3,9 +3,11 @@ import {
   useAdminListFighterApplications,
   useAdminUpdateFighterApplication,
   useAdminSendPaymentLink,
+  useAdminGetFighterApplicationEmailLog,
+  getAdminGetFighterApplicationEmailLogQueryKey,
   getAdminListFighterApplicationsQueryKey,
 } from "@workspace/api-client-react";
-import type { AdminListFighterApplicationsStatus } from "@workspace/api-client-react";
+import type { AdminListFighterApplicationsStatus, EmailLogEntry } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle, Mail, ChevronDown, ChevronUp, XCircle } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 
@@ -37,6 +39,92 @@ function statusBadge(status: string) {
 function paymentBadge(ps: string) {
   if (ps === "paid") return <Badge className="uppercase text-[10px] bg-emerald-900 text-emerald-100 border-emerald-700">Paid</Badge>;
   return <Badge variant="outline" className="uppercase text-[10px] border-yellow-700/50 text-yellow-500">Not Paid</Badge>;
+}
+
+const EMAIL_TYPE_LABELS: Record<string, string> = {
+  confirmation: "Application Confirmation",
+  admin_notification: "Admin Notification",
+  payment_link: "Payment Link",
+  approval: "Approval",
+  rejection: "Rejection",
+};
+
+function emailTypeLabel(type: string): string {
+  return EMAIL_TYPE_LABELS[type] ?? type;
+}
+
+function EmailHistory({ applicationId }: { applicationId: number }) {
+  const [open, setOpen] = useState(false);
+  const { data: logs, isLoading } = useAdminGetFighterApplicationEmailLog(applicationId, {
+    query: {
+      queryKey: getAdminGetFighterApplicationEmailLogQueryKey(applicationId),
+      enabled: open,
+    },
+  });
+
+  return (
+    <div className="border border-border/40 rounded-md overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-4 py-2.5 bg-zinc-900/60 hover:bg-zinc-900 transition-colors text-left"
+        onClick={() => setOpen(v => !v)}
+      >
+        <div className="flex items-center gap-2">
+          <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="text-xs font-heading uppercase tracking-widest text-muted-foreground">Email History</span>
+          {logs && logs.length > 0 && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{logs.length}</Badge>
+          )}
+        </div>
+        {open ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />}
+      </button>
+
+      {open && (
+        <div className="px-4 py-3 space-y-2 bg-zinc-950/50">
+          {isLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : !logs || logs.length === 0 ? (
+            <p className="text-xs text-muted-foreground italic py-1">No emails sent yet for this application.</p>
+          ) : (
+            <div className="space-y-1.5">
+              {logs.map((entry: EmailLogEntry) => (
+                <div
+                  key={entry.id}
+                  className={`flex items-start gap-3 rounded px-3 py-2 text-xs border ${
+                    entry.success
+                      ? "bg-green-950/20 border-green-900/30"
+                      : "bg-red-950/20 border-red-900/30"
+                  }`}
+                >
+                  <div className="mt-0.5 shrink-0">
+                    {entry.success
+                      ? <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+                      : <XCircle className="h-3.5 w-3.5 text-red-400" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span className={`font-semibold ${entry.success ? "text-green-300" : "text-red-300"}`}>
+                        {emailTypeLabel(entry.emailType)}
+                      </span>
+                      <span className="text-muted-foreground">→ {entry.recipientEmail}</span>
+                    </div>
+                    {entry.errorMessage && (
+                      <p className="text-red-400/80 mt-0.5 truncate" title={entry.errorMessage}>{entry.errorMessage}</p>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-muted-foreground whitespace-nowrap">
+                    {format(new Date(entry.sentAt), "MMM d, HH:mm")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function AdminApplicationsPage() {
@@ -98,6 +186,14 @@ export default function AdminApplicationsPage() {
     qc.invalidateQueries({ queryKey: getAdminListFighterApplicationsQueryKey() });
   };
 
+  const invalidateEmailLog = (id: number) => {
+    // Approval/rejection emails are fire-and-forget on the server side,
+    // so we delay slightly to give the server time to write the log entry.
+    setTimeout(() => {
+      qc.invalidateQueries({ queryKey: getAdminGetFighterApplicationEmailLogQueryKey(id) });
+    }, 1500);
+  };
+
   const handleStatusChange = (id: number, status: Status) => {
     updateApplication.mutate(
       { id, data: { status } },
@@ -105,6 +201,9 @@ export default function AdminApplicationsPage() {
         onSuccess: () => {
           toast({ title: `Application marked as ${status}` });
           invalidate();
+          if (status === "approved" || status === "rejected") {
+            invalidateEmailLog(id);
+          }
         },
         onError: () => toast({ title: "Failed to update status", variant: "destructive" }),
       }
@@ -160,6 +259,7 @@ export default function AdminApplicationsPage() {
         onSuccess: () => {
           toast({ title: `Payment link sent to ${app.email} ✓` });
           invalidate();
+          qc.invalidateQueries({ queryKey: getAdminGetFighterApplicationEmailLogQueryKey(id) });
           setPaymentLinks(prev => ({ ...prev, [id]: "" }));
           setSendingLink(prev => ({ ...prev, [id]: false }));
         },
@@ -506,6 +606,9 @@ export default function AdminApplicationsPage() {
                         </p>
                       </div>
                     )}
+
+                    {/* Email History */}
+                    <EmailHistory applicationId={app.id} />
 
                     {/* Admin notes */}
                     <div className="flex flex-col sm:flex-row gap-2 items-start">

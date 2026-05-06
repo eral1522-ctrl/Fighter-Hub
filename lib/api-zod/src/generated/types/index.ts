@@ -23,6 +23,7 @@ export * from "./createOpportunityBody";
 export * from "./createOpportunityBodyType";
 export * from "./dashboardStats";
 export * from "./dashboardStatsPaymentStatus";
+export * from "./emailLogEntry";
 export * from "./errorResponse";
 export * from "./event";
 export * from "./eventStatus";

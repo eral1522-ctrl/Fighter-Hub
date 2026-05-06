@@ -18,13 +18,15 @@ router.post("/", async (req: any, res: any) => {
       .values(parsed.data)
       .returning();
 
+    const appId = application.id;
+
     // Fire fighter confirmation email — non-blocking, failure doesn't affect response
-    sendApplicationConfirmation(parsed.data).catch((err) => {
+    sendApplicationConfirmation(parsed.data, appId).catch((err) => {
       req.log.warn({ err }, "Apply: failed to send fighter confirmation email (check SMTP env vars)");
     });
 
     // Fire admin notification email — non-blocking, failure doesn't affect response
-    sendAdminNewApplicationNotification(parsed.data).catch((err) => {
+    sendAdminNewApplicationNotification(parsed.data, appId).catch((err) => {
       req.log.warn({ err }, "Apply: failed to send admin notification email (check SMTP/ADMIN_EMAIL env vars)");
     });
 
