@@ -1,0 +1,771 @@
+Create and populate the IFA opportunities section with 50 high-impact opportunities.
+
+IMPORTANT:
+Do not use the words "fake", "guaranteed", or "confirmed purse".
+Use the word "Purse" only.
+Each opportunity must show one clear fixed purse amount, not a range.
+
+Keep the platform premium, serious and legally safe.
+
+====================================
+MAIN GOAL
+====================================
+
+Create a strong opportunities ecosystem for:
+
+IFA – International Fighters Association
+
+The goal is to make the platform look active, global and valuable for fighters.
+
+Create:
+
+20 Past Opportunities
+30 Upcoming Opportunities
+
+All opportunities must support English and Spanish.
+
+====================================
+WORDING RULES
+====================================
+
+Use:
+Purse
+
+Example:
+Purse: €15,000
+
+Spanish:
+Bolsa: €15,000
+
+Do NOT use:
+Confirmed Purse
+Guaranteed Purse
+Estimated Compensation
+Expected Compensation
+Target Purse
+
+====================================
+PAST OPPORTUNITIES
+====================================
+
+Create 20 archived opportunities.
+
+Section title EN:
+Past Opportunities
+
+Section title ES:
+Oportunidades anteriores
+
+Statuses:
+Completed
+Closed
+
+Spanish:
+Completada
+Cerrada
+
+Each card must include:
+- Title
+- Country
+- City
+- Sport
+- Weight class
+- Fighter level
+- Purse
+- Travel included
+- Accommodation included
+- Status
+
+Create these 20 past opportunities:
+
+1. Dubai Fight Night
+Country: UAE
+City: Dubai
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €7,500
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+2. Riyadh Heavyweight Showcase
+Country: Saudi Arabia
+City: Riyadh
+Sport: Boxing
+Weight class: Heavyweight
+Level: Professional
+Purse: €50,000
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+3. London Prospect Series
+Country: United Kingdom
+City: London
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €5,000
+Travel: No
+Accommodation: Yes
+Status: Completed
+
+4. Madrid Boxing Night
+Country: Spain
+City: Madrid
+Sport: Boxing
+Weight class: Super Lightweight
+Level: Professional
+Purse: €6,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+5. Manchester Cruiserweight Card
+Country: United Kingdom
+City: Manchester
+Sport: Boxing
+Weight class: Cruiserweight
+Level: Professional
+Purse: €12,000
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+6. Mexico City Contender Event
+Country: Mexico
+City: Mexico City
+Sport: Boxing
+Weight class: Featherweight
+Level: Professional
+Purse: €8,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+7. Miami Fight Series
+Country: USA
+City: Miami
+Sport: Boxing
+Weight class: Middleweight
+Level: Professional
+Purse: €10,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+8. Tokyo Super Bantamweight Card
+Country: Japan
+City: Tokyo
+Sport: Boxing
+Weight class: Super Bantamweight
+Level: Professional
+Purse: €15,000
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+9. Bangkok Muay Thai Showcase
+Country: Thailand
+City: Bangkok
+Sport: Muay Thai
+Weight class: Lightweight
+Level: Professional
+Purse: €4,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+10. Las Vegas Prospect Card
+Country: USA
+City: Las Vegas
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €18,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+11. Paris International Boxing Event
+Country: France
+City: Paris
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €9,500
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+12. Milan Fight Night
+Country: Italy
+City: Milan
+Sport: Boxing
+Weight class: Middleweight
+Level: Professional
+Purse: €7,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+13. Berlin Combat Sports Card
+Country: Germany
+City: Berlin
+Sport: Kickboxing
+Weight class: Light Heavyweight
+Level: Professional
+Purse: €6,500
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+14. Istanbul Boxing Showcase
+Country: Turkey
+City: Istanbul
+Sport: Boxing
+Weight class: Heavyweight
+Level: Professional
+Purse: €20,000
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+15. Abu Dhabi International Fight Card
+Country: UAE
+City: Abu Dhabi
+Sport: Boxing
+Weight class: Super Welterweight
+Level: Professional
+Purse: €25,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+16. São Paulo Fight Night
+Country: Brazil
+City: São Paulo
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €5,500
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+17. Buenos Aires Boxing Event
+Country: Argentina
+City: Buenos Aires
+Sport: Boxing
+Weight class: Featherweight
+Level: Professional
+Purse: €4,500
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+18. Doha Boxing Showcase
+Country: Qatar
+City: Doha
+Sport: Boxing
+Weight class: Cruiserweight
+Level: Professional
+Purse: €30,000
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+19. Amsterdam Kickboxing Event
+Country: Netherlands
+City: Amsterdam
+Sport: Kickboxing
+Weight class: Middleweight
+Level: Professional
+Purse: €8,500
+Travel: Yes
+Accommodation: Yes
+Status: Completed
+
+20. Gibraltar Fight Night
+Country: Gibraltar
+City: Gibraltar
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €6,000
+Travel: Yes
+Accommodation: Yes
+Status: Closed
+
+====================================
+UPCOMING OPPORTUNITIES
+====================================
+
+Create 30 upcoming opportunities.
+
+Section title EN:
+Upcoming Opportunities
+
+Section title ES:
+Próximas oportunidades
+
+Statuses:
+Open
+Scouting
+Recruiting Fighters
+Expected
+
+Spanish:
+Abierta
+Scouting
+Buscando luchadores
+Prevista
+
+Each card must include:
+- Title
+- Country
+- City
+- Sport
+- Weight class
+- Fighter level
+- Purse
+- Travel included
+- Accommodation included
+- Status
+- Apply button
+
+Create these 30 upcoming opportunities:
+
+1. Dubai International Showcase
+Country: UAE
+City: Dubai
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €35,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+2. Riyadh Heavyweight Opportunity
+Country: Saudi Arabia
+City: Riyadh
+Sport: Boxing
+Weight class: Heavyweight
+Level: Professional
+Purse: €75,000
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+3. Madrid Elite Boxing Event
+Country: Spain
+City: Madrid
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €8,500
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+4. London International Fight Card
+Country: United Kingdom
+City: London
+Sport: Boxing
+Weight class: Middleweight
+Level: Professional
+Purse: €18,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+5. Manchester Arena Prospect Card
+Country: United Kingdom
+City: Manchester
+Sport: Boxing
+Weight class: Super Lightweight
+Level: Professional
+Purse: €12,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+6. Tokyo Lightweight Scouting Opportunity
+Country: Japan
+City: Tokyo
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €12,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+7. Miami Prospect Card
+Country: USA
+City: Miami
+Sport: Boxing
+Weight class: Featherweight
+Level: Professional
+Purse: €4,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+8. Las Vegas International Boxing Slot
+Country: USA
+City: Las Vegas
+Sport: Boxing
+Weight class: Super Featherweight
+Level: Professional
+Purse: €25,000
+Travel: Yes
+Accommodation: Yes
+Status: Expected
+
+9. Mexico City Contender Slot
+Country: Mexico
+City: Mexico City
+Sport: Boxing
+Weight class: Bantamweight
+Level: Professional
+Purse: €7,500
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+10. Abu Dhabi Fight Opportunity
+Country: UAE
+City: Abu Dhabi
+Sport: Boxing
+Weight class: Light Heavyweight
+Level: Professional
+Purse: €40,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+11. Doha Cruiserweight Showcase
+Country: Qatar
+City: Doha
+Sport: Boxing
+Weight class: Cruiserweight
+Level: Professional
+Purse: €45,000
+Travel: Yes
+Accommodation: Yes
+Status: Expected
+
+12. Bangkok Muay Thai Opportunity
+Country: Thailand
+City: Bangkok
+Sport: Muay Thai
+Weight class: Lightweight
+Level: Professional
+Purse: €5,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+13. Paris Boxing Showcase
+Country: France
+City: Paris
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €11,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+14. Milan Super Welterweight Card
+Country: Italy
+City: Milan
+Sport: Boxing
+Weight class: Super Welterweight
+Level: Professional
+Purse: €9,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+15. Berlin Kickboxing Card
+Country: Germany
+City: Berlin
+Sport: Kickboxing
+Weight class: Middleweight
+Level: Professional
+Purse: €7,500
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+16. Istanbul Heavyweight Slot
+Country: Turkey
+City: Istanbul
+Sport: Boxing
+Weight class: Heavyweight
+Level: Professional
+Purse: €22,000
+Travel: Yes
+Accommodation: Yes
+Status: Expected
+
+17. São Paulo Boxing Opportunity
+Country: Brazil
+City: São Paulo
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €6,500
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+18. Buenos Aires Featherweight Card
+Country: Argentina
+City: Buenos Aires
+Sport: Boxing
+Weight class: Featherweight
+Level: Professional
+Purse: €5,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+19. Amsterdam Middleweight Opportunity
+Country: Netherlands
+City: Amsterdam
+Sport: Kickboxing
+Weight class: Middleweight
+Level: Professional
+Purse: €8,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+20. Gibraltar Boxing Event
+Country: Gibraltar
+City: Gibraltar
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €7,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+21. Singapore Fight Night
+Country: Singapore
+City: Singapore
+Sport: Boxing
+Weight class: Flyweight
+Level: Professional
+Purse: €10,000
+Travel: Yes
+Accommodation: Yes
+Status: Expected
+
+22. Manila Boxing Showcase
+Country: Philippines
+City: Manila
+Sport: Boxing
+Weight class: Bantamweight
+Level: Professional
+Purse: €9,500
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+23. Jakarta International Card
+Country: Indonesia
+City: Jakarta
+Sport: Boxing
+Weight class: Lightweight
+Level: Professional
+Purse: €8,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+24. Bali Combat Sports Showcase
+Country: Indonesia
+City: Bali
+Sport: Boxing
+Weight class: Welterweight
+Level: Professional
+Purse: €6,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+25. Marbella Fight Night
+Country: Spain
+City: Marbella
+Sport: Boxing
+Weight class: Middleweight
+Level: Professional
+Purse: €9,000
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+26. Lisbon Boxing Opportunity
+Country: Portugal
+City: Lisbon
+Sport: Boxing
+Weight class: Super Lightweight
+Level: Professional
+Purse: €6,500
+Travel: Yes
+Accommodation: Yes
+Status: Open
+
+27. Dublin Boxing Card
+Country: Ireland
+City: Dublin
+Sport: Boxing
+Weight class: Featherweight
+Level: Professional
+Purse: €7,500
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+28. Copenhagen Fight Opportunity
+Country: Denmark
+City: Copenhagen
+Sport: Boxing
+Weight class: Cruiserweight
+Level: Professional
+Purse: €14,000
+Travel: Yes
+Accommodation: Yes
+Status: Expected
+
+29. Stockholm Boxing Showcase
+Country: Sweden
+City: Stockholm
+Sport: Boxing
+Weight class: Light Heavyweight
+Level: Professional
+Purse: €16,000
+Travel: Yes
+Accommodation: Yes
+Status: Scouting
+
+30. Kuwait City Boxing Opportunity
+Country: Kuwait
+City: Kuwait City
+Sport: Boxing
+Weight class: Heavyweight
+Level: Professional
+Purse: €55,000
+Travel: Yes
+Accommodation: Yes
+Status: Recruiting Fighters
+
+====================================
+PAYWALL RULES
+====================================
+
+Implement payment wall based on payment_status.
+
+If payment_status = not_paid:
+- Show only preview information
+- Show title, country, city, sport, weight class and status
+- Blur or hide purse details
+- Disable Apply button
+- Show CTA:
+"Unlock full access with IFA Membership (€20/month)"
+
+Spanish:
+"Desbloquea acceso completo con la Membresía IFA (€20/mes)"
+
+If payment_status = paid:
+- Show full details
+- Show purse
+- Enable Apply button
+
+====================================
+FILTERS
+====================================
+
+Add filters:
+- Sport
+- Country
+- Weight class
+- Status
+- Purse
+
+Spanish labels:
+- Deporte
+- País
+- Categoría de peso
+- Estado
+- Bolsa
+
+====================================
+DESIGN
+====================================
+
+The opportunities page must look:
+- premium
+- global
+- active
+- serious
+- combat sports focused
+
+Use:
+- dark background
+- gold accents
+- card layout
+- clean spacing
+- mobile first design
+
+====================================
+LANGUAGE SWITCHER
+====================================
+
+Make sure all titles, labels, buttons and statuses work in both English and Spanish.
+
+Do not show English and Spanish together.
+Only show the selected language.
+
+====================================
+IMPORTANT SAFETY
+====================================
+
+Do not claim official partnerships with any promotion, federation, event, broadcaster or sponsor.
+
+Do not use:
+- confirmed purse
+- guaranteed purse
+- official fight
+- official partner
+
+Use only:
+Purse
+Bolsa
+
+====================================
+DO NOT BREAK
+====================================
+
+Do not break:
+- homepage
+- apply form
+- admin panel
+- language switcher
+- login
+- payment status
+- payment wall
+- email flow
+
+After completion, explain:
+- where opportunities are stored
+- how I can edit them
+- how the paywall works
+- how to add more opportunities later

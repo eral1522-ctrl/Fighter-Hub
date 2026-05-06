@@ -756,7 +756,21 @@ components:
           type: ["string", "null"]
         status:
           type: string
-          enum: [active, closed]
+          enum: [open, scouting, recruiting, expected, completed, closed, active]
+        country:
+          type: ["string", "null"]
+        city:
+          type: ["string", "null"]
+        sport:
+          type: ["string", "null"]
+        level:
+          type: ["string", "null"]
+        purse:
+          type: ["string", "null"]
+        travelIncluded:
+          type: ["boolean", "null"]
+        accommodationIncluded:
+          type: ["boolean", "null"]
         createdAt:
           type: string
       required:
@@ -785,6 +799,23 @@ components:
           type: ["string", "null"]
         compensation:
           type: ["string", "null"]
+        status:
+          type: string
+          enum: [open, scouting, recruiting, expected, completed, closed, active]
+        country:
+          type: ["string", "null"]
+        city:
+          type: ["string", "null"]
+        sport:
+          type: ["string", "null"]
+        level:
+          type: ["string", "null"]
+        purse:
+          type: ["string", "null"]
+        travelIncluded:
+          type: ["boolean", "null"]
+        accommodationIncluded:
+          type: ["boolean", "null"]
       required:
         - type
         - title

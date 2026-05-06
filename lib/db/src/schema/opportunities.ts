@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -12,8 +12,16 @@ export const opportunitiesTable = pgTable("opportunities", {
   date: text("date"),
   weightClass: text("weight_class"),
   compensation: text("compensation"),
-  // active | closed
-  status: text("status").notNull().default("active"),
+  // open | scouting | recruiting | expected | completed | closed | active
+  status: text("status").notNull().default("open"),
+  // extended fields
+  country: text("country"),
+  city: text("city"),
+  sport: text("sport"),
+  level: text("level"),
+  purse: text("purse"),
+  travelIncluded: boolean("travel_included"),
+  accommodationIncluded: boolean("accommodation_included"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

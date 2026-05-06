@@ -116,8 +116,13 @@ export type OpportunityStatus =
   (typeof OpportunityStatus)[keyof typeof OpportunityStatus];
 
 export const OpportunityStatus = {
-  active: "active",
+  open: "open",
+  scouting: "scouting",
+  recruiting: "recruiting",
+  expected: "expected",
+  completed: "completed",
   closed: "closed",
+  active: "active",
 } as const;
 
 export interface Opportunity {
@@ -134,6 +139,20 @@ export interface Opportunity {
   /** @nullable */
   compensation?: string | null;
   status: OpportunityStatus;
+  /** @nullable */
+  country?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  sport?: string | null;
+  /** @nullable */
+  level?: string | null;
+  /** @nullable */
+  purse?: string | null;
+  /** @nullable */
+  travelIncluded?: boolean | null;
+  /** @nullable */
+  accommodationIncluded?: boolean | null;
   createdAt: string;
 }
 
@@ -143,6 +162,19 @@ export type CreateOpportunityBodyType =
 export const CreateOpportunityBodyType = {
   fight: "fight",
   sponsor: "sponsor",
+} as const;
+
+export type CreateOpportunityBodyStatus =
+  (typeof CreateOpportunityBodyStatus)[keyof typeof CreateOpportunityBodyStatus];
+
+export const CreateOpportunityBodyStatus = {
+  open: "open",
+  scouting: "scouting",
+  recruiting: "recruiting",
+  expected: "expected",
+  completed: "completed",
+  closed: "closed",
+  active: "active",
 } as const;
 
 export interface CreateOpportunityBody {
@@ -157,6 +189,21 @@ export interface CreateOpportunityBody {
   weightClass?: string | null;
   /** @nullable */
   compensation?: string | null;
+  status?: CreateOpportunityBodyStatus;
+  /** @nullable */
+  country?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  sport?: string | null;
+  /** @nullable */
+  level?: string | null;
+  /** @nullable */
+  purse?: string | null;
+  /** @nullable */
+  travelIncluded?: boolean | null;
+  /** @nullable */
+  accommodationIncluded?: boolean | null;
 }
 
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus];

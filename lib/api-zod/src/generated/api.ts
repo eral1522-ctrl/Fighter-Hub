@@ -128,7 +128,22 @@ export const ListOpportunitiesResponseItem = zod.object({
   date: zod.string().nullish(),
   weightClass: zod.string().nullish(),
   compensation: zod.string().nullish(),
-  status: zod.enum(["active", "closed"]),
+  status: zod.enum([
+    "open",
+    "scouting",
+    "recruiting",
+    "expected",
+    "completed",
+    "closed",
+    "active",
+  ]),
+  country: zod.string().nullish(),
+  city: zod.string().nullish(),
+  sport: zod.string().nullish(),
+  level: zod.string().nullish(),
+  purse: zod.string().nullish(),
+  travelIncluded: zod.boolean().nullish(),
+  accommodationIncluded: zod.boolean().nullish(),
   createdAt: zod.string(),
 });
 export const ListOpportunitiesResponse = zod.array(
@@ -151,7 +166,22 @@ export const GetOpportunityResponse = zod.object({
   date: zod.string().nullish(),
   weightClass: zod.string().nullish(),
   compensation: zod.string().nullish(),
-  status: zod.enum(["active", "closed"]),
+  status: zod.enum([
+    "open",
+    "scouting",
+    "recruiting",
+    "expected",
+    "completed",
+    "closed",
+    "active",
+  ]),
+  country: zod.string().nullish(),
+  city: zod.string().nullish(),
+  sport: zod.string().nullish(),
+  level: zod.string().nullish(),
+  purse: zod.string().nullish(),
+  travelIncluded: zod.boolean().nullish(),
+  accommodationIncluded: zod.boolean().nullish(),
   createdAt: zod.string(),
 });
 
@@ -368,6 +398,24 @@ export const AdminCreateOpportunityBody = zod.object({
   date: zod.string().nullish(),
   weightClass: zod.string().nullish(),
   compensation: zod.string().nullish(),
+  status: zod
+    .enum([
+      "open",
+      "scouting",
+      "recruiting",
+      "expected",
+      "completed",
+      "closed",
+      "active",
+    ])
+    .optional(),
+  country: zod.string().nullish(),
+  city: zod.string().nullish(),
+  sport: zod.string().nullish(),
+  level: zod.string().nullish(),
+  purse: zod.string().nullish(),
+  travelIncluded: zod.boolean().nullish(),
+  accommodationIncluded: zod.boolean().nullish(),
 });
 
 /**

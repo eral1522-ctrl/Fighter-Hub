@@ -21,6 +21,7 @@ export * from "./createApplicationBody";
 export * from "./createEventBody";
 export * from "./createFighterBody";
 export * from "./createOpportunityBody";
+export * from "./createOpportunityBodyStatus";
 export * from "./createOpportunityBodyType";
 export * from "./dashboardStats";
 export * from "./dashboardStatsPaymentStatus";

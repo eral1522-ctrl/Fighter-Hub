@@ -5,6 +5,7 @@
  * FightersRoom API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CreateOpportunityBodyStatus } from "./createOpportunityBodyStatus";
 import type { CreateOpportunityBodyType } from "./createOpportunityBodyType";
 
 export interface CreateOpportunityBody {
@@ -19,4 +20,19 @@ export interface CreateOpportunityBody {
   weightClass?: string | null;
   /** @nullable */
   compensation?: string | null;
+  status?: CreateOpportunityBodyStatus;
+  /** @nullable */
+  country?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  sport?: string | null;
+  /** @nullable */
+  level?: string | null;
+  /** @nullable */
+  purse?: string | null;
+  /** @nullable */
+  travelIncluded?: boolean | null;
+  /** @nullable */
+  accommodationIncluded?: boolean | null;
 }

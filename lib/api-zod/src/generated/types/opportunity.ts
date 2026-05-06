@@ -22,5 +22,19 @@ export interface Opportunity {
   /** @nullable */
   compensation?: string | null;
   status: OpportunityStatus;
+  /** @nullable */
+  country?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  sport?: string | null;
+  /** @nullable */
+  level?: string | null;
+  /** @nullable */
+  purse?: string | null;
+  /** @nullable */
+  travelIncluded?: boolean | null;
+  /** @nullable */
+  accommodationIncluded?: boolean | null;
   createdAt: string;
 }

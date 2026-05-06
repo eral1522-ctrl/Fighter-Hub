@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type OpportunityStatus =
-  (typeof OpportunityStatus)[keyof typeof OpportunityStatus];
+export type CreateOpportunityBodyStatus =
+  (typeof CreateOpportunityBodyStatus)[keyof typeof CreateOpportunityBodyStatus];
 
-export const OpportunityStatus = {
+export const CreateOpportunityBodyStatus = {
   open: "open",
   scouting: "scouting",
   recruiting: "recruiting",
