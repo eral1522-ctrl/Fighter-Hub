@@ -303,6 +303,8 @@ export interface FighterApplication {
   paymentStatus: FighterApplicationPaymentStatus;
   /** @nullable */
   paymentLink?: string | null;
+  /** @nullable */
+  boxrecLink?: string | null;
   createdAt: string;
 }
 
@@ -315,6 +317,8 @@ export interface SubmitFighterApplicationBody {
   record: string;
   /** @nullable */
   bio?: string | null;
+  /** @nullable */
+  boxrecLink?: string | null;
 }
 
 export type AdminUpdateFighterApplicationBodyStatus =

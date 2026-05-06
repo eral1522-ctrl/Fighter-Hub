@@ -24,5 +24,7 @@ export interface FighterApplication {
   paymentStatus: FighterApplicationPaymentStatus;
   /** @nullable */
   paymentLink?: string | null;
+  /** @nullable */
+  boxrecLink?: string | null;
   createdAt: string;
 }

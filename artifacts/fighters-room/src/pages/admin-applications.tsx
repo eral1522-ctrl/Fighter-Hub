@@ -451,6 +451,21 @@ export default function AdminApplicationsPage() {
                       </div>
                     </div>
 
+                    {app.boxrecLink && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="text-xs text-muted-foreground uppercase tracking-widest shrink-0">BoxRec</div>
+                        <a
+                          href={app.boxrecLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-primary hover:underline truncate font-medium"
+                        >
+                          <Link2 className="h-3.5 w-3.5 shrink-0" />
+                          <span className="truncate">{app.boxrecLink}</span>
+                        </a>
+                      </div>
+                    )}
+
                     {app.bio && (
                       <div className="text-sm text-muted-foreground italic bg-background border border-border rounded p-3">
                         "{app.bio}"

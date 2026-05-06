@@ -936,6 +936,8 @@ components:
           enum: [not_paid, paid]
         paymentLink:
           type: ["string", "null"]
+        boxrecLink:
+          type: ["string", "null"]
         createdAt:
           type: string
       required:
@@ -966,6 +968,8 @@ components:
         record:
           type: string
         bio:
+          type: ["string", "null"]
+        boxrecLink:
           type: ["string", "null"]
       required:
         - name

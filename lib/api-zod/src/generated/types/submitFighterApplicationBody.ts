@@ -15,4 +15,6 @@ export interface SubmitFighterApplicationBody {
   record: string;
   /** @nullable */
   bio?: string | null;
+  /** @nullable */
+  boxrecLink?: string | null;
 }

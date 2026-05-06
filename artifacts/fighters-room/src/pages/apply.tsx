@@ -21,22 +21,41 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [form, setForm] = useState({
-    name: "", email: "", country: "", weightClass: "", record: "", discipline: "", bio: "",
+    name: "", email: "", country: "", weightClass: "", record: "", discipline: "", bio: "", boxrecLink: "",
   });
+  const [boxrecError, setBoxrecError] = useState("");
 
   const submitApplication = useSubmitFighterApplication();
   const { toast } = useToast();
 
+  const isBoxing = form.discipline === "Boxing";
+
   const handleChange = (field: string, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
+    if (field === "boxrecLink") setBoxrecError("");
+    if (field === "discipline" && value !== "Boxing") setBoxrecError("");
+  };
+
+  const validateBoxrec = (): boolean => {
+    if (!isBoxing) return true;
+    if (!form.boxrecLink.trim()) {
+      setBoxrecError("Please enter a valid BoxRec profile link. / Por favor introduce un enlace válido de BoxRec.");
+      return false;
+    }
+    if (!form.boxrecLink.includes("boxrec.com")) {
+      setBoxrecError("Please enter a valid BoxRec profile link. / Por favor introduce un enlace válido de BoxRec.");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) return;
+    if (!validateBoxrec()) return;
 
     submitApplication.mutate(
-      { data: { ...form, bio: form.bio || null } },
+      { data: { ...form, bio: form.bio || null, boxrecLink: form.boxrecLink.trim() || null } },
       {
         onSuccess: () => {
           setSubmitted(true);
@@ -202,6 +221,22 @@ export default function ApplyPage() {
                           onChange={e => handleChange("record", e.target.value)}
                           required
                         />
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="boxrecLink" className="uppercase text-xs tracking-wider text-muted-foreground">
+                          BoxRec Profile Link {isBoxing ? <span className="text-primary">*</span> : <span className="text-muted-foreground/60">(optional)</span>}
+                        </Label>
+                        <Input
+                          id="boxrecLink"
+                          type="url"
+                          className={`bg-background ${boxrecError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                          placeholder="https://boxrec.com/en/proboxer/..."
+                          value={form.boxrecLink}
+                          onChange={e => handleChange("boxrecLink", e.target.value)}
+                        />
+                        {boxrecError && (
+                          <p className="text-xs text-destructive mt-1">{boxrecError}</p>
+                        )}
                       </div>
                     </div>
                   </div>
