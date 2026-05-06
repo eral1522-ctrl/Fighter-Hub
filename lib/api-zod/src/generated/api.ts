@@ -112,6 +112,21 @@ export const UpdateMyProfileResponse = zod.object({
 });
 
 /**
+ * Returns the most recent fighter application for the authenticated user's email, used to pre-populate the profile form.
+ * @summary Get prefill data from latest fighter application
+ */
+export const GetMyProfilePrefillResponse = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  country: zod.string(),
+  discipline: zod.string(),
+  weightClass: zod.string(),
+  record: zod.string(),
+  bio: zod.string().nullish(),
+  boxrecLink: zod.string().nullish(),
+});
+
+/**
  * @summary List all opportunities (fight + sponsor)
  */
 export const ListOpportunitiesQueryParams = zod.object({

@@ -38,6 +38,7 @@ import type {
   ListOpportunitiesParams,
   MembershipPlan,
   Opportunity,
+  ProfilePrefill,
   SubmitFighterApplicationBody,
   SubscribeBody,
   UpdateFighterBody,
@@ -371,6 +372,82 @@ export const useUpdateMyProfile = <
 > => {
   return useMutation(getUpdateMyProfileMutationOptions(options));
 };
+
+/**
+ * Returns the most recent fighter application for the authenticated user's email, used to pre-populate the profile form.
+ * @summary Get prefill data from latest fighter application
+ */
+export const getGetMyProfilePrefillUrl = () => {
+  return `/api/fighters/me/prefill`;
+};
+
+export const getMyProfilePrefill = async (
+  options?: RequestInit,
+): Promise<ProfilePrefill> => {
+  return customFetch<ProfilePrefill>(getGetMyProfilePrefillUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyProfilePrefillQueryKey = () => {
+  return [`/api/fighters/me/prefill`] as const;
+};
+
+export const getGetMyProfilePrefillQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyProfilePrefill>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProfilePrefill>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyProfilePrefillQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMyProfilePrefill>>
+  > = ({ signal }) => getMyProfilePrefill({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProfilePrefill>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyProfilePrefillQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyProfilePrefill>>
+>;
+export type GetMyProfilePrefillQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Get prefill data from latest fighter application
+ */
+
+export function useGetMyProfilePrefill<
+  TData = Awaited<ReturnType<typeof getMyProfilePrefill>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProfilePrefill>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyProfilePrefillQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary List all opportunities (fight + sponsor)

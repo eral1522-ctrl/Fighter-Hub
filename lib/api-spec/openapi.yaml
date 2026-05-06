@@ -90,6 +90,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/Fighter"
 
+  /fighters/me/prefill:
+    get:
+      operationId: getMyProfilePrefill
+      tags: [fighters]
+      summary: Get prefill data from latest fighter application
+      description: Returns the most recent fighter application for the authenticated user's email, used to pre-populate the profile form.
+      responses:
+        "200":
+          description: Prefill data from application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfilePrefill"
+        "404":
+          description: No application found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   # Opportunities
   /opportunities:
     get:
@@ -1000,6 +1020,27 @@ components:
           type: ["string", "null"]
       required:
         - url
+
+    ProfilePrefill:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        country:
+          type: string
+        discipline:
+          type: string
+        weightClass:
+          type: string
+        record:
+          type: string
+        bio:
+          type: ["string", "null"]
+        boxrecLink:
+          type: ["string", "null"]
+      required: [name, email, country, discipline, weightClass, record]
 
     FighterApplication:
       type: object

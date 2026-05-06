@@ -1,5 +1,12 @@
 import { Layout } from "@/components/layout";
-import { useGetMyProfile, useCreateMyProfile, useUpdateMyProfile, getGetMyProfileQueryKey } from "@workspace/api-client-react";
+import {
+  useGetMyProfile,
+  useCreateMyProfile,
+  useUpdateMyProfile,
+  useGetMyProfilePrefill,
+  getGetMyProfileQueryKey,
+  getGetMyProfilePrefillQueryKey,
+} from "@workspace/api-client-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,13 +18,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/lib/i18n";
+import { Info } from "lucide-react";
 
 const WEIGHT_CLASSES = [
-  "Strawweight", "Light Flyweight", "Flyweight", "Super Flyweight", "Bantamweight", 
-  "Super Bantamweight", "Featherweight", "Super Featherweight", "Lightweight", 
-  "Super Lightweight", "Welterweight", "Super Welterweight", "Middleweight", 
+  "Strawweight", "Light Flyweight", "Flyweight", "Super Flyweight", "Bantamweight",
+  "Super Bantamweight", "Featherweight", "Super Featherweight", "Lightweight",
+  "Super Lightweight", "Welterweight", "Super Welterweight", "Middleweight",
   "Super Middleweight", "Light Heavyweight", "Cruiserweight", "Heavyweight", "Super Heavyweight"
 ];
 
@@ -43,13 +52,22 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
+  const { t } = useLanguage();
+  const p = t.profile;
+
   const { data: profile, isLoading, error } = useGetMyProfile({
     query: {
       queryKey: getGetMyProfileQueryKey(),
       retry: false,
     }
   });
-  const isNewProfile = !!error && (error as any)?.response?.status === 404;
+  const isNewProfile = !!error && (error as any)?.status === 404;
+
+  const { data: prefillData } = useGetMyProfilePrefill({
+    query: { queryKey: getGetMyProfilePrefillQueryKey(), enabled: isNewProfile, retry: false },
+  });
+
+  const [prefillApplied, setPrefillApplied] = useState(false);
 
   const createProfile = useCreateMyProfile();
   const updateProfile = useUpdateMyProfile();
@@ -95,14 +113,42 @@ export default function ProfilePage() {
     }
   }, [profile, form]);
 
+  useEffect(() => {
+    if (isNewProfile && prefillData && !prefillApplied) {
+      form.reset({
+        fullName: prefillData.name || "",
+        email: prefillData.email || "",
+        country: prefillData.country || "",
+        city: "",
+        weightClass: prefillData.weightClass || "",
+        record: prefillData.record || "",
+        age: null,
+        height: "",
+        stance: "",
+        coach: "",
+        manager: "",
+        instagram: "",
+        whatsapp: "",
+        videoLinks: prefillData.boxrecLink || "",
+        bio: prefillData.bio || "",
+        availableInternationally: false,
+      });
+      setPrefillApplied(true);
+    }
+  }, [isNewProfile, prefillData, prefillApplied, form]);
+
   const onSubmit = (data: ProfileFormValues) => {
     const action = isNewProfile ? createProfile.mutateAsync : updateProfile.mutateAsync;
-    
+
     action({ data }).then(() => {
-      toast({ title: "Profile saved", description: "Your fighter profile has been updated successfully." });
+      toast({ title: p.saved });
       qc.invalidateQueries({ queryKey: getGetMyProfileQueryKey() });
     }).catch((err: any) => {
-      toast({ title: "Error saving profile", description: err?.response?.data?.error || "An error occurred", variant: "destructive" });
+      toast({
+        title: p.saveError,
+        description: err?.response?.data?.error || err?.message || "An error occurred",
+        variant: "destructive",
+      });
     });
   };
 
@@ -112,9 +158,16 @@ export default function ProfilePage() {
     <Layout>
       <div className="container py-8 max-w-3xl">
         <div className="mb-8 border-b border-border pb-6">
-          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">IFA Member Profile</h1>
-          <p className="text-muted-foreground mt-1">Complete your IFA member profile to access opportunities, apply for fights, and connect with sponsors worldwide.</p>
+          <h1 className="font-heading text-4xl font-bold uppercase tracking-tight">{p.heading}</h1>
+          <p className="text-muted-foreground mt-2 text-sm leading-relaxed max-w-2xl">{p.description}</p>
         </div>
+
+        {isNewProfile && prefillApplied && (
+          <div className="mb-6 flex items-start gap-3 bg-primary/10 border border-primary/30 rounded-md px-4 py-3">
+            <Info className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <p className="text-sm text-primary/90">{p.prefilled}</p>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="space-y-6">
@@ -125,11 +178,13 @@ export default function ProfilePage() {
         ) : (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+              {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-zinc-950 p-6 rounded-md border border-border">
                 <div className="col-span-1 md:col-span-2">
-                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">Basic Info</h3>
+                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">{p.basicInfo}</h3>
                 </div>
-                
+
                 <FormField control={form.control} name="fullName" render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs tracking-wider text-muted-foreground">Full Name / Ring Name</FormLabel>
@@ -163,9 +218,10 @@ export default function ProfilePage() {
                 )} />
               </div>
 
+              {/* Athletic Profile */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-zinc-950 p-6 rounded-md border border-border">
                 <div className="col-span-1 md:col-span-3">
-                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">Athletic Profile</h3>
+                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">{p.athleticProfile}</h3>
                 </div>
 
                 <FormField control={form.control} name="weightClass" render={({ field }) => (
@@ -221,15 +277,16 @@ export default function ProfilePage() {
                 <FormField control={form.control} name="height" render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs tracking-wider text-muted-foreground">Height</FormLabel>
-                    <FormControl><Input placeholder="e.g. 6'1&quot;" {...field} value={field.value || ''} className="bg-background" /></FormControl>
+                    <FormControl><Input placeholder='e.g. 6&apos;1"' {...field} value={field.value || ''} className="bg-background" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
               </div>
 
+              {/* Management & Media */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-zinc-950 p-6 rounded-md border border-border">
                 <div className="col-span-1 md:col-span-2">
-                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">Management & Media</h3>
+                  <h3 className="font-heading text-xl uppercase tracking-wider mb-4 border-b border-border/50 pb-2">{p.managementMedia}</h3>
                 </div>
 
                 <FormField control={form.control} name="coach" render={({ field }) => (
@@ -267,13 +324,13 @@ export default function ProfilePage() {
                 <div className="col-span-1 md:col-span-2">
                   <FormField control={form.control} name="videoLinks" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="uppercase text-xs tracking-wider text-muted-foreground">Highlight / Fight Videos (URLs)</FormLabel>
-                      <FormControl><Textarea placeholder="YouTube/Vimeo links..." className="resize-none bg-background" {...field} value={field.value || ''} /></FormControl>
+                      <FormLabel className="uppercase text-xs tracking-wider text-muted-foreground">Videos & BoxRec (URLs)</FormLabel>
+                      <FormControl><Textarea placeholder="YouTube/Vimeo links, BoxRec profile URL..." className="resize-none bg-background" {...field} value={field.value || ''} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                 </div>
-                
+
                 <div className="col-span-1 md:col-span-2">
                   <FormField control={form.control} name="bio" render={({ field }) => (
                     <FormItem>
@@ -301,7 +358,7 @@ export default function ProfilePage() {
 
               <div className="flex justify-end pt-4">
                 <Button type="submit" size="lg" className="font-heading uppercase tracking-wider font-bold w-full md:w-auto min-w-[200px]" disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save Profile"}
+                  {isSaving ? p.saving : p.saveBtn}
                 </Button>
               </div>
             </form>

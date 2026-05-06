@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getAuth } from "@clerk/express";
-import { db, fightersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { getAuth, clerkClient } from "@clerk/express";
+import { db, fightersTable, fighterApplicationsTable } from "@workspace/db";
+import { eq, desc } from "drizzle-orm";
 import {
   CreateMyProfileBody,
   UpdateMyProfileBody,
@@ -19,6 +19,43 @@ function requireAuth(req: any, res: any, next: any) {
   req.clerkUserId = userId;
   next();
 }
+
+// GET /api/fighters/me/prefill — return latest application data for profile pre-fill
+router.get("/me/prefill", requireAuth, async (req: any, res: any) => {
+  try {
+    const user = await clerkClient.users.getUser(req.clerkUserId);
+    const email = user.emailAddresses[0]?.emailAddress;
+
+    if (!email) {
+      return res.status(404).json({ error: "No email found" });
+    }
+
+    const [application] = await db
+      .select()
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.email, email))
+      .orderBy(desc(fighterApplicationsTable.createdAt))
+      .limit(1);
+
+    if (!application) {
+      return res.status(404).json({ error: "No application found" });
+    }
+
+    return res.json({
+      name: application.name,
+      email: application.email,
+      country: application.country,
+      discipline: application.discipline,
+      weightClass: application.weightClass,
+      record: application.record,
+      bio: application.bio ?? null,
+      boxrecLink: application.boxrecLink ?? null,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to get profile prefill data");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // GET /api/fighters/me — get current fighter's profile
 router.get("/me", requireAuth, async (req: any, res: any) => {

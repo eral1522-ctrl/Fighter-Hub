@@ -41,6 +41,7 @@ export * from "./membershipPlan";
 export * from "./opportunity";
 export * from "./opportunityStatus";
 export * from "./opportunityType";
+export * from "./profilePrefill";
 export * from "./submitFighterApplicationBody";
 export * from "./subscribeBody";
 export * from "./updateFighterBody";

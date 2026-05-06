@@ -1,0 +1,144 @@
+Pega este prompt completo en Replit:
+
+```text
+Fix these IFA website and dashboard issues.
+
+IMPORTANT:
+Do not break:
+- login
+- apply form
+- admin panel
+- payment wall
+- language switcher
+- opportunities
+- Stripe payment link
+
+Keep the current dark premium design.
+
+====================================
+1. FIX IFA LOGO CLICK FROM DASHBOARD
+====================================
+
+Problem:
+When a user is inside the dashboard and clicks the IFA logo, it stays on the dashboard instead of going to the main public homepage.
+
+Fix:
+On all authenticated pages:
+- /dashboard
+- /profile
+- /admin
+- /admin/applications
+- /applications
+
+Clicking the IFA logo must navigate to:
+
+/
+
+It must take the user to the public homepage:
+fightersassociation.com
+
+Do not log the user out.
+
+====================================
+2. CHECK PUBLIC PAGES ARE ACCESSIBLE
+====================================
+
+Make sure these pages exist and work publicly:
+
+/association
+/statutes
+/president-message
+
+They should be accessible at:
+
+fightersassociation.com/association
+fightersassociation.com/statutes
+fightersassociation.com/president-message
+
+Requirements:
+- They must not require login
+- They must use the same header and footer
+- They must support EN / ES language switcher
+- They must be linked in the footer
+- If they do not exist, create them
+
+====================================
+3. SAVE REGISTRATION DATA INTO MEMBER PROFILE
+====================================
+
+Problem:
+When a fighter registers through /apply, the information they entered is not saved into their IFA Member Profile.
+Then, after logging in, they have to enter the same data again.
+
+Fix:
+The data submitted in /apply must automatically populate the user’s IFA Member Profile.
+
+Fields to save and reuse:
+- Full name / ring name
+- Email
+- Country
+- City if available
+- Discipline
+- Weight class
+- Professional record
+- BoxRec link if available
+- Short bio
+- Instagram if available
+- WhatsApp if available
+
+Logic:
+1. When a user submits /apply, save the data in fighter_applications.
+2. When that same user logs in with the same email, the My Profile page must fetch the latest fighter_application linked to that email.
+3. Pre-fill the IFA Member Profile form with that data.
+4. If a profile already exists, do not overwrite manually edited profile data unless the field is empty.
+5. If no profile exists, create or prefill profile from the application.
+6. The user should not have to re-enter the same information again.
+
+====================================
+4. PROFILE PAGE COPY UPDATE
+====================================
+
+Current text:
+"Complete your IFA member profile to access opportunities, apply for fights, and connect with sponsors worldwide."
+
+Update to:
+
+English:
+"Your IFA member profile is built from your registration details. Keep it updated so promoters, sponsors and the IFA team can evaluate your opportunities properly."
+
+Spanish:
+"Tu perfil de miembro IFA se crea a partir de los datos de tu registro. Mantenlo actualizado para que promotores, sponsors y el equipo de IFA puedan evaluar correctamente tus oportunidades."
+
+Use "luchador" in Spanish where relevant, not "fighter".
+
+====================================
+5. PROFILE DATA DISPLAY
+====================================
+
+On My Profile page:
+- Show the existing saved data clearly
+- Allow the user to edit and save changes
+- Show a success message after saving:
+English:
+"Profile updated successfully."
+Spanish:
+"Perfil actualizado correctamente."
+
+If no application data exists:
+Show:
+English:
+"No registration data found. Please complete your member profile."
+Spanish:
+"No se encontraron datos de registro. Completa tu perfil de miembro."
+
+====================================
+6. FINAL CHECK
+====================================
+
+After completion, explain:
+- how the IFA logo navigation was fixed
+- whether /association, /statutes and /president-message are public
+- where registration data is stored
+- how the profile is populated from the registration form
+- how I can test with a new user
+```

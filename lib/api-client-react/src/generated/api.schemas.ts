@@ -324,6 +324,19 @@ export interface CheckoutResponse {
   sessionId?: string | null;
 }
 
+export interface ProfilePrefill {
+  name: string;
+  email: string;
+  country: string;
+  discipline: string;
+  weightClass: string;
+  record: string;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  boxrecLink?: string | null;
+}
+
 export type FighterApplicationStatus =
   (typeof FighterApplicationStatus)[keyof typeof FighterApplicationStatus];
 
