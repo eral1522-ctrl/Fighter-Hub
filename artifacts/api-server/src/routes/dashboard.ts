@@ -6,6 +6,7 @@ import {
   opportunitiesTable,
   eventsTable,
   applicationsTable,
+  fighterApplicationsTable,
 } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
 
@@ -69,6 +70,25 @@ router.get("/stats", requireAuth, async (req: any, res: any) => {
       approvedApps = Number(myApproved.count);
     }
 
+    let paymentStatus: "not_paid" | "paid" = "not_paid";
+    let paymentLink: string | null = null;
+
+    if (fighter?.email) {
+      const [application] = await db
+        .select({
+          paymentStatus: fighterApplicationsTable.paymentStatus,
+          paymentLink: fighterApplicationsTable.paymentLink,
+        })
+        .from(fighterApplicationsTable)
+        .where(eq(fighterApplicationsTable.email, fighter.email))
+        .limit(1);
+
+      if (application) {
+        paymentStatus = (application.paymentStatus as "not_paid" | "paid") ?? "not_paid";
+        paymentLink = application.paymentLink ?? null;
+      }
+    }
+
     return res.json({
       totalOpportunities: Number(oppCount.count),
       totalFightOpportunities: Number(fightOppCount.count),
@@ -79,6 +99,8 @@ router.get("/stats", requireAuth, async (req: any, res: any) => {
       approvedApplications: approvedApps,
       membershipStatus: fighter?.membershipStatus ?? "inactive",
       approvalStatus: fighter?.approvalStatus ?? "none",
+      paymentStatus,
+      paymentLink,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get dashboard stats");

@@ -845,6 +845,11 @@ components:
           type: string
         approvalStatus:
           type: string
+        paymentStatus:
+          type: string
+          enum: [not_paid, paid]
+        paymentLink:
+          type: ["string", "null"]
       required:
         - totalOpportunities
         - totalFightOpportunities
@@ -855,6 +860,7 @@ components:
         - approvedApplications
         - membershipStatus
         - approvalStatus
+        - paymentStatus
 
     MembershipPlan:
       type: object

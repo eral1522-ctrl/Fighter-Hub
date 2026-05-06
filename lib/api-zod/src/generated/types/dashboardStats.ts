@@ -5,6 +5,7 @@
  * FightersRoom API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { DashboardStatsPaymentStatus } from "./dashboardStatsPaymentStatus";
 
 export interface DashboardStats {
   totalOpportunities: number;
@@ -16,4 +17,7 @@ export interface DashboardStats {
   approvedApplications: number;
   membershipStatus: string;
   approvalStatus: string;
+  paymentStatus: DashboardStatsPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
 }

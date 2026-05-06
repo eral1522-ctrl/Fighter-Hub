@@ -230,6 +230,8 @@ export const GetDashboardStatsResponse = zod.object({
   approvedApplications: zod.number(),
   membershipStatus: zod.string(),
   approvalStatus: zod.string(),
+  paymentStatus: zod.enum(["not_paid", "paid"]),
+  paymentLink: zod.string().nullish(),
 });
 
 /**

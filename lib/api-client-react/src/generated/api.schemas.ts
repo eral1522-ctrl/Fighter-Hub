@@ -226,6 +226,14 @@ export interface CreateApplicationBody {
   message?: string | null;
 }
 
+export type DashboardStatsPaymentStatus =
+  (typeof DashboardStatsPaymentStatus)[keyof typeof DashboardStatsPaymentStatus];
+
+export const DashboardStatsPaymentStatus = {
+  not_paid: "not_paid",
+  paid: "paid",
+} as const;
+
 export interface DashboardStats {
   totalOpportunities: number;
   totalFightOpportunities: number;
@@ -236,6 +244,9 @@ export interface DashboardStats {
   approvedApplications: number;
   membershipStatus: string;
   approvalStatus: string;
+  paymentStatus: DashboardStatsPaymentStatus;
+  /** @nullable */
+  paymentLink?: string | null;
 }
 
 export interface MembershipPlan {
