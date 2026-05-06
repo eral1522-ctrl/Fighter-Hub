@@ -128,7 +128,7 @@ export default function ProfilePage() {
         coach: "",
         manager: "",
         instagram: "",
-        whatsapp: "",
+        whatsapp: prefillData.whatsapp || "",
         videoLinks: prefillData.boxrecLink || "",
         bio: prefillData.bio || "",
         availableInternationally: false,

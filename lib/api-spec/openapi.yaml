@@ -1040,6 +1040,8 @@ components:
           type: ["string", "null"]
         boxrecLink:
           type: ["string", "null"]
+        whatsapp:
+          type: ["string", "null"]
       required: [name, email, country, discipline, weightClass, record]
 
     FighterApplication:
@@ -1073,6 +1075,8 @@ components:
           type: ["string", "null"]
         boxrecLink:
           type: ["string", "null"]
+        whatsapp:
+          type: ["string", "null"]
         createdAt:
           type: string
       required:
@@ -1105,6 +1109,8 @@ components:
         bio:
           type: ["string", "null"]
         boxrecLink:
+          type: ["string", "null"]
+        whatsapp:
           type: ["string", "null"]
       required:
         - name

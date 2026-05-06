@@ -17,4 +17,6 @@ export interface ProfilePrefill {
   bio?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
 }

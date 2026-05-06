@@ -17,4 +17,6 @@ export interface SubmitFighterApplicationBody {
   bio?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
 }

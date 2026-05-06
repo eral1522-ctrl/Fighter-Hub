@@ -26,5 +26,7 @@ export interface FighterApplication {
   paymentLink?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
   createdAt: string;
 }

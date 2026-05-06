@@ -23,7 +23,7 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [form, setForm] = useState({
-    name: "", email: "", country: "", weightClass: "", record: "", discipline: "", bio: "", boxrecLink: "",
+    name: "", email: "", country: "", weightClass: "", record: "", discipline: "", bio: "", boxrecLink: "", whatsapp: "",
   });
   const [boxrecError, setBoxrecError] = useState("");
 
@@ -53,7 +53,7 @@ export default function ApplyPage() {
     if (!validateBoxrec()) return;
 
     submitApplication.mutate(
-      { data: { ...form, bio: form.bio || null, boxrecLink: form.boxrecLink.trim() || null } },
+      { data: { ...form, bio: form.bio || null, boxrecLink: form.boxrecLink.trim() || null, whatsapp: form.whatsapp.trim() || null } },
       {
         onSuccess: () => setSubmitted(true),
         onError: () => {
@@ -245,9 +245,22 @@ export default function ApplyPage() {
                     </div>
                   </div>
 
-                  {/* Bio */}
+                  {/* Bio + Contact */}
                   <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
                     <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionBio}</h2>
+                    <div className="space-y-2">
+                      <Label htmlFor="whatsapp" className="uppercase text-xs tracking-wider text-muted-foreground">
+                        {(t.apply as any).whatsappLabel} <span className="text-primary">*</span>
+                      </Label>
+                      <Input
+                        id="whatsapp"
+                        className="bg-background"
+                        placeholder={(t.apply as any).whatsappPlaceholder}
+                        value={form.whatsapp}
+                        onChange={e => handleChange("whatsapp", e.target.value)}
+                        required
+                      />
+                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="bio" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.bioLabel}</Label>
                       <Textarea

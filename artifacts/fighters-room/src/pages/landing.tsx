@@ -493,6 +493,9 @@ export default function LandingPage() {
                 <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
                   <Instagram className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
+                <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                  <MessageCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                </a>
               </div>
             </div>
             <div>

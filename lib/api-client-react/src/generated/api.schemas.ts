@@ -335,6 +335,8 @@ export interface ProfilePrefill {
   bio?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
 }
 
 export type FighterApplicationStatus =
@@ -372,6 +374,8 @@ export interface FighterApplication {
   paymentLink?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
   createdAt: string;
 }
 
@@ -386,6 +390,8 @@ export interface SubmitFighterApplicationBody {
   bio?: string | null;
   /** @nullable */
   boxrecLink?: string | null;
+  /** @nullable */
+  whatsapp?: string | null;
 }
 
 export type AdminUpdateFighterApplicationBodyStatus =

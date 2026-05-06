@@ -50,6 +50,7 @@ router.get("/me/prefill", requireAuth, async (req: any, res: any) => {
       record: application.record,
       bio: application.bio ?? null,
       boxrecLink: application.boxrecLink ?? null,
+      whatsapp: application.whatsapp ?? null,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to get profile prefill data");

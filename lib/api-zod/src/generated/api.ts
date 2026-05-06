@@ -124,6 +124,7 @@ export const GetMyProfilePrefillResponse = zod.object({
   record: zod.string(),
   bio: zod.string().nullish(),
   boxrecLink: zod.string().nullish(),
+  whatsapp: zod.string().nullish(),
 });
 
 /**
@@ -525,6 +526,7 @@ export const SubmitFighterApplicationBody = zod.object({
   record: zod.string(),
   bio: zod.string().nullish(),
   boxrecLink: zod.string().nullish(),
+  whatsapp: zod.string().nullish(),
 });
 
 /**
@@ -556,6 +558,7 @@ export const AdminListFighterApplicationsResponseItem = zod.object({
   paymentStatus: zod.enum(["not_paid", "paid"]),
   paymentLink: zod.string().nullish(),
   boxrecLink: zod.string().nullish(),
+  whatsapp: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const AdminListFighterApplicationsResponse = zod.array(
@@ -590,6 +593,7 @@ export const AdminUpdateFighterApplicationResponse = zod.object({
   paymentStatus: zod.enum(["not_paid", "paid"]),
   paymentLink: zod.string().nullish(),
   boxrecLink: zod.string().nullish(),
+  whatsapp: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -618,6 +622,7 @@ export const AdminSendPaymentLinkResponse = zod.object({
   paymentStatus: zod.enum(["not_paid", "paid"]),
   paymentLink: zod.string().nullish(),
   boxrecLink: zod.string().nullish(),
+  whatsapp: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
