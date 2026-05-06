@@ -14,7 +14,14 @@ import {
   AdminCreateEventBody,
   AdminUpdateFighterApplicationBody,
 } from "@workspace/api-zod";
-import { getSmtpDiagnostics, sendPaymentLink as mailerSendPaymentLink, sendTestEmail, SmtpDeliveryError } from "../lib/mailer";
+import {
+  getSmtpDiagnostics,
+  sendPaymentLink as mailerSendPaymentLink,
+  sendTestEmail,
+  SmtpDeliveryError,
+  sendApplicationApproved,
+  sendApplicationRejected,
+} from "../lib/mailer";
 
 const router = Router();
 
@@ -293,6 +300,18 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
   }
 
   try {
+    // Capture prior status before update so we only send an email on a real transition
+    let priorStatus: string | undefined;
+    if (parsed.data.status !== undefined) {
+      const [prior] = await db
+        .select({ status: fighterApplicationsTable.status })
+        .from(fighterApplicationsTable)
+        .where(eq(fighterApplicationsTable.id, id))
+        .limit(1);
+      if (!prior) return res.status(404).json({ error: "Application not found" });
+      priorStatus = prior.status ?? undefined;
+    }
+
     const [application] = await db
       .update(fighterApplicationsTable)
       .set(updates)
@@ -300,6 +319,21 @@ router.patch("/fighter-applications/:id", requireAdmin, async (req: any, res: an
       .returning();
 
     if (!application) return res.status(404).json({ error: "Application not found" });
+
+    // Fire status-change email only when the status genuinely transitions
+    const newStatus = parsed.data.status;
+    if (newStatus !== undefined && newStatus !== priorStatus) {
+      if (newStatus === "approved") {
+        sendApplicationApproved(application.name, application.email).catch((err) => {
+          req.log.warn({ err, id }, "Admin: failed to send approval email");
+        });
+      } else if (newStatus === "rejected") {
+        sendApplicationRejected(application.name, application.email).catch((err) => {
+          req.log.warn({ err, id }, "Admin: failed to send rejection email");
+        });
+      }
+    }
+
     return res.json(application);
   } catch (err) {
     req.log.error({ err }, "Admin: failed to update fighter application");

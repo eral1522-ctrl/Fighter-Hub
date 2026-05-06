@@ -311,6 +311,93 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
   });
 }
 
+export async function sendApplicationApproved(name: string, email: string): Promise<void> {
+  const transport = createTransport();
+  if (!transport) return; // silently skip — best-effort
+
+  const loginUrl = esc(`${process.env.APP_URL || "https://ifa-fighters.org"}/sign-in`);
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
+  <div style="max-width:560px;margin:0 auto;">
+    ${header()}
+    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Approved</h2>
+      <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
+        Congratulations, <strong style="color:#f5f5f5;">${esc(name)}</strong>!
+      </p>
+      <p style="color:#ccc;line-height:1.7;margin-bottom:24px;">
+        Your IFA application has been <strong style="color:#f5c518;">approved</strong>. You now have access to fight opportunities, sponsors, events, and global boxing campaigns. Log in to your account to get started.
+      </p>
+      <div style="text-align:center;margin:32px 0;">
+        <a href="${loginUrl}"
+           style="display:inline-block;background:#f5c518;color:#0d0d0d;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
+          Log In to Your Account
+        </a>
+      </div>
+      <div style="border-left:3px solid #f5c518;padding-left:16px;margin-top:8px;">
+        <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
+          ¡Felicidades, <strong style="color:#ccc;">${esc(name)}</strong>! Tu solicitud ha sido <strong style="color:#f5c518;">aprobada</strong>. Inicia sesión para acceder a peleas, patrocinadores, eventos y campañas internacionales de boxeo.
+        </p>
+      </div>
+    </div>
+    ${footer()}
+  </div>
+</body>
+</html>`.trim();
+
+  await deliver(transport, {
+    from: SMTP_FROM,
+    to: email,
+    subject: "IFA Application Approved / Solicitud Aprobada",
+    html,
+  });
+}
+
+export async function sendApplicationRejected(name: string, email: string): Promise<void> {
+  const transport = createTransport();
+  if (!transport) return; // silently skip — best-effort
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
+  <div style="max-width:560px;margin:0 auto;">
+    ${header()}
+    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Update</h2>
+      <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
+        Dear <strong style="color:#f5f5f5;">${esc(name)}</strong>,
+      </p>
+      <p style="color:#ccc;line-height:1.7;margin-bottom:16px;">
+        Thank you for your interest in IFA – International Fighters Association. After careful review, we are unable to approve your application at this time.
+      </p>
+      <p style="color:#ccc;line-height:1.7;margin-bottom:24px;">
+        We encourage you to continue training and to reapply in the future. If you have any questions or would like feedback, please contact us at <a href="mailto:contact@ifa-fighters.org" style="color:#f5c518;text-decoration:none;">contact@ifa-fighters.org</a>.
+      </p>
+      <div style="border-left:3px solid #f5c518;padding-left:16px;margin-top:8px;">
+        <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
+          Estimado/a <strong style="color:#ccc;">${esc(name)}</strong>, tras una revisión cuidadosa, no hemos podido aprobar tu solicitud en este momento. Te animamos a seguir entrenando y a volver a solicitar en el futuro. Para preguntas, escríbenos a <a href="mailto:contact@ifa-fighters.org" style="color:#f5c518;text-decoration:none;">contact@ifa-fighters.org</a>.
+        </p>
+      </div>
+    </div>
+    ${footer()}
+  </div>
+</body>
+</html>`.trim();
+
+  await deliver(transport, {
+    from: SMTP_FROM,
+    to: email,
+    subject: "IFA Application Update / Actualización de Solicitud",
+    html,
+  });
+}
+
 export async function sendTestEmail(to: string): Promise<void> {
   const diag = getSmtpDiagnostics();
   if (!diag.configured) {
