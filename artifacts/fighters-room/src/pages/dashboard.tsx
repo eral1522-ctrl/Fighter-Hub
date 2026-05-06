@@ -76,30 +76,50 @@ export default function DashboardPage() {
     setStatusFilter("all");
   };
 
+  const hasFighterProfile = !isStatsLoading && stats?.approvalStatus !== undefined && stats.approvalStatus !== "none";
+
+  function getAppError(err: any): string {
+    return err?.data?.error || err?.message || t.dashboard.appErrorFallback;
+  }
+
   const handleApplyOpportunity = (id: number) => {
-    if (!isPaid) return;
+    if (!hasFighterProfile) {
+      toast({ title: t.dashboard.appFailed, description: t.dashboard.noProfile, variant: "destructive" });
+      return;
+    }
+    if (!isPaid) {
+      toast({ title: t.dashboard.appFailed, description: t.dashboard.notPaidApply, variant: "destructive" });
+      return;
+    }
     createApplication.mutate({ data: { opportunityId: id } }, {
       onSuccess: () => {
-        toast({ title: t.dashboard.applied, description: "You have successfully applied to this opportunity." });
+        toast({ title: t.dashboard.appSuccess });
         qc.invalidateQueries({ queryKey: getListMyApplicationsQueryKey() });
         qc.invalidateQueries({ queryKey: getGetDashboardStatsQueryKey() });
       },
       onError: (err: any) => {
-        toast({ title: "Application failed", description: err?.response?.data?.error || "An error occurred", variant: "destructive" });
+        toast({ title: t.dashboard.appFailed, description: getAppError(err), variant: "destructive" });
       }
     });
   };
 
   const handleApplyEvent = (id: number) => {
-    if (!isPaid) return;
+    if (!hasFighterProfile) {
+      toast({ title: t.dashboard.appFailed, description: t.dashboard.noProfile, variant: "destructive" });
+      return;
+    }
+    if (!isPaid) {
+      toast({ title: t.dashboard.appFailed, description: t.dashboard.notPaidApply, variant: "destructive" });
+      return;
+    }
     createApplication.mutate({ data: { eventId: id } }, {
       onSuccess: () => {
-        toast({ title: t.dashboard.applied, description: "You have successfully applied to this event." });
+        toast({ title: t.dashboard.appSuccess });
         qc.invalidateQueries({ queryKey: getListMyApplicationsQueryKey() });
         qc.invalidateQueries({ queryKey: getGetDashboardStatsQueryKey() });
       },
       onError: (err: any) => {
-        toast({ title: "Application failed", description: err?.response?.data?.error || "An error occurred", variant: "destructive" });
+        toast({ title: t.dashboard.appFailed, description: getAppError(err), variant: "destructive" });
       }
     });
   };

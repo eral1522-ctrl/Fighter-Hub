@@ -227,6 +227,11 @@ const T = {
         notIncluded: "Not included",
         level: "Level",
       },
+      appSuccess: "Application submitted successfully.",
+      appFailed: "Application failed",
+      noProfile: "Please complete your fighter profile before applying.",
+      notPaidApply: "Activate your IFA Membership to apply for opportunities.",
+      appErrorFallback: "An unexpected error occurred. Please try again.",
     },
   },
   es: {
@@ -453,6 +458,11 @@ const T = {
         notIncluded: "No incluido",
         level: "Nivel",
       },
+      appSuccess: "Solicitud enviada correctamente.",
+      appFailed: "Solicitud fallida",
+      noProfile: "Completa tu perfil de luchador antes de aplicar.",
+      notPaidApply: "Activa tu Membresía IFA para aplicar a oportunidades.",
+      appErrorFallback: "Ocurrió un error inesperado. Por favor inténtalo de nuevo.",
     },
   },
 };

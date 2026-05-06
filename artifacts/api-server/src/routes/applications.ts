@@ -71,7 +71,13 @@ router.get("/", requireAuth, async (req: any, res: any) => {
 router.post("/", requireAuth, async (req: any, res: any) => {
   const parsed = CreateApplicationBody.safeParse(req.body);
   if (!parsed.success) {
-    return res.status(400).json({ error: parsed.error.message });
+    req.log.warn({ zodError: parsed.error.issues, body: req.body }, "Invalid application request body");
+    return res.status(400).json({ error: "Invalid request: " + parsed.error.issues.map((i: any) => i.message).join(", ") });
+  }
+
+  if (!parsed.data.opportunityId && !parsed.data.eventId) {
+    req.log.warn({ body: req.body }, "Application submitted without opportunityId or eventId");
+    return res.status(400).json({ error: "You must provide an opportunityId or eventId." });
   }
 
   try {
@@ -82,9 +88,10 @@ router.post("/", requireAuth, async (req: any, res: any) => {
       .limit(1);
 
     if (!fighter) {
+      req.log.warn({ clerkUserId: req.clerkUserId }, "Application attempt with no fighter profile");
       return res
         .status(400)
-        .json({ error: "You must create a fighter profile first" });
+        .json({ error: "Please complete your fighter profile before applying." });
     }
 
     const [application] = await db
@@ -98,13 +105,15 @@ router.post("/", requireAuth, async (req: any, res: any) => {
       })
       .returning();
 
+    req.log.info({ applicationId: application.id, fighterId: fighter.id }, "Application created");
+
     return res.status(201).json({
       ...application,
       fighterName: fighter.fullName,
       opportunityTitle: null,
     });
-  } catch (err) {
-    req.log.error({ err }, "Failed to create application");
+  } catch (err: any) {
+    req.log.error({ err, clerkUserId: req.clerkUserId, body: req.body, errMessage: err?.message, errCode: err?.code }, "Failed to create application");
     return res.status(500).json({ error: "Internal server error" });
   }
 });
