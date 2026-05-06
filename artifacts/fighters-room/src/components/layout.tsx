@@ -3,6 +3,7 @@ import { useClerk, useUser } from "@clerk/react";
 import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
+import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { signOut } = useClerk();
@@ -61,9 +62,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col">
         {children}
       </main>
-      <footer className="border-t py-6 md:py-0 bg-zinc-950">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-16 md:flex-row">
-          <p className="text-center text-xs leading-loose text-muted-foreground md:text-left uppercase tracking-widest font-heading">
+      <footer className="border-t py-8 bg-zinc-950">
+        <div className="container flex flex-col items-center gap-4">
+          <img
+            src={ifaLogo}
+            alt="IFA – The International Fighters Association"
+            className="w-full max-w-[180px] md:max-w-[240px] opacity-90"
+          />
+          <p className="text-center text-xs leading-loose text-muted-foreground uppercase tracking-widest font-heading">
             {t.footer.copyright}
           </p>
         </div>

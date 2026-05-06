@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, CheckCircle2, Shield, FileText, Globe, Heart, Tv, Users, Mail, Instagram, MessageCircle } from "lucide-react";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
+import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
 
 const BENEFIT_ICONS = [Shield, FileText, Globe, Heart, Tv, Users];
 
@@ -317,12 +318,13 @@ export default function LandingPage() {
       </main>
 
       <footer className="py-12 border-t border-border bg-zinc-950">
-        <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-              <div className="font-heading font-black text-2xl text-primary tracking-widest uppercase mb-1">IFA</div>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">International Fighters Association</p>
-            </div>
+        <div className="container flex flex-col items-center gap-8">
+          <img
+            src={ifaLogo}
+            alt="IFA – The International Fighters Association"
+            className="w-full max-w-[220px] md:max-w-[300px] opacity-90"
+          />
+          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4">
             <nav className="flex gap-6 text-xs text-muted-foreground uppercase tracking-widest font-heading">
               <Link href="/apply" className="hover:text-primary transition-colors">{t.footer.apply}</Link>
               <Link href="/sign-in" className="hover:text-primary transition-colors">{t.footer.login}</Link>
