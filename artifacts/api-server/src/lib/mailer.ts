@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { logger } from "./logger";
 
 const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
@@ -76,12 +77,18 @@ function sanitizeError(err: unknown): string {
 
 function createTransport() {
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+  const secure = SMTP_PORT === 465;
+  logger.info(
+    { host: SMTP_HOST, port: SMTP_PORT, secure },
+    "Using SMTP config",
+  );
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
-    secure: SMTP_PORT === 465,         // true = implicit TLS (port 465)
-    requireTLS: SMTP_PORT === 587,     // true = enforce STARTTLS upgrade (port 587)
+    secure,                        // true on 465 (implicit TLS), false on 587 (STARTTLS)
+    requireTLS: SMTP_PORT === 587, // enforce STARTTLS upgrade on port 587
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    tls: { rejectUnauthorized: false }, // accept self-signed / IONOS certs
   });
 }
 
