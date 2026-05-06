@@ -18,6 +18,7 @@ import type {
 
 import type {
   AdminListFighterApplicationsParams,
+  AdminResendFighterApplicationNotification200,
   AdminSendPaymentLinkBody,
   AdminStats,
   AdminUpdateFighterApplicationBody,
@@ -2142,6 +2143,97 @@ export const useAdminSendPaymentLink = <
   TContext
 > => {
   return useMutation(getAdminSendPaymentLinkMutationOptions(options));
+};
+
+/**
+ * @summary Resend the approval or rejection email for a fighter application
+ */
+export const getAdminResendFighterApplicationNotificationUrl = (id: number) => {
+  return `/api/admin/fighter-applications/${id}/resend-notification`;
+};
+
+export const adminResendFighterApplicationNotification = async (
+  id: number,
+  options?: RequestInit,
+): Promise<AdminResendFighterApplicationNotification200> => {
+  return customFetch<AdminResendFighterApplicationNotification200>(
+    getAdminResendFighterApplicationNotificationUrl(id),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+export const getAdminResendFighterApplicationNotificationMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["adminResendFighterApplicationNotification"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return adminResendFighterApplicationNotification(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AdminResendFighterApplicationNotificationMutationResult =
+  NonNullable<
+    Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>
+  >;
+
+export type AdminResendFighterApplicationNotificationMutationError =
+  ErrorType<ErrorResponse>;
+
+/**
+ * @summary Resend the approval or rejection email for a fighter application
+ */
+export const useAdminResendFighterApplicationNotification = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof adminResendFighterApplicationNotification>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(
+    getAdminResendFighterApplicationNotificationMutationOptions(options),
+  );
 };
 
 /**

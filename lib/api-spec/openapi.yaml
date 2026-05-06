@@ -505,6 +505,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/FighterApplication"
 
+  /admin/fighter-applications/{id}/resend-notification:
+    post:
+      operationId: adminResendFighterApplicationNotification
+      tags: [admin]
+      summary: Resend the approval or rejection email for a fighter application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Email resent (best-effort)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required:
+                  - ok
+        "400":
+          description: Application is still pending — no notification to resend
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Application not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /admin/fighter-applications/{id}/email-log:
     get:
       operationId: adminGetFighterApplicationEmailLog

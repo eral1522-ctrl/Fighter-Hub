@@ -3,6 +3,7 @@ import {
   useAdminListFighterApplications,
   useAdminUpdateFighterApplication,
   useAdminSendPaymentLink,
+  useAdminResendFighterApplicationNotification,
   useAdminGetFighterApplicationEmailLog,
   getAdminGetFighterApplicationEmailLogQueryKey,
   getAdminListFighterApplicationsQueryKey,
@@ -17,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle, Mail, ChevronDown, ChevronUp, XCircle } from "lucide-react";
+import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle, Mail, ChevronDown, ChevronUp, XCircle, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
 
@@ -135,6 +136,7 @@ export default function AdminApplicationsPage() {
   const [savingNotes, setSavingNotes] = useState<Record<number, boolean>>({});
   const [paymentLinks, setPaymentLinks] = useState<Record<number, string>>({});
   const [sendingLink, setSendingLink] = useState<Record<number, boolean>>({});
+  const [resendingNotification, setResendingNotification] = useState<Record<number, boolean>>({});
   const [testEmailResult, setTestEmailResult] = useState<{ ok: boolean; msg: string; config?: Record<string, unknown> } | null>(null);
 
   const testEmail = useMutation({
@@ -181,6 +183,7 @@ export default function AdminApplicationsPage() {
   const { data: applications, isLoading } = useAdminListFighterApplications(apiParams);
   const updateApplication = useAdminUpdateFighterApplication();
   const sendPaymentLink = useAdminSendPaymentLink();
+  const resendNotification = useAdminResendFighterApplicationNotification();
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: getAdminListFighterApplicationsQueryKey() });
@@ -206,6 +209,24 @@ export default function AdminApplicationsPage() {
           }
         },
         onError: () => toast({ title: "Failed to update status", variant: "destructive" }),
+      }
+    );
+  };
+
+  const handleResendNotification = (id: number, email: string) => {
+    setResendingNotification(prev => ({ ...prev, [id]: true }));
+    resendNotification.mutate(
+      { id },
+      {
+        onSuccess: () => {
+          toast({ title: `Notification email queued for ${email} ✓` });
+          invalidateEmailLog(id);
+          setResendingNotification(prev => ({ ...prev, [id]: false }));
+        },
+        onError: () => {
+          toast({ title: "Failed to resend notification", variant: "destructive" });
+          setResendingNotification(prev => ({ ...prev, [id]: false }));
+        },
       }
     );
   };
@@ -480,6 +501,7 @@ export default function AdminApplicationsPage() {
               const notesValue = editingNotes[app.id] !== undefined ? editingNotes[app.id] : (app.adminNotes ?? "");
               const linkValue = paymentLinks[app.id] !== undefined ? paymentLinks[app.id] : (app.paymentLink ?? "");
               const isSending = sendingLink[app.id] ?? false;
+              const isResending = resendingNotification[app.id] ?? false;
               const isApproved = app.status === "approved";
 
               return (
@@ -508,6 +530,20 @@ export default function AdminApplicationsPage() {
                           <SelectItem value="rejected">Rejected</SelectItem>
                         </SelectContent>
                       </Select>
+                      {/* Resend notification — only for approved/rejected */}
+                      {(app.status === "approved" || app.status === "rejected") && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="font-heading uppercase tracking-wider text-xs shrink-0 border-zinc-700 text-zinc-400 hover:text-white gap-1.5"
+                          onClick={() => handleResendNotification(app.id, app.email)}
+                          disabled={isResending}
+                          title={`Resend ${app.status} email to ${app.email}`}
+                        >
+                          <RefreshCw className="h-3 w-3" />
+                          {isResending ? "Sending..." : "Resend Email"}
+                        </Button>
+                      )}
                       {/* Payment toggle */}
                       <Button
                         size="sm"

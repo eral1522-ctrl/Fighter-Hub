@@ -547,6 +547,17 @@ export const AdminSendPaymentLinkResponse = zod.object({
 });
 
 /**
+ * @summary Resend the approval or rejection email for a fighter application
+ */
+export const AdminResendFighterApplicationNotificationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminResendFighterApplicationNotificationResponse = zod.object({
+  ok: zod.boolean(),
+});
+
+/**
  * @summary Get email delivery history for a fighter application
  */
 export const AdminGetFighterApplicationEmailLogParams = zod.object({

@@ -8,6 +8,7 @@
 
 export * from "./adminListFighterApplicationsParams";
 export * from "./adminListFighterApplicationsStatus";
+export * from "./adminResendFighterApplicationNotification200";
 export * from "./adminSendPaymentLinkBody";
 export * from "./adminStats";
 export * from "./adminUpdateFighterApplicationBody";

@@ -380,6 +380,43 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
   }
 });
 
+// POST /api/admin/fighter-applications/:id/resend-notification — resend approval or rejection email
+router.post("/fighter-applications/:id/resend-notification", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  try {
+    const [application] = await db
+      .select()
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.id, id))
+      .limit(1);
+
+    if (!application) return res.status(404).json({ error: "Application not found" });
+
+    const status = application.status;
+    if (status !== "approved" && status !== "rejected") {
+      return res.status(400).json({ error: "No notification to resend: application is still pending" });
+    }
+
+    if (status === "approved") {
+      sendApplicationApproved(application.name, application.email, id).catch((err) => {
+        req.log.warn({ err, id }, "Admin: failed to resend approval email");
+      });
+    } else {
+      sendApplicationRejected(application.name, application.email, id).catch((err) => {
+        req.log.warn({ err, id }, "Admin: failed to resend rejection email");
+      });
+    }
+
+    req.log.info({ id, status }, "Admin: resend notification triggered");
+    return res.json({ ok: true });
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to resend notification");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // GET /api/admin/fighter-applications/:id/email-log — fetch email delivery history for an application
 router.get("/fighter-applications/:id/email-log", requireAdmin, async (req: any, res: any) => {
   const id = parseInt(req.params.id);

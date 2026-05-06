@@ -417,3 +417,7 @@ export const AdminListFighterApplicationsStatus = {
   approved: "approved",
   rejected: "rejected",
 } as const;
+
+export type AdminResendFighterApplicationNotification200 = {
+  ok: boolean;
+};
