@@ -226,11 +226,14 @@ export const GetEventResponse = zod.object({
 export const ListMyApplicationsResponseItem = zod.object({
   id: zod.number(),
   fighterId: zod.number(),
+  clerkUserId: zod.string().nullish(),
+  fighterApplicationId: zod.number().nullish(),
   fighterName: zod.string(),
   opportunityId: zod.number().nullish(),
   eventId: zod.number().nullish(),
   opportunityTitle: zod.string().nullish(),
-  status: zod.enum(["pending", "approved", "rejected"]),
+  opportunityType: zod.string().nullish(),
+  status: zod.enum(["submitted", "pending", "approved", "rejected"]),
   message: zod.string().nullish(),
   createdAt: zod.string(),
 });
@@ -436,11 +439,14 @@ export const AdminCreateEventBody = zod.object({
 export const AdminListApplicationsResponseItem = zod.object({
   id: zod.number(),
   fighterId: zod.number(),
+  clerkUserId: zod.string().nullish(),
+  fighterApplicationId: zod.number().nullish(),
   fighterName: zod.string(),
   opportunityId: zod.number().nullish(),
   eventId: zod.number().nullish(),
   opportunityTitle: zod.string().nullish(),
-  status: zod.enum(["pending", "approved", "rejected"]),
+  opportunityType: zod.string().nullish(),
+  status: zod.enum(["submitted", "pending", "approved", "rejected"]),
   message: zod.string().nullish(),
   createdAt: zod.string(),
 });
@@ -458,11 +464,14 @@ export const AdminApproveApplicationParams = zod.object({
 export const AdminApproveApplicationResponse = zod.object({
   id: zod.number(),
   fighterId: zod.number(),
+  clerkUserId: zod.string().nullish(),
+  fighterApplicationId: zod.number().nullish(),
   fighterName: zod.string(),
   opportunityId: zod.number().nullish(),
   eventId: zod.number().nullish(),
   opportunityTitle: zod.string().nullish(),
-  status: zod.enum(["pending", "approved", "rejected"]),
+  opportunityType: zod.string().nullish(),
+  status: zod.enum(["submitted", "pending", "approved", "rejected"]),
   message: zod.string().nullish(),
   createdAt: zod.string(),
 });
@@ -477,11 +486,14 @@ export const AdminRejectApplicationParams = zod.object({
 export const AdminRejectApplicationResponse = zod.object({
   id: zod.number(),
   fighterId: zod.number(),
+  clerkUserId: zod.string().nullish(),
+  fighterApplicationId: zod.number().nullish(),
   fighterName: zod.string(),
   opportunityId: zod.number().nullish(),
   eventId: zod.number().nullish(),
   opportunityTitle: zod.string().nullish(),
-  status: zod.enum(["pending", "approved", "rejected"]),
+  opportunityType: zod.string().nullish(),
+  status: zod.enum(["submitted", "pending", "approved", "rejected"]),
   message: zod.string().nullish(),
   createdAt: zod.string(),
 });

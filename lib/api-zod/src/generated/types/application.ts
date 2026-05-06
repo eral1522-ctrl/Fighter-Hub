@@ -10,6 +10,10 @@ import type { ApplicationStatus } from "./applicationStatus";
 export interface Application {
   id: number;
   fighterId: number;
+  /** @nullable */
+  clerkUserId?: string | null;
+  /** @nullable */
+  fighterApplicationId?: number | null;
   fighterName: string;
   /** @nullable */
   opportunityId?: number | null;
@@ -17,6 +21,8 @@ export interface Application {
   eventId?: number | null;
   /** @nullable */
   opportunityTitle?: string | null;
+  /** @nullable */
+  opportunityType?: string | null;
   status: ApplicationStatus;
   /** @nullable */
   message?: string | null;

@@ -10,6 +10,7 @@ export type ApplicationStatus =
   (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
 
 export const ApplicationStatus = {
+  submitted: "submitted",
   pending: "pending",
   approved: "approved",
   rejected: "rejected",

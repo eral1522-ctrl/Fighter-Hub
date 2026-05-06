@@ -1,0 +1,159 @@
+Fix three issues in the IFA app.
+
+IMPORTANT:
+Do not change the public design.
+Do not break the dashboard.
+Do not break the admin panel.
+Do not remove the paywall.
+Do not change the opportunities data.
+
+==================================================
+1. FIX "APPLY FOR FIGHT" ERROR
+==================================================
+
+Problem:
+When a logged in user clicks "Apply for Fight" on an opportunity card, the app shows:
+"Application failed. An error occurred."
+
+Fix it properly.
+
+Requirements:
+
+1. Inspect the frontend function connected to the "Apply for Fight" button.
+2. Inspect the backend endpoint that should receive the application.
+3. Inspect the database table used to store opportunity applications.
+
+Make sure the flow is:
+
+Logged in user clicks Apply for Fight
+→ app checks if user has a fighter profile / fighter application
+→ app checks payment_status
+→ if payment_status is not "paid", block application and show:
+English:
+"Activate your IFA Membership to apply for opportunities."
+Spanish:
+"Activa tu Membresía IFA para aplicar a oportunidades."
+
+→ if payment_status is "paid", create the opportunity application in the database.
+
+The created record should include:
+- userId
+- fighterApplicationId if available
+- opportunityId
+- opportunityTitle
+- opportunityType = "fight"
+- status = "submitted"
+- createdAt
+
+If there is no table for opportunity applications, create one.
+
+After success, show:
+English:
+"Application submitted successfully."
+Spanish:
+"Solicitud enviada correctamente."
+
+Also:
+- prevent duplicate applications to the same opportunity
+- if duplicate, show:
+English:
+"You have already applied to this opportunity."
+Spanish:
+"Ya has aplicado a esta oportunidad."
+
+Add strong backend error logs with the exact cause.
+Return clear API errors instead of generic errors.
+
+==================================================
+2. CHANGE APPLICATION RECEIVED MESSAGE
+==================================================
+
+Update the success message after a fighter submits the /apply form.
+
+Current message:
+"Your application has been received. IFA will review your profile and contact you if selected."
+
+Change the logic and wording.
+
+New business logic:
+Every fighter who submits the form is accepted into the IFA registration process.
+However, to become an official IFA member and unlock full access to all services, opportunities, sponsors and support, they must activate the €20/month membership.
+
+New English success message:
+
+Title:
+APPLICATION RECEIVED
+
+Body:
+"Your registration has been received and your profile has been accepted into the IFA onboarding process.
+
+To become an official IFA member and unlock full access to fight opportunities, sponsor opportunities, career support and member services, you must activate your €20/month membership.
+
+Our team will contact you with the next steps."
+
+Instagram line:
+"In the meantime, follow us on Instagram @fighters_room for the latest news and opportunities."
+
+New Spanish success message:
+
+Title:
+SOLICITUD RECIBIDA
+
+Body:
+"Hemos recibido tu registro y tu perfil ha sido aceptado dentro del proceso de incorporación de IFA.
+
+Para convertirte en miembro oficial de IFA y desbloquear acceso completo a oportunidades de pelea, sponsors, apoyo profesional y servicios para miembros, debes activar tu membresía de €20/mes.
+
+Nuestro equipo te contactará con los próximos pasos."
+
+Instagram line:
+"Mientras tanto, síguenos en Instagram @fighters_room para ver las últimas noticias y oportunidades."
+
+Important:
+Remove @ifafighters everywhere and replace it with @fighters_room.
+
+==================================================
+3. CHANGE LOGIN METHOD TO EMAIL + PASSWORD
+==================================================
+
+Problem:
+Currently, when users log in, the app sends them an email code every time.
+I want users to create an account with email and password, then log in with email and password.
+
+Requirements:
+
+1. Check current authentication provider.
+2. If using Clerk, update the sign in and sign up configuration to prefer email + password.
+3. Disable or hide email code / magic link login if possible in the app UI.
+4. The login page should show:
+- Email
+- Password
+- Sign In button
+
+5. The registration page should show:
+- Email
+- Password
+- Confirm Password if supported
+- Create Account button
+
+6. Do not remove authentication security.
+7. Do not break existing users if possible.
+8. If this cannot be fully changed in code because it requires Clerk dashboard settings, explain exactly what I must change in Clerk dashboard.
+
+Expected result:
+Users register with email and password.
+Users log in with email and password.
+They should not need to receive an email code every time.
+
+==================================================
+4. FINAL CHECK
+==================================================
+
+After finishing, explain:
+
+1. Why Apply for Fight was failing
+2. What was changed to fix it
+3. Where opportunity applications are stored
+4. What message now appears after /apply
+5. Whether email/password login was fixed in code or requires Clerk dashboard changes
+6. How I can test everything step by step

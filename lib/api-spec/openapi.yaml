@@ -880,6 +880,10 @@ components:
           type: integer
         fighterId:
           type: integer
+        clerkUserId:
+          type: ["string", "null"]
+        fighterApplicationId:
+          type: ["integer", "null"]
         fighterName:
           type: string
         opportunityId:
@@ -888,9 +892,11 @@ components:
           type: ["integer", "null"]
         opportunityTitle:
           type: ["string", "null"]
+        opportunityType:
+          type: ["string", "null"]
         status:
           type: string
-          enum: [pending, approved, rejected]
+          enum: [submitted, pending, approved, rejected]
         message:
           type: ["string", "null"]
         createdAt:

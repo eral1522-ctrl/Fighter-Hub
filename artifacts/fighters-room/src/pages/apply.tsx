@@ -96,7 +96,9 @@ export default function ApplyPage() {
             </div>
             <h1 className="font-heading text-4xl md:text-5xl font-black uppercase tracking-tight mb-4">{t.apply.successTitle}</h1>
             <div className="h-1 w-20 bg-primary mx-auto mb-6" />
-            <p className="text-foreground text-base mb-3">{t.apply.successMsg}</p>
+            <p className="text-foreground text-base mb-4">{t.apply.successMsg}</p>
+            <p className="text-foreground/80 text-sm mb-4 border border-primary/30 bg-primary/5 rounded-md px-4 py-3">{(t.apply as any).successMsg2}</p>
+            <p className="text-muted-foreground text-sm mb-6">{(t.apply as any).successMsg3}</p>
             <p className="text-muted-foreground text-xs mb-8">{t.apply.successNote}</p>
             <Link href="/">
               <Button variant="outline" className="font-heading uppercase tracking-wider">

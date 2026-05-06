@@ -79,7 +79,14 @@ export default function DashboardPage() {
   const hasFighterProfile = !isStatsLoading && stats?.approvalStatus !== undefined && stats.approvalStatus !== "none";
 
   function getAppError(err: any): string {
-    return err?.data?.error || err?.message || t.dashboard.appErrorFallback;
+    const serverMsg: string | undefined = err?.data?.error;
+    if (err?.status === 409 || serverMsg?.toLowerCase().includes("already applied") || serverMsg?.toLowerCase().includes("ya has aplicado")) {
+      return t.dashboard.alreadyApplied;
+    }
+    if (err?.status === 403 || serverMsg?.toLowerCase().includes("membership")) {
+      return t.dashboard.notPaidApply;
+    }
+    return serverMsg || err?.message || t.dashboard.appErrorFallback;
   }
 
   const handleApplyOpportunity = (id: number) => {

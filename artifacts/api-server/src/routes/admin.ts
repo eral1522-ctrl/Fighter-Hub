@@ -492,7 +492,7 @@ router.get("/stats", requireAdmin, async (req: any, res: any) => {
     const [pendingApplications] = await db
       .select({ count: count() })
       .from(applicationsTable)
-      .where(eq(applicationsTable.status, "pending"));
+      .where(or(eq(applicationsTable.status, "pending"), eq(applicationsTable.status, "submitted")));
 
     return res.json({
       totalFighters: Number(totalFighters.count),

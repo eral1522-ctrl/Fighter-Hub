@@ -16,12 +16,19 @@ export const applicationsTable = pgTable("applications", {
   fighterId: integer("fighter_id")
     .notNull()
     .references(() => fightersTable.id),
+  // Clerk user ID (userId)
+  clerkUserId: text("clerk_user_id"),
+  // ID of the fighter_applications row if available
+  fighterApplicationId: integer("fighter_application_id"),
   opportunityId: integer("opportunity_id").references(
     () => opportunitiesTable.id,
   ),
+  // Denormalized for display
+  opportunityTitle: text("opportunity_title"),
+  opportunityType: text("opportunity_type"),
   eventId: integer("event_id").references(() => eventsTable.id),
-  // pending | approved | rejected
-  status: text("status").notNull().default("pending"),
+  // submitted | approved | rejected
+  status: text("status").notNull().default("submitted"),
   message: text("message"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
