@@ -85,7 +85,7 @@ export default function LandingPage() {
         <section className="relative pt-32 pb-24 md:pt-52 md:pb-40 overflow-hidden border-b border-border min-h-[95vh] flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('https://images.stockcake.com/public/c/3/4/c346eb8f-60fa-47fb-a84b-3d1f7e5a98b2_large/boxing-ring-spotlight-stockcake.jpg')" }}
+            style={{ backgroundImage: "url('https://images.stockcake.com/public/2/6/1/26110a07-b233-4411-9d00-6d9b0cf9ed27_large/ring-awaits-battle-stockcake.jpg')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/75 to-background" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent" />

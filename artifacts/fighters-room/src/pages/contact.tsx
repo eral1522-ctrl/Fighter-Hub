@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Instagram, CheckCircle2, Megaphone, Handshake } from "lucide-react";
+import { Mail, Instagram, CheckCircle2, Megaphone, Handshake, AlertCircle } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 
 const SUBJECTS = [
@@ -20,11 +20,41 @@ const SUBJECTS = [
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [subject, setSubject] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again or email us directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setSubmitted(false);
+    setName("");
+    setEmail("");
+    setSubject("");
+    setMessage("");
   };
 
   return (
@@ -58,25 +88,31 @@ export default function ContactPage() {
                       Thank you for reaching out to IFA. Our team will review your message and respond within 24–48 hours.
                     </p>
                   </div>
-                  <Button variant="outline" onClick={() => setSubmitted(false)} className="font-heading uppercase tracking-wider text-xs mt-2">
+                  <Button variant="outline" onClick={resetForm} className="font-heading uppercase tracking-wider text-xs mt-2">
                     Send Another Message
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {error && (
+                    <div className="flex items-start gap-3 bg-destructive/10 border border-destructive/30 rounded-md px-4 py-3">
+                      <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                      <p className="text-sm text-destructive">{error}</p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="uppercase text-xs tracking-wider text-muted-foreground">Full Name</Label>
-                      <Input id="name" required placeholder="Your name" className="bg-zinc-950" />
+                      <Input id="name" required placeholder="Your name" className="bg-zinc-950" value={name} onChange={e => setName(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email" className="uppercase text-xs tracking-wider text-muted-foreground">Email Address</Label>
-                      <Input id="email" type="email" required placeholder="you@example.com" className="bg-zinc-950" />
+                      <Input id="email" type="email" required placeholder="you@example.com" className="bg-zinc-950" value={email} onChange={e => setEmail(e.target.value)} />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label className="uppercase text-xs tracking-wider text-muted-foreground">Subject</Label>
-                    <Select onValueChange={setSubject} required>
+                    <Select value={subject} onValueChange={setSubject} required>
                       <SelectTrigger className="bg-zinc-950">
                         <SelectValue placeholder="Select a subject" />
                       </SelectTrigger>
@@ -94,10 +130,12 @@ export default function ContactPage() {
                       required
                       placeholder="How can IFA help you?"
                       className="resize-none h-36 bg-zinc-950"
+                      value={message}
+                      onChange={e => setMessage(e.target.value)}
                     />
                   </div>
-                  <Button type="submit" size="lg" className="w-full h-12 font-heading uppercase tracking-wider font-bold">
-                    Send Message
+                  <Button type="submit" size="lg" className="w-full h-12 font-heading uppercase tracking-wider font-bold" disabled={submitting || !subject}>
+                    {submitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               )}
@@ -149,7 +187,7 @@ export default function ContactPage() {
                   Press releases, interviews, fighter profiles for editorial use, event accreditation, and official statements. Reference "Media Inquiry" in your subject line.
                 </p>
                 <a href="mailto:info@fightersassociation.com?subject=Media Inquiry" className="text-primary text-xs font-heading uppercase tracking-wider hover:underline">
-                  media@fightersassociation.com →
+                  info@fightersassociation.com →
                 </a>
               </div>
 
@@ -165,7 +203,7 @@ export default function ContactPage() {
                   Brand partnerships, event co-sponsorship, gym affiliation, regional federation agreements, and commercial inquiries. Reference "Partnership" in your subject line.
                 </p>
                 <a href="mailto:info@fightersassociation.com?subject=Partnership Inquiry" className="text-primary text-xs font-heading uppercase tracking-wider hover:underline">
-                  partners@fightersassociation.com →
+                  info@fightersassociation.com →
                 </a>
               </div>
             </div>

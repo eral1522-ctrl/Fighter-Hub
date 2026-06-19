@@ -546,6 +546,72 @@ export async function sendApplicationRejected(name: string, email: string, appli
   }
 }
 
+export async function sendContactMessage(details: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): Promise<void> {
+  if (!getSmtpDiagnostics().configured) {
+    await logEmail({ emailType: "contact_form", recipientEmail: details.email, success: false, errorMessage: "Skipped: SMTP not configured" });
+    throw new SmtpDeliveryError("SMTP is not configured on this server", "Missing SMTP variable");
+  }
+
+  const recipient = (process.env.CONTACT_FORM_RECIPIENT ?? "info@fightersassociation.com").trim();
+
+  const fieldRow = (label: string, value: string) => `
+    <tr>
+      <td style="color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px;padding:7px 14px 7px 0;white-space:nowrap;vertical-align:top;">${label}</td>
+      <td style="color:#f5f5f5;font-size:14px;padding:7px 0;vertical-align:top;">${value}</td>
+    </tr>`;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
+  <div style="max-width:560px;margin:0 auto;">
+    ${header()}
+    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">New Contact Form Message</h2>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+        ${fieldRow("Name", esc(details.name))}
+        ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#f5c518;text-decoration:none;">${esc(details.email)}</a>`)}
+        ${fieldRow("Subject", esc(details.subject))}
+      </table>
+      <div style="background:#111;border:1px solid #333;border-radius:4px;padding:16px;">
+        <p style="color:#888;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin:0 0 10px;">Message</p>
+        <p style="color:#f5f5f5;font-size:14px;line-height:1.7;margin:0;white-space:pre-wrap;">${esc(details.message)}</p>
+      </div>
+      <p style="color:#666;font-size:12px;margin-top:20px;">
+        Reply directly to this email to respond to ${esc(details.name)}.
+      </p>
+    </div>
+    ${footer()}
+  </div>
+</body>
+</html>`.trim();
+
+  try {
+    await deliver({
+      from: SMTP_FROM,
+      to: recipient,
+      replyTo: details.email,
+      subject: `[IFA Contact] ${details.subject} — ${details.name}`,
+      html,
+    });
+    await logEmail({ emailType: "contact_form", recipientEmail: recipient, success: true });
+  } catch (err) {
+    await logEmail({
+      emailType: "contact_form",
+      recipientEmail: recipient,
+      success: false,
+      errorMessage: sanitizeError(err),
+    });
+    throw err;
+  }
+}
+
 export async function sendTestEmail(to: string): Promise<void> {
   const diag = getSmtpDiagnostics();
   if (!diag.configured) {
