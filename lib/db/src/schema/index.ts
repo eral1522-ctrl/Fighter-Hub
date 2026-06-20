@@ -4,3 +4,4 @@ export * from "./events";
 export * from "./applications";
 export * from "./fighter-applications";
 export * from "./email-log";
+export * from "./unmatched-payments";

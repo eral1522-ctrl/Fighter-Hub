@@ -8,6 +8,7 @@ import {
   applicationsTable,
   fighterApplicationsTable,
   emailLogTable,
+  unmatchedPaymentsTable,
 } from "@workspace/db";
 import { eq, count, ilike, and, or, desc, SQL } from "drizzle-orm";
 import {
@@ -514,6 +515,62 @@ router.get("/stats", requireAdmin, async (req: any, res: any) => {
     });
   } catch (err) {
     req.log.error({ err }, "Admin: failed to get stats");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /api/admin/unmatched-payments — Stripe payments the webhook couldn't
+// auto-match to a fighter application by email. Surfaced here so a real
+// payment never silently goes unnoticed in server logs.
+router.get("/unmatched-payments", requireAdmin, async (req: any, res: any) => {
+  try {
+    const payments = await db
+      .select()
+      .from(unmatchedPaymentsTable)
+      .where(eq(unmatchedPaymentsTable.resolved, false))
+      .orderBy(desc(unmatchedPaymentsTable.createdAt));
+    return res.json(payments);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to list unmatched payments");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// PATCH /api/admin/unmatched-payments/:id — manually link an unmatched
+// payment to a fighter application and mark that application as paid.
+router.patch("/unmatched-payments/:id", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  const applicationId = parseInt(req.body?.applicationId);
+
+  if (!Number.isFinite(id) || !Number.isFinite(applicationId)) {
+    return res.status(400).json({ error: "A valid applicationId is required" });
+  }
+
+  try {
+    const [application] = await db
+      .select({ id: fighterApplicationsTable.id })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.id, applicationId))
+      .limit(1);
+
+    if (!application) {
+      return res.status(404).json({ error: "Fighter application not found" });
+    }
+
+    await db
+      .update(fighterApplicationsTable)
+      .set({ paymentStatus: "paid" })
+      .where(eq(fighterApplicationsTable.id, applicationId));
+
+    await db
+      .update(unmatchedPaymentsTable)
+      .set({ resolved: true, linkedApplicationId: applicationId })
+      .where(eq(unmatchedPaymentsTable.id, id));
+
+    req.log.info({ unmatchedPaymentId: id, applicationId }, "Admin: manually resolved unmatched payment");
+    return res.json({ success: true });
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to resolve unmatched payment");
     return res.status(500).json({ error: "Internal server error" });
   }
 });

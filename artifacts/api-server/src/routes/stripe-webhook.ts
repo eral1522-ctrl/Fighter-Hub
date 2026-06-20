@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Stripe from "stripe";
-import { db, fighterApplicationsTable } from "@workspace/db";
+import { db, fighterApplicationsTable, unmatchedPaymentsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 
@@ -45,6 +45,8 @@ router.post("/webhook", async (req: any, res: any) => {
         await markApplicationPaid({
           email: session.customer_details?.email ?? session.customer_email ?? null,
           stripeSessionId: session.id,
+          amountTotal: session.amount_total ?? null,
+          currency: session.currency ?? null,
         });
         break;
       }
@@ -54,7 +56,12 @@ router.post("/webhook", async (req: any, res: any) => {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
         const email = invoice.customer_email ?? null;
-        await markApplicationPaid({ email, stripeSessionId: invoice.id });
+        await markApplicationPaid({
+          email,
+          stripeSessionId: invoice.id ?? `invoice_${invoice.number ?? "unknown"}`,
+          amountTotal: invoice.amount_paid ?? null,
+          currency: invoice.currency ?? null,
+        });
         break;
       }
 
@@ -71,14 +78,20 @@ router.post("/webhook", async (req: any, res: any) => {
   }
 });
 
-async function markApplicationPaid(params: { email: string | null; stripeSessionId: string }) {
-  const { email, stripeSessionId } = params;
+async function markApplicationPaid(params: {
+  email: string | null;
+  stripeSessionId: string;
+  amountTotal: number | null;
+  currency: string | null;
+}) {
+  const { email, stripeSessionId, amountTotal, currency } = params;
 
   if (!email) {
     logger.warn(
       { stripeSessionId },
       "Stripe payment completed but no email was present on the session — cannot match to a fighter application",
     );
+    await recordUnmatchedPayment({ stripeSessionId, payerEmail: null, amountTotal, currency });
     return;
   }
 
@@ -95,6 +108,7 @@ async function markApplicationPaid(params: { email: string | null; stripeSession
       { email: normalizedEmail, stripeSessionId },
       "Stripe payment completed for an email with no matching fighter application — manual review needed",
     );
+    await recordUnmatchedPayment({ stripeSessionId, payerEmail: normalizedEmail, amountTotal, currency });
     return;
   }
 
@@ -112,6 +126,25 @@ async function markApplicationPaid(params: { email: string | null; stripeSession
     { applicationId: application.id, email: normalizedEmail, stripeSessionId },
     "Fighter application automatically marked as paid via Stripe webhook",
   );
+}
+
+async function recordUnmatchedPayment(params: {
+  stripeSessionId: string;
+  payerEmail: string | null;
+  amountTotal: number | null;
+  currency: string | null;
+}) {
+  try {
+    await db.insert(unmatchedPaymentsTable).values({
+      stripeSessionId: params.stripeSessionId,
+      payerEmail: params.payerEmail,
+      amountTotal: params.amountTotal,
+      currency: params.currency,
+    });
+  } catch (err) {
+    // Never let a logging failure mask the original webhook error.
+    logger.error({ err, stripeSessionId: params.stripeSessionId }, "Failed to record unmatched payment");
+  }
 }
 
 export default router;

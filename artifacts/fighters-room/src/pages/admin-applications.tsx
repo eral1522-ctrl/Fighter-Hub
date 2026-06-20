@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle, Mail, ChevronDown, ChevronUp, XCircle, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { useState, useMemo, useEffect } from "react";
@@ -36,6 +36,39 @@ import { useState, useMemo, useEffect } from "react";
 async function postAdminTestEmail(): Promise<{ success?: boolean; sentTo?: string; error?: string; errorType?: string; smtpConfig?: Record<string, unknown> }> {
   const res = await fetch("/api/admin/test-email", { method: "POST" });
   return res.json();
+}
+
+type UnmatchedPayment = {
+  id: number;
+  stripeSessionId: string;
+  payerEmail: string | null;
+  amountTotal: number | null;
+  currency: string | null;
+  resolved: boolean;
+  linkedApplicationId: number | null;
+  createdAt: string;
+};
+
+// Inline fetchers for unmatched-payments endpoints (not in generated hooks)
+async function getAdminUnmatchedPayments(): Promise<UnmatchedPayment[]> {
+  const res = await fetch("/api/admin/unmatched-payments");
+  if (!res.ok) throw new Error("Failed to load unmatched payments");
+  return res.json();
+}
+
+async function resolveAdminUnmatchedPayment(id: number, applicationId: number): Promise<{ success?: boolean; error?: string }> {
+  const res = await fetch(`/api/admin/unmatched-payments/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ applicationId }),
+  });
+  return res.json();
+}
+
+function formatAmount(amountTotal: number | null, currency: string | null): string {
+  if (amountTotal == null) return "—";
+  const value = (amountTotal / 100).toFixed(2);
+  return `${value} ${(currency ?? "").toUpperCase()}`;
 }
 
 type Status = "pending" | "approved" | "rejected";
@@ -168,6 +201,29 @@ export default function AdminApplicationsPage() {
       const msg = err?.message ?? "Request failed";
       setTestEmailResult({ ok: false, msg });
       toast({ title: "Unknown SMTP error", description: msg, variant: "destructive" });
+    },
+  });
+
+  // Stripe payments the webhook couldn't auto-match to an application by email
+  const { data: unmatchedPayments } = useQuery({
+    queryKey: ["admin", "unmatched-payments"],
+    queryFn: getAdminUnmatchedPayments,
+  });
+  const [linkTargetId, setLinkTargetId] = useState<Record<number, string>>({});
+  const resolveUnmatchedPayment = useMutation({
+    mutationFn: ({ id, applicationId }: { id: number; applicationId: number }) =>
+      resolveAdminUnmatchedPayment(id, applicationId),
+    onSuccess: (data) => {
+      if (data.error) {
+        toast({ title: "Failed to link payment", description: data.error, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Payment linked and marked as paid ✓" });
+      qc.invalidateQueries({ queryKey: ["admin", "unmatched-payments"] });
+      qc.invalidateQueries({ queryKey: getAdminListFighterApplicationsQueryKey() });
+    },
+    onError: (err: any) => {
+      toast({ title: "Failed to link payment", description: err?.message ?? "Request failed", variant: "destructive" });
     },
   });
 
@@ -384,6 +440,54 @@ export default function AdminApplicationsPage() {
           </div>
         )}
 
+        {/* Unmatched Stripe payments — payments the webhook couldn't auto-link by email */}
+        {unmatchedPayments && unmatchedPayments.length > 0 && (
+          <div className="mb-6 rounded border border-yellow-700 bg-yellow-950/30 p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <AlertTriangle className="h-5 w-5 text-yellow-400 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium text-yellow-300">
+                  {unmatchedPayments.length} Stripe payment{unmatchedPayments.length > 1 ? "s" : ""} couldn't be auto-matched
+                </p>
+                <p className="text-yellow-200/70 text-xs mt-0.5">
+                  The payer's email didn't match any fighter application. Link each payment to the correct applicant below.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {unmatchedPayments.map((p) => (
+                <div key={p.id} className="flex flex-wrap items-center gap-3 bg-zinc-950/60 border border-yellow-900 rounded p-3">
+                  <div className="flex-1 min-w-[200px] text-sm">
+                    <span className="text-zinc-200 font-medium">{p.payerEmail ?? "(no email on payment)"}</span>
+                    <span className="text-zinc-500 ml-2">{formatAmount(p.amountTotal, p.currency)}</span>
+                    <span className="text-zinc-600 ml-2">{format(new Date(p.createdAt), "MMM d, yyyy HH:mm")}</span>
+                  </div>
+                  <Input
+                    type="number"
+                    placeholder="Application ID"
+                    className="w-40 bg-zinc-950 h-9"
+                    value={linkTargetId[p.id] ?? ""}
+                    onChange={(e) => setLinkTargetId(prev => ({ ...prev, [p.id]: e.target.value }))}
+                  />
+                  <Button
+                    size="sm"
+                    className="h-9"
+                    disabled={!linkTargetId[p.id] || resolveUnmatchedPayment.isPending}
+                    onClick={() => {
+                      const applicationId = parseInt(linkTargetId[p.id]);
+                      if (Number.isFinite(applicationId)) {
+                        resolveUnmatchedPayment.mutate({ id: p.id, applicationId });
+                      }
+                    }}
+                  >
+                    Link &amp; Mark Paid
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-zinc-950 border-border">
@@ -523,6 +627,7 @@ export default function AdminApplicationsPage() {
                       {statusBadge(app.status)}
                       {paymentBadge(app.paymentStatus)}
                       <h3 className="font-heading text-xl uppercase tracking-wide">{app.name}</h3>
+                      <span className="text-[10px] font-mono text-zinc-600">#{app.id}</span>
                       <span className="text-xs text-muted-foreground">{format(new Date(app.createdAt), "MMM d, yyyy")}</span>
                     </div>
                     <div className="flex flex-wrap gap-2 items-center">
