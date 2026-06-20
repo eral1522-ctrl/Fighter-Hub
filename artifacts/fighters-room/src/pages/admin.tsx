@@ -11,9 +11,11 @@ import { Check, X, ShieldAlert } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AdminPage() {
-  const { data: stats, isLoading: isStatsLoading } = useAdminGetStats();
+  const { data: stats, isLoading: isStatsLoading, error: statsError } = useAdminGetStats();
   const { data: fighters, isLoading: isFightersLoading } = useAdminListFighters();
   const { data: applications, isLoading: isAppsLoading } = useAdminListApplications();
+
+  const isUnauthorized = (statsError as any)?.status === 401 || (statsError as any)?.status === 403;
 
   const approveFighter = useAdminApproveFighter();
   const rejectFighter = useAdminRejectFighter();
@@ -50,6 +52,20 @@ export default function AdminPage() {
       onError: () => toast({ title: "Action failed", variant: "destructive" })
     });
   };
+
+  if (isUnauthorized) {
+    return (
+      <Layout>
+        <div className="container py-24 flex flex-col items-center text-center gap-4">
+          <ShieldAlert className="h-12 w-12 text-destructive" />
+          <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Access Denied</h1>
+          <p className="text-muted-foreground max-w-md">
+            This area is restricted to IFA administrators. If you believe you should have access, contact a system administrator.
+          </p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

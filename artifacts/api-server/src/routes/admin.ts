@@ -26,9 +26,12 @@ import {
 
 const router = Router();
 
-// Admin middleware: checks for a special admin claim or hardcoded admin user IDs
-// TODO: Replace with your real admin Clerk user IDs or implement a proper role system
-const ADMIN_CLERK_IDS = (process.env.ADMIN_CLERK_IDS || "").split(",").filter(Boolean);
+// Admin middleware: only Clerk user IDs listed in ADMIN_CLERK_IDS may access
+// admin routes. If ADMIN_CLERK_IDS is not configured, admin access is
+// disabled for everyone (fail closed) rather than open to any signed-in
+// user, to avoid accidentally exposing fighter applications, emails, and
+// payment status to the public.
+const ADMIN_CLERK_IDS = (process.env.ADMIN_CLERK_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
 
 function requireAdmin(req: any, res: any, next: any) {
   const auth = getAuth(req);
@@ -37,8 +40,14 @@ function requireAdmin(req: any, res: any, next: any) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // Allow if userId is in admin list OR if no admins configured (dev mode)
-  if (ADMIN_CLERK_IDS.length > 0 && !ADMIN_CLERK_IDS.includes(userId as string)) {
+  if (ADMIN_CLERK_IDS.length === 0) {
+    req.log.error(
+      "Admin route blocked: ADMIN_CLERK_IDS is not configured. Set it in Secrets to grant admin access — see admin.ts.",
+    );
+    return res.status(403).json({ error: "Forbidden: admin access is not configured on this server" });
+  }
+
+  if (!ADMIN_CLERK_IDS.includes(userId as string)) {
     return res.status(403).json({ error: "Forbidden: Admin access required" });
   }
 

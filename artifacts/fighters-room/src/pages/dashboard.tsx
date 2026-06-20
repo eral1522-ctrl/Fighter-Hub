@@ -12,6 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useLanguage } from "@/lib/i18n";
 import { useState, useMemo } from "react";
+import { useUser } from "@clerk/react";
 
 const PAST_STATUSES = ["completed", "closed"];
 const UPCOMING_STATUSES = ["open", "scouting", "recruiting", "expected", "active"];
@@ -30,6 +31,7 @@ function getStatusColor(status: string) {
 
 export default function DashboardPage() {
   const { t } = useLanguage();
+  const { user } = useUser(); // TEMP — remove after copying admin Clerk user ID
   const { data: stats, isLoading: isStatsLoading } = useGetDashboardStats();
   const { data: allOpportunities, isLoading: isOppLoading } = useListOpportunities();
   const { data: events, isLoading: isEventsLoading } = useListEvents();
@@ -142,6 +144,13 @@ export default function DashboardPage() {
   return (
     <Layout>
       <div className="container py-8 max-w-6xl">
+        {/* TEMP DEBUG — remove this block after copying the user ID */}
+        {user && (
+          <div className="mb-6 p-4 bg-yellow-500/20 border-2 border-yellow-500 rounded-md">
+            <p className="text-yellow-200 font-mono text-sm font-bold">YOUR CLERK USER ID: {user.id}</p>
+            <p className="text-yellow-200/70 text-xs mt-1">Copy this and send it to Claude. This banner will be removed afterward.</p>
+          </div>
+        )}
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
