@@ -16,6 +16,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { ShieldAlert, Search, CreditCard, Send, Link2, FlaskConical, CheckCircle2, AlertTriangle, Mail, ChevronDown, ChevronUp, XCircle, RefreshCw } from "lucide-react";
@@ -138,6 +148,7 @@ export default function AdminApplicationsPage() {
   const [sendingLink, setSendingLink] = useState<Record<number, boolean>>({});
   const [resendingNotification, setResendingNotification] = useState<Record<number, boolean>>({});
   const [testEmailResult, setTestEmailResult] = useState<{ ok: boolean; msg: string; config?: Record<string, unknown> } | null>(null);
+  const [resendTarget, setResendTarget] = useState<{ id: number; email: string; status: string } | null>(null);
 
   const testEmail = useMutation({
     mutationFn: postAdminTestEmail,
@@ -536,7 +547,7 @@ export default function AdminApplicationsPage() {
                           size="sm"
                           variant="outline"
                           className="font-heading uppercase tracking-wider text-xs shrink-0 border-zinc-700 text-zinc-400 hover:text-white gap-1.5"
-                          onClick={() => handleResendNotification(app.id, app.email)}
+                          onClick={() => setResendTarget({ id: app.id, email: app.email, status: app.status })}
                           disabled={isResending}
                           title={`Resend ${app.status} email to ${app.email}`}
                         >
@@ -671,6 +682,38 @@ export default function AdminApplicationsPage() {
           </div>
         )}
       </div>
+
+      {/* Resend email confirmation dialog */}
+      <AlertDialog open={resendTarget !== null} onOpenChange={(open) => { if (!open) setResendTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Resend notification email?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will send{" "}
+              {resendTarget?.status === "approved" ? "an" : "a"}{" "}
+              <span className="font-semibold text-foreground">
+                {resendTarget?.status === "approved" ? "Approved" : "Rejected"}
+              </span>{" "}
+              notification email to{" "}
+              <span className="font-semibold text-foreground">{resendTarget?.email}</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={resendTarget ? (resendingNotification[resendTarget.id] ?? false) : false}
+              onClick={() => {
+                if (resendTarget) {
+                  handleResendNotification(resendTarget.id, resendTarget.email);
+                  setResendTarget(null);
+                }
+              }}
+            >
+              Send Email
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }
