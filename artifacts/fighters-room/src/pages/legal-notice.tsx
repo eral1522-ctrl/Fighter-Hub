@@ -5,12 +5,18 @@ const SECTIONS = [
     title: "Organization",
     content: `IFA – International Fighters Association
 International membership association for professional and amateur combat sports athletes
+
+Operated by: NLIS UK Investments Limited
+Company Number: 16061459
+Registered in England and Wales
+Registered Office: Hull, United Kingdom
+
 Website: https://fightersassociation.com
 Contact: info@fightersassociation.com`,
   },
   {
     title: "Nature of Operations",
-    content: `IFA operates as an international, independent, non-governmental membership association. IFA is not a sports governing body, regulatory authority, or sanctioning organization. IFA does not grant fighting licenses.
+    content: `IFA operates as an international, independent, non-governmental membership association managed by NLIS UK Investments Limited, a company registered in England and Wales. IFA is not a sports governing body, regulatory authority, or sanctioning organization. IFA does not grant fighting licenses.
 
 IFA operates globally across multiple jurisdictions. Our primary operational language is English. Our services are accessible internationally, subject to applicable local laws and regulations.`,
   },
@@ -32,7 +38,7 @@ Membership fees are set by IFA and are subject to change. Current pricing is dis
   },
   {
     title: "Intellectual Property",
-    content: `All content on the IFA Platform — including but not limited to the IFA name, logo, text, graphics, page layouts, and software — is the property of IFA or its content suppliers and is protected by applicable intellectual property laws.
+    content: `All content on the IFA Platform — including but not limited to the IFA name, logo, text, graphics, page layouts, and software — is the property of NLIS UK Investments Limited or its content suppliers and is protected by applicable intellectual property laws.
 
 You may not copy, reproduce, modify, distribute, transmit, display, publish, license, create derivative works from, or sell any content obtained from the Platform without prior written consent from IFA.
 
@@ -54,7 +60,7 @@ Some jurisdictions do not allow the exclusion of certain warranties or limitatio
   },
   {
     title: "Governing Law and Dispute Resolution",
-    content: `These terms are governed by applicable international law. In the event of any dispute, IFA encourages resolution through good-faith negotiation before pursuing formal legal proceedings.
+    content: `These terms are governed by the laws of England and Wales. Any disputes arising from or in connection with these terms shall be subject to the exclusive jurisdiction of the courts of England and Wales.
 
 IFA reserves the right to update these legal terms at any time. Material changes will be communicated to members. Continued use of the Platform after such changes constitutes acceptance of the updated terms.`,
   },
@@ -62,11 +68,12 @@ IFA reserves the right to update these legal terms at any time. Material changes
     title: "Contact",
     content: `For legal inquiries or notices:
 
-IFA – International Fighters Association
+NLIS UK Investments Limited (trading as IFA – International Fighters Association)
+Company No. 16061459 — Registered in England and Wales
 Email: info@fightersassociation.com
 Website: https://fightersassociation.com
 
-Last updated: May 2025`,
+Last updated: June 2026`,
   },
 ];
 

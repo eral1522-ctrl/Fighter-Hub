@@ -5,24 +5,24 @@ import { PublicPageLayout } from "@/components/public-page-layout";
 
 const NEWS = [
   {
-    category: "Partnerships",
-    date: "April 28, 2025",
-    title: "IFA Expands to South America — New Regional Partners Announced",
-    excerpt: "The International Fighters Association has established new regional partnerships across Brazil, Argentina, and Colombia, opening access to hundreds of fighters across South America's growing combat sports scene.",
-    image: "https://images.stockcake.com/public/c/3/4/c346eb8f-60fa-47fb-a84b-3d1f7e5a98b2_large/boxing-ring-spotlight-stockcake.jpg",
+    category: "Expansion",
+    date: "June 10, 2026",
+    title: "IFA Opens Registration to Fighters Across the Middle East and North Africa",
+    excerpt: "IFA has expanded its membership program to include fighters based in the MENA region, establishing new regional contacts in Morocco, UAE, and Egypt to support fighters seeking international exposure.",
+    image: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&q=80",
   },
   {
     category: "Fighter Protection",
-    date: "April 15, 2025",
-    title: "IFA Launches Enhanced Contract Review Process for All Members",
-    excerpt: "IFA has upgraded its contract review service, now providing all Athlete members with access to a standardized contract review framework designed to protect fighters from unfair terms and hidden clauses.",
+    date: "May 22, 2026",
+    title: "IFA Launches Standardised Contract Review Framework for Member Fighters",
+    excerpt: "All IFA Athlete members now have access to a contract review framework designed to protect fighters from unfair terms. The service covers promotion contracts, sponsorship agreements, and bout contracts.",
     image: "https://images.pexels.com/photos/6295869/pexels-photo-6295869.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
   },
   {
-    category: "Events",
-    date: "March 30, 2025",
-    title: "IFA Members Featured Across Three Major European Fight Cards",
-    excerpt: "Twelve IFA members have been booked for major boxing and MMA events across Spain, France, and Germany in Q2 2025, marking one of IFA's strongest periods for member placement in European combat sports.",
+    category: "Community",
+    date: "April 14, 2026",
+    title: "IFA Member Network Reaches Fighters in 30+ Countries",
+    excerpt: "IFA's growing membership now spans more than 30 countries across Europe, Asia, the Americas and Africa. The association continues to expand its network of regional contacts and partner promotions.",
     image: "https://images.pexels.com/photos/9968139/pexels-photo-9968139.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
   },
 ];
@@ -30,8 +30,8 @@ const NEWS = [
 const EVENTS = [
   {
     id: 1,
-    title: "IFA European Boxing Championships",
-    date: "June 14, 2025",
+    title: "IFA European Boxing Summit",
+    date: "September 20, 2026",
     location: "Madrid, Spain",
     sport: "Boxing",
     level: "International",
@@ -40,7 +40,7 @@ const EVENTS = [
   {
     id: 2,
     title: "IFA MMA Showcase — Amsterdam",
-    date: "July 19, 2025",
+    date: "October 11, 2026",
     location: "Amsterdam, Netherlands",
     sport: "MMA",
     level: "Regional",
@@ -49,16 +49,16 @@ const EVENTS = [
   {
     id: 3,
     title: "IFA Kickboxing Grand Prix",
-    date: "September 6, 2025",
+    date: "November 8, 2026",
     location: "Paris, France",
     sport: "Kickboxing",
     level: "International",
-    desc: "IFA's first standalone kickboxing event under the Grand Prix format. Full contact rules, 8-man tournament, multiple weight categories. Applications through the member dashboard.",
+    desc: "IFA's standalone kickboxing event under the Grand Prix format. Full contact rules, 8-man tournament, multiple weight categories. Applications through the member dashboard.",
   },
   {
     id: 4,
     title: "IFA Latin America — Fight Night Bogotá",
-    date: "October 11, 2025",
+    date: "December 5, 2026",
     location: "Bogotá, Colombia",
     sport: "Boxing / MMA",
     level: "Regional",
