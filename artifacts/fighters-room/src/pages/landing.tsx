@@ -34,7 +34,7 @@ function getStatusStyle(status: string): { badgeClass: string; accentClass: stri
 }
 
 export default function LandingPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { isSignedIn } = useUser();
   const { data: stats } = useGetDashboardStats();
   const { data: allOpportunities } = useListOpportunities();
@@ -132,6 +132,65 @@ export default function LandingPage() {
                 <div key={label} className="py-6 text-center">
                   <div className="font-heading font-black text-4xl md:text-5xl text-primary mb-1">{num}</div>
                   <div className="text-[11px] text-muted-foreground font-heading uppercase tracking-widest">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── THREE AUDIENCES ── */}
+        <section className="py-20 md:py-28 border-b border-border bg-zinc-950">
+          <div className="container">
+            <div className="text-center mb-16">
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">
+                {lang === "es" ? "Para quién es IFA" : "Who is IFA for"}
+              </p>
+              <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter">
+                {lang === "es" ? "Conecta, Compite y Destaca" : "Connect, Compete and Stand Out"}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-border rounded-md overflow-hidden">
+              {[
+                {
+                  icon: "🥊",
+                  title: lang === "es" ? "Luchadores" : "Fighters",
+                  desc: lang === "es"
+                    ? "Accede a oportunidades internacionales, construye tu perfil profesional, conecta con promotores y desbloquea patrocinios."
+                    : "Access international fight opportunities, build your professional profile, connect with promoters and unlock sponsorships.",
+                  cta: lang === "es" ? "Aplicar como luchador" : "Apply as a Fighter",
+                  href: "/apply",
+                },
+                {
+                  icon: "📋",
+                  title: lang === "es" ? "Promotores" : "Promoters",
+                  desc: lang === "es"
+                    ? "Encuentra talento verificado en todo el mundo. Accede a perfiles de luchadores IFA activos y listos para competir."
+                    : "Find verified talent worldwide. Access profiles of active IFA fighters ready to compete on your card.",
+                  cta: lang === "es" ? "Contactar con IFA" : "Contact IFA",
+                  href: "/contact",
+                },
+                {
+                  icon: "🤝",
+                  title: lang === "es" ? "Patrocinadores" : "Sponsors",
+                  desc: lang === "es"
+                    ? "Conecta tu marca con atletas y eventos internacionales. IFA te pone en contacto con los deportistas adecuados para tu inversión."
+                    : "Connect your brand with international athletes and events. IFA puts you in front of the right athletes for your investment.",
+                  cta: lang === "es" ? "Explorar patrocinio" : "Explore Sponsorship",
+                  href: "/contact",
+                },
+              ].map((item, i) => (
+                <div key={i} className={`group p-10 flex flex-col gap-6 hover:bg-primary/5 transition-all duration-300 ${i < 2 ? "border-b md:border-b-0 md:border-r border-border" : ""}`}>
+                  <div className="text-5xl">{item.icon}</div>
+                  <div>
+                    <h3 className="font-heading text-3xl md:text-4xl font-black uppercase tracking-tighter text-primary mb-4">{item.title}</h3>
+                    <p className="text-muted-foreground text-base leading-relaxed">{item.desc}</p>
+                  </div>
+                  <Link href={item.href} className="mt-auto">
+                    <Button variant="outline" className="font-heading uppercase tracking-wider text-xs border-primary/30 hover:border-primary hover:bg-primary/10 group-hover:border-primary/60">
+                      {item.cta}
+                      <ArrowRight className="ml-2 h-3 w-3" />
+                    </Button>
+                  </Link>
                 </div>
               ))}
             </div>
