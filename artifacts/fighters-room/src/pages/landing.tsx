@@ -93,7 +93,7 @@ export default function LandingPage() {
             <div className="inline-block bg-primary/10 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest px-5 py-1.5 rounded-full mb-8 font-heading">
               {t.hero.badge}
             </div>
-            <h1 className="font-heading text-5xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.85] text-foreground mb-8">
+            <h1 className="font-heading text-5xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.92] text-foreground mb-8">
               {t.hero.headline}
             </h1>
             <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mb-12 font-medium leading-relaxed">
