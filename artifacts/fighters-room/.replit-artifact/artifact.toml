@@ -23,7 +23,79 @@ publicDir = "artifacts/fighters-room/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]
-from = "/*"
+from = "/"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/sign-in"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/sign-in/*"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/sign-up"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/sign-up/*"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/dashboard"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/profile"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/admin"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/admin/applications"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/apply"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/statutes"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/association"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/president-message"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/about"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/membership"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/news-events"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/contact"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/privacy-policy"
+to = "/index.html"
+
+[[services.production.rewrites]]
+from = "/legal-notice"
 to = "/index.html"
 
 [services.env]
