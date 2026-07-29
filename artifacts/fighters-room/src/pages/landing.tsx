@@ -10,6 +10,7 @@ import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { useUser } from "@clerk/react";
 import { useGetDashboardStats, useListOpportunities } from "@workspace/api-client-react";
 import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
+import heroFighterImg from "@assets/hero-fighter-tunnel_1.jpg";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
@@ -83,23 +84,29 @@ export default function LandingPage() {
 
         {/* ── HERO ── */}
         <section className="relative pt-32 pb-24 md:pt-52 md:pb-40 overflow-hidden border-b border-border min-h-[95vh] flex items-center">
+          {/* Full-bleed photo — fighter kept on the right edge of frame */}
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('https://images.stockcake.com/public/2/6/1/26110a07-b233-4411-9d00-6d9b0cf9ed27_large/ring-awaits-battle-stockcake.jpg')" }}
+            className="absolute inset-0 bg-cover bg-no-repeat bg-[73%_center] md:bg-[position:center_right]"
+            style={{ backgroundImage: `url(${heroFighterImg})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/75 to-background" />
+          {/* Cinematic gradient: solid dark on the left for the copy, fading out toward the fighter */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background from-15% via-background/90 via-40% to-transparent to-85% md:from-background md:from-0% md:via-background/75 md:via-50% md:to-transparent md:to-80%" />
+          {/* Extra bottom-up fade, reinforced on mobile where the crop is tighter */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent md:from-background/40 md:via-transparent" />
+          {/* Brand accent glow, kept subtle */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent" />
-          <div className="container relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto">
+
+          <div className="container relative z-10 flex flex-col items-start text-left max-w-2xl lg:max-w-3xl">
             <div className="inline-block bg-primary/10 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest px-5 py-1.5 rounded-full mb-8 font-heading">
               {t.hero.badge}
             </div>
-            <h1 className="font-heading text-5xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-[0.92] text-foreground mb-8">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.92] text-foreground mb-8">
               {t.hero.headline}
             </h1>
-            <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mb-12 font-medium leading-relaxed">
+            <p className="text-lg md:text-2xl text-muted-foreground max-w-xl mb-12 font-medium leading-relaxed">
               {t.hero.subheadline}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/apply" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto h-14 px-10 font-heading text-lg uppercase tracking-wider font-bold shadow-[0_0_50px_-10px_hsl(var(--primary))]">
                   {t.hero.joinBtn}
