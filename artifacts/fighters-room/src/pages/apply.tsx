@@ -10,6 +10,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useSubmitFighterApplication } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const WEIGHT_CLASSES = [
   "Strawweight", "Light Flyweight", "Flyweight", "Super Flyweight", "Bantamweight",
@@ -19,6 +20,11 @@ const WEIGHT_CLASSES = [
 ];
 
 export default function ApplyPage() {
+  usePageMeta({
+    title: "Apply as a Fighter",
+    description: "Submit your application to join the International Fighters Association and access global opportunities.",
+    path: "/apply",
+  });
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);

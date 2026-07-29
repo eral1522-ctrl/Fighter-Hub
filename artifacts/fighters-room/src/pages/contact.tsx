@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Instagram, CheckCircle2, Megaphone, Handshake, AlertCircle } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const SUBJECTS = [
   "General Inquiry",
@@ -19,6 +20,11 @@ const SUBJECTS = [
 ];
 
 export default function ContactPage() {
+  usePageMeta({
+    title: "Contact IFA",
+    description: "Get in touch with the International Fighters Association for membership, media, or partnership inquiries.",
+    path: "/contact",
+  });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

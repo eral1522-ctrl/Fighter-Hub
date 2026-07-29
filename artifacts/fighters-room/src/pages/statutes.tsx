@@ -1,7 +1,13 @@
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { useLanguage } from "@/lib/i18n";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 export default function StatutesPage() {
+  usePageMeta({
+    title: "IFA Statutes",
+    description: "The official statutes governing the International Fighters Association's structure, mission, and operations.",
+    path: "/statutes",
+  });
   const { t } = useLanguage();
   const s = t.statutes;
 

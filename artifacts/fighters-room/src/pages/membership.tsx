@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
@@ -106,6 +107,11 @@ const FAQ = [
 ];
 
 export default function MembershipPage() {
+  usePageMeta({
+    title: "Membership Plans",
+    description: "Compare IFA membership tiers for athletes, clubs, and partners, including pricing, benefits, and how to join.",
+    path: "/membership",
+  });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (

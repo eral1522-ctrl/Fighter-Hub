@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, MapPin, Tag } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const NEWS = [
   {
@@ -74,6 +75,11 @@ const SPORT_COLORS: Record<string, string> = {
 };
 
 export default function NewsEventsPage() {
+  usePageMeta({
+    title: "News & Events",
+    description: "Latest news and upcoming events from the International Fighters Association and the global combat sports community.",
+    path: "/news-events",
+  });
   return (
     <PublicPageLayout>
       {/* Hero */}

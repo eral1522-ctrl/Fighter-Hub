@@ -1,4 +1,5 @@
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const SECTIONS = [
   {
@@ -112,6 +113,11 @@ Website: https://fightersassociation.com`,
 ];
 
 export default function PrivacyPolicyPage() {
+  usePageMeta({
+    title: "Privacy Policy",
+    description: "How the International Fighters Association collects, uses, and protects your personal data.",
+    path: "/privacy-policy",
+  });
   return (
     <PublicPageLayout>
       <section className="py-20 md:py-28 border-b border-border relative overflow-hidden">

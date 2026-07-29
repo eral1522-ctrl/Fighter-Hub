@@ -1,5 +1,6 @@
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { useLanguage } from "@/lib/i18n";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const PHOTO_URL = "https://raw.githubusercontent.com/eral1522-ctrl/Fighter-Hub/main/attached_assets/president-erik-alonso.jpg";
 
@@ -19,6 +20,11 @@ const MESSAGE = {
 };
 
 export default function PresidentMessagePage() {
+  usePageMeta({
+    title: "Message from the President",
+    description: "A message from Erik Alonso, President of the International Fighters Association.",
+    path: "/president-message",
+  });
   const { t, lang } = useLanguage();
   const p = t.presidentMessage;
   const paragraphs = MESSAGE[lang];

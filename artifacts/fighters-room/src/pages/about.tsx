@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Globe, Target, Users, Star, Heart } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const VALUES = [
   { icon: Shield, title: "Fighter First", desc: "Every decision IFA makes is guided by what is best for the athletes we represent. Fighters are the heart of combat sports and must be treated as such." },
@@ -29,6 +30,11 @@ const BOARD = [
 ];
 
 export default function AboutPage() {
+  usePageMeta({
+    title: "About IFA",
+    description: "IFA's mission, vision, values, and timeline as the independent global association representing combat sports athletes.",
+    path: "/about",
+  });
   return (
     <PublicPageLayout>
       {/* Hero */}

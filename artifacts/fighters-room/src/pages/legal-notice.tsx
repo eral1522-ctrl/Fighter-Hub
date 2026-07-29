@@ -1,4 +1,5 @@
 import { PublicPageLayout } from "@/components/public-page-layout";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const SECTIONS = [
   {
@@ -78,6 +79,11 @@ Last updated: June 2026`,
 ];
 
 export default function LegalNoticePage() {
+  usePageMeta({
+    title: "Legal Notice",
+    description: "Legal information, organizational details, and terms governing the International Fighters Association website.",
+    path: "/legal-notice",
+  });
   return (
     <PublicPageLayout>
       <section className="py-20 md:py-28 border-b border-border relative overflow-hidden">

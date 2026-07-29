@@ -3,10 +3,16 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Globe, TrendingUp, BookOpen, FileText, Eye, Users, Star } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { useLanguage } from "@/lib/i18n";
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const SECTION_ICONS = [Shield, TrendingUp, Star, BookOpen, FileText, Globe, Eye, Users];
 
 export default function AssociationPage() {
+  usePageMeta({
+    title: "What IFA Does",
+    description: "Discover the pillars of the International Fighters Association: representation, protection, and global opportunities for fighters.",
+    path: "/association",
+  });
   const { t } = useLanguage();
   const a = t.association;
 

@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import {
   ArrowRight, CheckCircle2, Shield, FileText, Globe, Eye,
   Users, Star, UserCheck, BookOpen, Mail, Instagram,
-  MessageCircle, Lock, Quote, ChevronDown,
+  MessageCircle, Lock, Quote, ChevronDown, Menu, X,
 } from "lucide-react";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { useUser } from "@clerk/react";
 import { useGetDashboardStats, useListOpportunities } from "@workspace/api-client-react";
+import { usePageMeta } from "@/lib/use-page-meta";
 import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
 import heroFighterImg from "@assets/hero-fighter-tunnel_1.jpg";
 
@@ -36,6 +38,12 @@ function getStatusStyle(status: string): { badgeClass: string; accentClass: stri
 
 export default function LandingPage() {
   const { t } = useLanguage();
+  usePageMeta({
+    title: "The Global Home of Combat Sports",
+    description: "IFA is the International Fighters Association representing fighters across boxing, MMA, kickboxing, Muay Thai and combat sports worldwide.",
+    path: "/",
+  });
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { isSignedIn } = useUser();
   const { data: stats } = useGetDashboardStats();
   const { data: allOpportunities } = useListOpportunities();
@@ -57,8 +65,8 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-background selection:bg-primary selection:text-primary-foreground">
       {/* Header */}
       <header className="absolute top-0 z-50 w-full border-b border-white/5 bg-background/80 backdrop-blur-sm">
-        <div className="container flex h-20 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="container flex h-20 items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             <span className="font-heading font-black text-3xl text-primary tracking-widest uppercase">IFA</span>
             <span className="hidden sm:block text-xs text-muted-foreground uppercase tracking-widest font-medium border-l border-border pl-3">International Fighters Association</span>
           </Link>
@@ -68,16 +76,40 @@ export default function LandingPage() {
             <Link href="/membership" className="hover:text-primary transition-colors">{t.footer.membership}</Link>
             <Link href="/news-events" className="hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <LangSwitcher />
-            <Link href="/sign-in">
+            <Link href="/sign-in" className="hidden sm:block">
               <Button variant="ghost" className="text-muted-foreground hover:text-white uppercase font-heading tracking-wider">{t.header.login}</Button>
             </Link>
             <Link href="/apply">
               <Button className="font-heading uppercase tracking-wider font-bold">{t.header.join}</Button>
             </Link>
+            <button
+              className="md:hidden p-1 text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="md:hidden border-t border-border bg-background/98 px-6 py-6 space-y-4">
+            {[
+              { href: "/about", label: t.footer.about },
+              { href: "/association", label: t.header.association },
+              { href: "/membership", label: t.footer.membership },
+              { href: "/news-events", label: t.footer.newsEvents },
+              { href: "/contact", label: t.footer.contact },
+              { href: "/sign-in", label: t.header.login },
+            ].map(({ href, label }) => (
+              <Link key={href} href={href} onClick={() => setMobileOpen(false)} className="block text-sm font-heading uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors py-1">
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
       </header>
 
       <main className="flex-1">
