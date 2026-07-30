@@ -19,14 +19,11 @@ const TIMELINE = [
   { year: "2022", title: "Expanded to 20 Countries", desc: "IFA opened regional partnerships across Europe, Latin America, and North Africa, building a truly international network." },
   { year: "2023", title: "Digital Member Portal Launched", desc: "IFA launched its digital platform allowing fighters to manage profiles, apply for opportunities, and track their career directly online." },
   { year: "2024", title: "1,000+ Members", desc: "Membership surpassed 1,000 registered fighters across 40+ countries, with opportunities spanning all major combat sports disciplines." },
-  { year: "2025", title: "International Events Program", desc: "IFA launched its own sanctioned event program, hosting IFA-branded shows across Europe and expanding to the Americas." },
+  { year: "2025", title: "International Events Program", desc: "IFA launched IFA-supported events and member participation programs, with member visibility across shows in Europe and expanding to the Americas." },
 ];
 
 const BOARD = [
-  { name: "Erik Alonso", role: "President", placeholder: true },
-  { name: "Board Member", role: "Vice President – Operations", placeholder: true },
-  { name: "Board Member", role: "Director – Fighter Relations", placeholder: true },
-  { name: "Board Member", role: "Director – Events & Partnerships", placeholder: true },
+  { name: "Erik Alonso", role: "President" },
 ];
 
 export default function AboutPage() {
@@ -144,18 +141,19 @@ export default function AboutPage() {
             <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">Board of Directors</h2>
             <div className="h-1 w-20 bg-primary mx-auto" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 max-w-xs mx-auto">
             {BOARD.map((member, i) => (
-              <div key={i} className="bg-background border border-border rounded-md p-6 text-center group hover:border-primary/30 transition-colors">
+              <Link key={i} href="/president-message" className="bg-background border border-border rounded-md p-6 text-center group hover:border-primary/30 transition-colors">
                 <div className="w-16 h-16 rounded-full bg-zinc-800 border border-border mx-auto mb-4 flex items-center justify-center">
                   <Users className="h-7 w-7 text-muted-foreground" />
                 </div>
                 <h3 className="font-heading text-base uppercase tracking-wide mb-1">{member.name}</h3>
-                <p className="text-muted-foreground text-xs leading-snug">{member.role}</p>
-              </div>
+                <p className="text-muted-foreground text-xs leading-snug mb-2">{member.role}</p>
+                <p className="text-primary text-[11px] font-heading uppercase tracking-wider">Read his message →</p>
+              </Link>
             ))}
           </div>
-          <p className="text-center text-xs text-muted-foreground mt-8">Full board profiles coming soon.</p>
+          <p className="text-center text-xs text-muted-foreground mt-8">Additional board profiles will be published as they are confirmed.</p>
         </div>
       </section>
 

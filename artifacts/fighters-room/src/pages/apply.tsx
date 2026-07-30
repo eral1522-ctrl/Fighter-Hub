@@ -288,7 +288,14 @@ export default function ApplyPage() {
                       className="mt-0.5"
                     />
                     <Label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                      {t.apply.termsText}
+                      {t.apply.termsAgree}{" "}
+                      <Link href="/legal-notice" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                        {t.apply.termsLinkLabel}
+                      </Link>{" "}
+                      {t.apply.termsAnd}{" "}
+                      <Link href="/privacy-policy" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                        {t.apply.privacyLinkLabel}
+                      </Link>. {t.apply.termsConfirm}
                     </Label>
                   </div>
 

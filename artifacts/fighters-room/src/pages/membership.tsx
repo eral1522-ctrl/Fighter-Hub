@@ -21,7 +21,7 @@ const TIERS = [
       "Sponsor & brand opportunity listings",
       "Career support & guidance",
       "International event access",
-      "Legal contract review support",
+      "Contract education & guidance",
       "Priority member support",
       "IFA fighter network access",
     ],
@@ -44,7 +44,6 @@ const TIERS = [
       "Coach & manager portal",
       "Priority support for all team members",
       "IFA-branded event presence",
-      "Dedicated account manager",
     ],
     cta: "Contact Us",
     href: "mailto:info@fightersassociation.com?subject=Club/Gym Membership",
@@ -77,6 +76,16 @@ const STEPS = [
   { step: "01", title: "Submit Application", desc: "Complete the fighter application form at /apply. Tell us about your career, discipline, and goals." },
   { step: "02", title: "IFA Reviews", desc: "Our team reviews your profile within 48 hours. We verify your credentials and sport background." },
   { step: "03", title: "Activate Membership", desc: "Once approved, activate your membership plan and gain immediate access to the full IFA platform." },
+];
+
+const FIRST_7_DAYS = [
+  "Activation of your IFA member profile.",
+  "Digital IFA membership card.",
+  "Access to the member opportunity board.",
+  "Initial review of your sporting profile.",
+  "Opportunity alerts matching your discipline and weight class.",
+  "Access to the IFA support channel.",
+  "Member resources for contracts, sponsors and career development.",
 ];
 
 const FAQ = [
@@ -202,6 +211,25 @@ export default function MembershipPage() {
                 <div className="font-heading text-6xl font-black text-primary/30 mb-4">{step.step}</div>
                 <h3 className="font-heading text-lg uppercase tracking-wide mb-3">{step.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* First 7 Days */}
+      <section className="py-20 md:py-28 border-b border-border">
+        <div className="container max-w-3xl">
+          <div className="text-center mb-14">
+            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Onboarding</p>
+            <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">What You Receive in Your First 7 Days</h2>
+            <div className="h-1 w-20 bg-primary mx-auto" />
+          </div>
+          <div className="bg-zinc-950 border border-border rounded-md p-8 md:p-10 space-y-4">
+            {FIRST_7_DAYS.map((item) => (
+              <div key={item} className="flex items-start gap-3">
+                <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-sm md:text-base text-foreground/90">{item}</span>
               </div>
             ))}
           </div>

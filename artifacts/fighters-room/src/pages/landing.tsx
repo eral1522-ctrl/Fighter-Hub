@@ -158,7 +158,26 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── STATS BAR ── */}
+        {/* ── PRIORITY BENEFITS ── */}
+        <section className="py-16 md:py-20 bg-zinc-950 border-b border-border">
+          <div className="container">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {t.priorityBenefits.items.map((item) => (
+                <div key={item.title} className="text-center md:text-left">
+                  <h3 className="font-heading text-2xl uppercase tracking-wide mb-3 text-primary">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── STATS BAR ──
+             DISABLED: membersNum/countriesNum/eventsNum are hardcoded,
+             not backed by a live DB count, and unverified. Hiding the
+             whole bar rather than cherry-picking which numbers to trust.
+             Re-enable once real figures are confirmed. */}
+        {false && (
         <section className="py-6 bg-zinc-950 border-b border-border">
           <div className="container">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
@@ -176,6 +195,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* ── ABOUT THE ASSOCIATION ── */}
         <section className="py-20 md:py-28 border-b border-border">
@@ -384,7 +404,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── WHAT FIGHTERS NEED TODAY (anonymous testimonials) ── */}
+        {/* ── WHAT FIGHTERS NEED TODAY (testimonials) ──
+             DISABLED: these quotes/names are placeholder content, not
+             sourced from real members with authorization. Re-enable once
+             real, approved testimonials are available. Content kept in
+             i18n.tsx (t.testimonials) rather than deleted. */}
+        {false && (
         <section className="py-24 md:py-36 border-b border-border bg-zinc-950 relative overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-5"
@@ -419,6 +444,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        )}
+
 
         {/* ── MEMBERSHIP ── */}
         <section className="py-24 md:py-36 relative overflow-hidden border-b border-border">

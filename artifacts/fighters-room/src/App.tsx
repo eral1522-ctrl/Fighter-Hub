@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/reac
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
-import { LanguageProvider } from "@/lib/i18n";
+import { LanguageProvider, useLanguage } from "@/lib/i18n";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
 import NotFound from "@/pages/not-found";
@@ -102,9 +102,17 @@ function ClerkQueryClientCacheInvalidator() {
 }
 
 function SignInPage() {
+  const { t } = useLanguage();
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
-      <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 bg-background px-4">
+      <p className="font-heading text-sm uppercase tracking-widest text-muted-foreground">{t.auth.portalTitle}</p>
+      <SignIn routing="path" path={`${basePath}/sign-in`} />
+      <p className="text-sm text-muted-foreground">
+        {t.auth.notMember}{" "}
+        <a href={`${basePath}/apply`} className="text-primary hover:underline font-medium">
+          {t.auth.applyLink}
+        </a>
+      </p>
     </div>
   );
 }
@@ -173,7 +181,6 @@ export default function App() {
             proxyUrl={clerkProxyUrl}
             appearance={clerkAppearance}
             signInUrl={`${basePath}/sign-in`}
-            signUpUrl={`${basePath}/sign-up`}
             routerPush={(to) => setLocation(stripBase(to))}
             routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
           >

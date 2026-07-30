@@ -15,7 +15,7 @@ router.post("/", async (req: any, res: any) => {
   try {
     const [application] = await db
       .insert(fighterApplicationsTable)
-      .values({ ...parsed.data, status: "approved" })
+      .values({ ...parsed.data, status: "pending" })
       .returning();
 
     const appId = application.id;
