@@ -75,6 +75,17 @@
   @media (min-width: 1280px) {
     padding-inline: 5rem;
   }
+
+  /* On large/ultra-wide monitors, 1320px reads as a narrow column
+     floating in a sea of background — widen the cap so content fills
+     more of the viewport instead of looking boxed in the middle. */
+  @media (min-width: 1600px) {
+    max-width: 1520px;
+  }
+
+  @media (min-width: 1920px) {
+    max-width: 1680px;
+  }
 }
 
 @layer base {

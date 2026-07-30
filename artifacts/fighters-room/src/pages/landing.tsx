@@ -177,6 +177,20 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── ABOUT THE ASSOCIATION ── */}
+        <section className="py-20 md:py-28 border-b border-border">
+          <div className="container max-w-4xl text-center">
+            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">{t.aboutSection.label}</p>
+            <h2 className="font-heading text-4xl md:text-6xl font-black uppercase mb-6">{t.aboutSection.heading}</h2>
+            <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8">{t.aboutSection.text}</p>
+            <Link href="/about" className="inline-flex items-center gap-2 text-primary font-heading uppercase tracking-wider text-sm font-bold hover:gap-3 transition-all">
+              {t.aboutSection.cta}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
         {/* ── COMBAT SPORTS ── */}
         <section className="py-20 md:py-28 border-b border-border">
           <div className="container">

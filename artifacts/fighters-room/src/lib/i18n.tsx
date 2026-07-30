@@ -23,6 +23,12 @@ const T = {
       joinBtn: "Apply to Join IFA",
       viewBenefitsBtn: "View Member Benefits",
     },
+    aboutSection: {
+      label: "Who We Are",
+      heading: "The International Fighters Association",
+      text: "Founded in 2020, IFA is an independent global association built to represent and protect combat sports athletes — with no conflicts of interest and no loyalty except to our members. Today IFA represents over 1,200 fighters in 45+ countries across boxing, MMA, kickboxing, Muay Thai and beyond, giving athletes access to legitimate opportunities, fair contracts, career guidance and an international network built to work in their favor.",
+      cta: "Learn more about IFA",
+    },
     whyJoin: {
       label: "Why Join IFA?",
       heading: "Why Join IFA?",
@@ -424,6 +430,12 @@ const T = {
       subheadline: "IFA representa a luchadores en MMA, Boxeo, Kickboxing, Muay Thai y todos los deportes de combate del mundo. Accede a oportunidades, protección y una red global creada para atletas profesionales.",
       joinBtn: "Aplicar para unirme a IFA",
       viewBenefitsBtn: "Ver beneficios",
+    },
+    aboutSection: {
+      label: "Quiénes Somos",
+      heading: "La Asociación Internacional de Luchadores",
+      text: "Fundada en 2020, IFA es una asociación global independiente creada para representar y proteger a los atletas de deportes de combate — sin conflictos de interés y con lealtad única a sus miembros. Hoy IFA representa a más de 1.200 luchadores en más de 45 países, en boxeo, MMA, kickboxing, Muay Thai y más, dando a los atletas acceso a oportunidades legítimas, contratos justos, orientación de carrera y una red internacional creada para trabajar a su favor.",
+      cta: "Conoce más sobre IFA",
     },
     whyJoin: {
       label: "¿Por qué unirte a IFA?",
