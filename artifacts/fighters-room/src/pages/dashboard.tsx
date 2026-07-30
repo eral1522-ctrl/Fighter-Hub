@@ -364,7 +364,7 @@ export default function DashboardPage() {
                 >
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="secondary" className="uppercase bg-primary/20 text-primary border-primary/30">Sponsorship</Badge>
-                    {opp.compensation && <Badge className="bg-green-900 text-green-100 border-green-800"><Coins className="w-3 h-3 mr-1" />{opp.compensation}</Badge>}
+                    {isPaid && opp.compensation && <Badge className="bg-green-900 text-green-100 border-green-800"><Coins className="w-3 h-3 mr-1" />{opp.compensation}</Badge>}
                   </div>
                   <CardTitle className="font-heading text-2xl uppercase mb-1">{opp.title}</CardTitle>
                   <p className={`text-sm text-muted-foreground line-clamp-2 ${!isPaid ? "blur-[3px] select-none pointer-events-none" : ""}`}>{opp.description}</p>

@@ -3,7 +3,7 @@ import { Switch, Route, Redirect, useLocation, Router as WouterRouter } from "wo
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, Show, useClerk } from "@clerk/react";
 import { LanguageProvider, useLanguage } from "@/lib/i18n";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
@@ -118,11 +118,10 @@ function SignInPage() {
 }
 
 function SignUpPage() {
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background px-4">
-      <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
-    </div>
-  );
+  // /sign-up is intentionally not a public entry point anymore — every new
+  // member must go through /apply first. This redirects any direct visit
+  // (typed URL, old bookmark, external link) straight to the application.
+  return <Redirect to="/apply" />;
 }
 
 function HomeRedirect() {
