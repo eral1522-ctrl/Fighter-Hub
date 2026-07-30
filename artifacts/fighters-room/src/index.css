@@ -48,6 +48,10 @@
   --font-sans: 'Inter', sans-serif;
   --font-heading: 'Barlow Condensed', sans-serif;
 
+  /* Barlow Condensed is already narrow, so Tailwind's default -0.05em
+     tracking-tighter reads cramped on bold uppercase headlines. */
+  --tracking-tighter: 0em;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
