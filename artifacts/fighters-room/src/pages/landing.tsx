@@ -298,6 +298,13 @@ export default function LandingPage() {
                 {featuredOpps.map((opp) => {
                   const style = getStatusStyle(opp.status);
                   const statusLabel = (t.liveOpps as Record<string, string>)[`status${opp.status.charAt(0).toUpperCase() + opp.status.slice(1)}`] ?? opp.status;
+                  // country/city aren't always populated on the record, but `location`
+                  // ("City, Country") reliably is — fall back to parsing it.
+                  const [locCity, locCountry] = opp.location
+                    ? opp.location.split(",").map((s: string) => s.trim())
+                    : [null, null];
+                  const displayCountry = opp.country ?? locCountry ?? null;
+                  const displayCity = opp.city ?? locCity ?? null;
                   return (
                     <div
                       key={opp.id}
@@ -315,12 +322,12 @@ export default function LandingPage() {
                         <div className="space-y-2.5 text-xs text-muted-foreground">
                           <div className="flex items-center justify-between">
                             <span className="uppercase tracking-wider">{t.liveOpps.country}</span>
-                            <span className="font-medium text-foreground/80">{opp.country ?? "—"}</span>
+                            <span className="font-medium text-foreground/80">{displayCountry ?? "—"}</span>
                           </div>
-                          {opp.city && (
+                          {displayCity && (
                             <div className="flex items-center justify-between">
                               <span className="uppercase tracking-wider">{t.liveOpps.city}</span>
-                              <span className="font-medium text-foreground/80">{opp.city}</span>
+                              <span className="font-medium text-foreground/80">{displayCity}</span>
                             </div>
                           )}
                           <div className="flex items-center justify-between">
