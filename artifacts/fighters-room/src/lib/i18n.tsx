@@ -14,6 +14,13 @@ const T = {
       notMember: "Not a member yet?",
       applyLink: "Apply for IFA Membership.",
     },
+    finalCta: {
+      label: "Join Now",
+      headingLine1: "Your Career.",
+      headingLine2: "Your Association.",
+      text: "Apply today and join fighters across boxing, MMA, kickboxing, Muay Thai and more who have chosen IFA as their global home in combat sports.",
+      applyBtn: "Apply to Join IFA",
+    },
     layout: {
       dashboard: "My Dashboard",
       profile: "My Profile",
@@ -392,6 +399,13 @@ const T = {
       portalTitle: "Portal de Miembros de IFA",
       notMember: "¿Aún no eres miembro?",
       applyLink: "Aplica para la Membresía de IFA.",
+    },
+    finalCta: {
+      label: "Únete Ahora",
+      headingLine1: "Tu Carrera.",
+      headingLine2: "Tu Asociación.",
+      text: "Aplica hoy y únete a luchadores de boxeo, MMA, kickboxing, Muay Thai y más que han elegido a IFA como su hogar global en los deportes de combate.",
+      applyBtn: "Aplicar para Unirme a IFA",
     },
     layout: {
       dashboard: "Mi Panel",

@@ -509,16 +509,16 @@ export default function LandingPage() {
         <section className="py-24 md:py-40 relative overflow-hidden border-b border-border">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
           <div className="container relative z-10 text-center max-w-3xl mx-auto">
-            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Join Now</p>
-            <h2 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 leading-[0.85]">Your Career.<br />Your Association.</h2>
+            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">{t.finalCta.label}</p>
+            <h2 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 leading-[0.85]">{t.finalCta.headingLine1}<br />{t.finalCta.headingLine2}</h2>
             <div className="h-1 w-20 bg-primary mx-auto mb-10" />
             <p className="text-muted-foreground text-lg md:text-xl leading-relaxed mb-12">
-              Over 1,200 fighters in 45+ countries have chosen IFA. Apply today and join the global home of combat sports.
+              {t.finalCta.text}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/apply">
                 <Button size="lg" className="h-14 px-12 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_50px_-10px_hsl(var(--primary))]">
-                  Apply to Join IFA
+                  {t.finalCta.applyBtn}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
