@@ -84,7 +84,7 @@ export default function LandingPage() {
             <Link href="/about" className="hover:text-primary transition-colors">{t.footer.about}</Link>
             <Link href="/association" className="hover:text-primary transition-colors">{t.header.association}</Link>
             <Link href="/membership" className="hover:text-primary transition-colors">{t.footer.membership}</Link>
-            <Link href="/news-events" className="hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
+            <Link href="/global-boxing-summit" className="hover:text-primary transition-colors">{t.footer.gbs}</Link>
           </nav>
           <div className="flex items-center gap-3 sm:gap-4">
             <LangSwitcher />
@@ -110,7 +110,7 @@ export default function LandingPage() {
               { href: "/about", label: t.footer.about },
               { href: "/association", label: t.header.association },
               { href: "/membership", label: t.footer.membership },
-              { href: "/news-events", label: t.footer.newsEvents },
+              { href: "/global-boxing-summit", label: t.footer.gbs },
               { href: "/contact", label: t.footer.contact },
               { href: "/sign-in", label: t.header.login },
             ].map(({ href, label }) => (
@@ -610,7 +610,7 @@ export default function LandingPage() {
                 <Link href="/apply" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.apply}</Link>
                 <Link href="/membership" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.membership}</Link>
                 <Link href="/sign-in" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.login}</Link>
-                <Link href="/news-events" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
+                <Link href="/global-boxing-summit" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.gbs}</Link>
               </nav>
             </div>
             <div>

@@ -23,7 +23,7 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
             <Link href="/about" className="hover:text-primary transition-colors">{t.footer.about}</Link>
             <Link href="/association" className="hover:text-primary transition-colors">{t.header.association}</Link>
             <Link href="/membership" className="hover:text-primary transition-colors">{t.footer.membership}</Link>
-            <Link href="/news-events" className="hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
+            <Link href="/global-boxing-summit" className="hover:text-primary transition-colors">{t.footer.gbs}</Link>
             <Link href="/contact" className="hover:text-primary transition-colors">{t.footer.contact}</Link>
           </nav>
 
@@ -50,7 +50,7 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
               { href: "/about", label: t.footer.about },
               { href: "/association", label: t.header.association },
               { href: "/membership", label: t.footer.membership },
-              { href: "/news-events", label: t.footer.newsEvents },
+              { href: "/global-boxing-summit", label: t.footer.gbs },
               { href: "/contact", label: t.footer.contact },
               { href: "/sign-in", label: t.header.login },
             ].map(({ href, label }) => (
@@ -95,18 +95,18 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
 
             {/* For Fighters */}
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">For Fighters</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.forFightersHeading}</h4>
               <nav className="space-y-3">
                 <Link href="/apply" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.apply}</Link>
                 <Link href="/membership" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.membership}</Link>
                 <Link href="/sign-in" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.login}</Link>
-                <Link href="/news-events" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.newsEvents}</Link>
+                <Link href="/global-boxing-summit" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.gbs}</Link>
               </nav>
             </div>
 
             {/* Association */}
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Association</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.association}</h4>
               <nav className="space-y-3">
                 <Link href="/about" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.about}</Link>
                 <Link href="/association" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.association}</Link>
@@ -118,7 +118,7 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
 
             {/* Legal */}
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Legal</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.legalHeading}</h4>
               <nav className="space-y-3">
                 <Link href="/privacy-policy" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.privacyPolicy}</Link>
                 <Link href="/legal-notice" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.legalNotice}</Link>

@@ -20,7 +20,7 @@ import AssociationPage from "@/pages/association";
 import PresidentMessagePage from "@/pages/president-message";
 import AboutPage from "@/pages/about";
 import MembershipPage from "@/pages/membership";
-import NewsEventsPage from "@/pages/news-events";
+import GlobalBoxingSummitPage from "@/pages/global-boxing-summit";
 import ContactPage from "@/pages/contact";
 import PrivacyPolicyPage from "@/pages/privacy-policy";
 import LegalNoticePage from "@/pages/legal-notice";
@@ -168,7 +168,13 @@ function Router() {
       <Route path="/president-message" component={PresidentMessagePage} />
       <Route path="/about" component={AboutPage} />
       <Route path="/membership" component={MembershipPage} />
-      <Route path="/news-events" component={NewsEventsPage} />
+      <Route path="/global-boxing-summit" component={GlobalBoxingSummitPage} />
+      <Route path="/news-events">
+        {/* Old News & Events route — unconfirmed news/events content was
+            removed per instruction. Redirect rather than 404 so existing
+            links/bookmarks land somewhere real. */}
+        <Redirect to="/global-boxing-summit" />
+      </Route>
       <Route path="/contact" component={ContactPage} />
       <Route path="/privacy-policy" component={PrivacyPolicyPage} />
       <Route path="/legal-notice" component={LegalNoticePage} />
