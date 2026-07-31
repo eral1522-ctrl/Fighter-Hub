@@ -110,6 +110,87 @@ router.patch("/fighters/:id/reject", requireAdmin, async (req: any, res: any) =>
   }
 });
 
+// GET /api/admin/opportunities — list ALL opportunities regardless of
+// status (draft/verified included) so admins can see and manage the
+// full pipeline, not just what's public.
+router.get("/opportunities", requireAdmin, async (req: any, res: any) => {
+  try {
+    const opportunities = await db
+      .select()
+      .from(opportunitiesTable)
+      .orderBy(desc(opportunitiesTable.createdAt));
+    return res.json(opportunities);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to list opportunities");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+const OPPORTUNITY_STATUSES = ["draft", "verified", "published", "closing_soon", "matched", "closed"];
+const OPPORTUNITY_TYPES = ["fight", "sponsor"];
+// Fields PATCH is allowed to touch. Anything not listed here is ignored
+// rather than erroring, so unrelated request-body noise can't slip through.
+const OPPORTUNITY_EDITABLE_FIELDS = [
+  "status", "title", "type", "description", "location", "date", "weightClass",
+  "compensation", "purse", "country", "city", "sport", "level",
+  "travelIncluded", "accommodationIncluded", "promoterOrganization", "gender",
+  "requiredExperience", "applicationDeadline", "travelAccommodationDetails",
+  "memberOnlyDetails", "applicationInstructions", "adminVerificationNotes",
+];
+
+function validateOpportunityUpdate(body: any): { data?: Record<string, unknown>; error?: string } {
+  if (typeof body !== "object" || body === null) {
+    return { error: "Request body must be an object" };
+  }
+  const data: Record<string, unknown> = {};
+  for (const key of OPPORTUNITY_EDITABLE_FIELDS) {
+    if (!(key in body)) continue;
+    const value = body[key];
+    if (key === "status" && value !== undefined && !OPPORTUNITY_STATUSES.includes(value)) {
+      return { error: `status must be one of: ${OPPORTUNITY_STATUSES.join(", ")}` };
+    }
+    if (key === "type" && value !== undefined && !OPPORTUNITY_TYPES.includes(value)) {
+      return { error: `type must be one of: ${OPPORTUNITY_TYPES.join(", ")}` };
+    }
+    if ((key === "travelIncluded" || key === "accommodationIncluded") && value !== null && value !== undefined && typeof value !== "boolean") {
+      return { error: `${key} must be a boolean or null` };
+    }
+    data[key] = value;
+  }
+  return { data };
+}
+
+// PATCH /api/admin/opportunities/:id — update status/fields.
+// This was the missing piece: there was previously no way at all,
+// through any API, to move an opportunity from draft to verified to
+// published (or to edit it after creation) — only creation existed.
+router.patch("/opportunities/:id", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  const parsed = validateOpportunityUpdate(req.body);
+  if (parsed.error) {
+    return res.status(400).json({ error: parsed.error });
+  }
+  if (!parsed.data || Object.keys(parsed.data).length === 0) {
+    return res.status(400).json({ error: "No fields to update" });
+  }
+
+  try {
+    const [opportunity] = await db
+      .update(opportunitiesTable)
+      .set(parsed.data)
+      .where(eq(opportunitiesTable.id, id))
+      .returning();
+
+    if (!opportunity) return res.status(404).json({ error: "Opportunity not found" });
+    return res.json(opportunity);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to update opportunity");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // POST /api/admin/opportunities — create opportunity
 router.post("/opportunities", requireAdmin, async (req: any, res: any) => {
   const parsed = AdminCreateOpportunityBody.safeParse(req.body);

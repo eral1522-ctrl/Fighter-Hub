@@ -1,10 +1,16 @@
 import { Router } from "express";
 import { db, opportunitiesTable, fightersTable, fighterApplicationsTable, type Opportunity } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import { ListOpportunitiesQueryParams } from "@workspace/api-zod";
 
 const router = Router();
+
+// An opportunity is only visible publicly once it's moved through the
+// admin workflow to one of these statuses. "draft" and "verified" (not
+// yet published) are never returned by this route, no matter who's
+// asking — that's what the /api/admin/opportunities routes are for.
+const PUBLIC_STATUSES = ["published", "closing_soon", "matched", "closed"];
 
 // Short in-memory cache for the public (redacted/unpaid) opportunities
 // list. This is the overwhelming majority of traffic (anonymous visitors
@@ -51,12 +57,22 @@ async function isRequestFromPaidMember(req: any): Promise<boolean> {
   }
 }
 
-function redactIfUnpaid<T extends { compensation: unknown; purse: unknown }>(
-  opp: T,
-  paid: boolean,
-): T {
-  if (paid) return opp;
-  return { ...opp, compensation: null, purse: null };
+function redactIfUnpaid<T extends {
+  compensation: unknown; purse: unknown;
+  memberOnlyDetails: unknown; applicationInstructions: unknown;
+  adminVerificationNotes: unknown;
+}>(opp: T, paid: boolean): T {
+  // adminVerificationNotes never leaves this route for anyone, paid or not.
+  const { adminVerificationNotes, ...safe } = opp;
+  if (paid) return { ...safe, adminVerificationNotes: null } as T;
+  return {
+    ...safe,
+    compensation: null,
+    purse: null,
+    memberOnlyDetails: null,
+    applicationInstructions: null,
+    adminVerificationNotes: null,
+  } as T;
 }
 
 // GET /api/opportunities — list all opportunities
@@ -73,27 +89,26 @@ router.get("/", async (req: any, res: any) => {
       return res.json(publicListCache.data);
     }
 
-    const conditions = [];
+    const conditions = [inArray(opportunitiesTable.status, PUBLIC_STATUSES)];
     if (parsed.success) {
       if (parsed.data.type) {
         conditions.push(eq(opportunitiesTable.type, parsed.data.type));
       }
       if (parsed.data.status) {
+        // A caller can narrow within the public set (e.g. ?status=closing_soon)
+        // but can never use this param to see draft/verified opportunities.
+        if (!PUBLIC_STATUSES.includes(parsed.data.status)) {
+          return res.json([]);
+        }
         conditions.push(eq(opportunitiesTable.status, parsed.data.status));
       }
     }
 
-    const opportunities =
-      conditions.length > 0
-        ? await db
-            .select()
-            .from(opportunitiesTable)
-            .where(and(...conditions))
-            .orderBy(opportunitiesTable.createdAt)
-        : await db
-            .select()
-            .from(opportunitiesTable)
-            .orderBy(opportunitiesTable.createdAt);
+    const opportunities = await db
+      .select()
+      .from(opportunitiesTable)
+      .where(and(...conditions))
+      .orderBy(opportunitiesTable.createdAt);
 
     const redacted = opportunities.map((o: Opportunity) => redactIfUnpaid(o, paid));
 
@@ -122,7 +137,7 @@ router.get("/:id", async (req: any, res: any) => {
       .where(eq(opportunitiesTable.id, id))
       .limit(1);
 
-    if (!opportunity) {
+    if (!opportunity || !PUBLIC_STATUSES.includes(opportunity.status)) {
       return res.status(404).json({ error: "Opportunity not found" });
     }
 
