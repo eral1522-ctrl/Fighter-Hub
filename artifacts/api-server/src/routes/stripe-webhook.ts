@@ -65,6 +65,43 @@ router.post("/webhook", async (req: any, res: any) => {
         break;
       }
 
+      // A renewal payment failed (card declined, expired, insufficient
+      // funds, etc). Revoke premium access until it's resolved — Stripe
+      // will keep retrying per the subscription's retry schedule, and a
+      // later invoice.payment_succeeded will restore access.
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        await markApplicationUnpaid({
+          email: invoice.customer_email ?? null,
+          reason: "invoice.payment_failed",
+        });
+        break;
+      }
+
+      // Subscription was cancelled (by the member or after exhausting
+      // Stripe's dunning retries). Revoke premium access.
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+        let email: string | null = null;
+        try {
+          const customerId =
+            typeof subscription.customer === "string"
+              ? subscription.customer
+              : subscription.customer?.id;
+          if (customerId) {
+            const customer = await stripe!.customers.retrieve(customerId);
+            email = !customer.deleted ? (customer.email ?? null) : null;
+          }
+        } catch (err) {
+          logger.error({ err, subscriptionId: subscription.id }, "Failed to resolve customer email for cancelled subscription");
+        }
+        await markApplicationUnpaid({
+          email,
+          reason: "customer.subscription.deleted",
+        });
+        break;
+      }
+
       default:
         // Ignore all other event types — acknowledge receipt so Stripe stops retrying.
         break;
@@ -125,6 +162,43 @@ async function markApplicationPaid(params: {
   logger.info(
     { applicationId: application.id, email: normalizedEmail, stripeSessionId },
     "Fighter application automatically marked as paid via Stripe webhook",
+  );
+}
+
+async function markApplicationUnpaid(params: { email: string | null; reason: string }) {
+  const { email, reason } = params;
+
+  if (!email) {
+    logger.warn({ reason }, "Stripe access-revocation event received but no email was present — cannot match to a fighter application");
+    return;
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const [application] = await db
+    .select({ id: fighterApplicationsTable.id, paymentStatus: fighterApplicationsTable.paymentStatus })
+    .from(fighterApplicationsTable)
+    .where(eq(fighterApplicationsTable.email, normalizedEmail))
+    .limit(1);
+
+  if (!application) {
+    logger.warn({ email: normalizedEmail, reason }, "Stripe access-revocation event for an email with no matching fighter application");
+    return;
+  }
+
+  if (application.paymentStatus !== "paid") {
+    logger.info({ applicationId: application.id, reason }, "Stripe webhook: application already not marked paid, skipping revocation");
+    return;
+  }
+
+  await db
+    .update(fighterApplicationsTable)
+    .set({ paymentStatus: "not_paid" })
+    .where(eq(fighterApplicationsTable.id, application.id));
+
+  logger.info(
+    { applicationId: application.id, email: normalizedEmail, reason },
+    "Fighter application access revoked (cancellation or failed payment)",
   );
 }
 

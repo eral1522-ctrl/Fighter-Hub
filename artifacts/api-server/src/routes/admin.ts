@@ -364,6 +364,22 @@ router.post("/fighter-applications/:id/send-payment-link", requireAdmin, async (
   }
 
   try {
+    // Enforce "approval before payment" server-side, not just via UI flow —
+    // an admin should not be able to send a payment link to an application
+    // that hasn't been approved yet.
+    const [existing] = await db
+      .select({ status: fighterApplicationsTable.status })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.id, id))
+      .limit(1);
+
+    if (!existing) return res.status(404).json({ error: "Application not found" });
+    if (existing.status !== "approved") {
+      return res.status(400).json({
+        error: `Cannot send a payment link to an application with status "${existing.status}". Approve it first.`,
+      });
+    }
+
     // Save the payment link to the application
     const [application] = await db
       .update(fighterApplicationsTable)
