@@ -6,6 +6,20 @@ import { ListOpportunitiesQueryParams } from "@workspace/api-zod";
 
 const router = Router();
 
+// Short in-memory cache for the public (redacted/unpaid) opportunities
+// list. This is the overwhelming majority of traffic (anonymous visitors
+// and unpaid members) and the data doesn't need to be real-time-fresh to
+// the second. Paid requests always skip the cache and hit the DB fresh —
+// never risk serving a cached unpaid (redacted) response to a paid
+// request or vice versa.
+// NOTE: this reduces per-request DB round-trip time once the server is
+// warm. It does NOT fix container cold-start (the first request after
+// the deployment has been idle) — that's a hosting/infrastructure
+// setting (e.g. a minimum instance count) outside what application code
+// can control, flagged separately in the report.
+let publicListCache: { data: Opportunity[]; expiresAt: number } | null = null;
+const PUBLIC_CACHE_TTL_MS = 30_000;
+
 // Compensation/purse is a paid-member benefit. It must never leave the
 // server for a request that isn't confirmed paid — blurring it in the UI
 // is not real access control, since the raw API response is still
@@ -49,7 +63,15 @@ function redactIfUnpaid<T extends { compensation: unknown; purse: unknown }>(
 router.get("/", async (req: any, res: any) => {
   try {
     const parsed = ListOpportunitiesQueryParams.safeParse(req.query);
-    let query = db.select().from(opportunitiesTable);
+    const hasFilters = parsed.success && (parsed.data.type || parsed.data.status);
+
+    const paid = await isRequestFromPaidMember(req);
+
+    // Fast path: unfiltered request from an unpaid/anonymous requester —
+    // by far the most common case — can be served from cache.
+    if (!hasFilters && !paid && publicListCache && publicListCache.expiresAt > Date.now()) {
+      return res.json(publicListCache.data);
+    }
 
     const conditions = [];
     if (parsed.success) {
@@ -73,8 +95,13 @@ router.get("/", async (req: any, res: any) => {
             .from(opportunitiesTable)
             .orderBy(opportunitiesTable.createdAt);
 
-    const paid = await isRequestFromPaidMember(req);
-    return res.json(opportunities.map((o: Opportunity) => redactIfUnpaid(o, paid)));
+    const redacted = opportunities.map((o: Opportunity) => redactIfUnpaid(o, paid));
+
+    if (!hasFilters && !paid) {
+      publicListCache = { data: redacted, expiresAt: Date.now() + PUBLIC_CACHE_TTL_MS };
+    }
+
+    return res.json(redacted);
   } catch (err) {
     req.log.error({ err }, "Failed to list opportunities");
     return res.status(500).json({ error: "Internal server error" });

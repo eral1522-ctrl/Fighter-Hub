@@ -158,7 +158,7 @@ const T = {
       city: "City",
       purse: "Purse",
       purseHidden: "Members only",
-      noOpps: "Opportunities loading…",
+      noOpps: "New verified opportunities are being prepared for IFA members. Complete your application to be notified when opportunities matching your profile become available.",
     },
     contact: {
       label: "Get in Touch",
@@ -599,7 +599,7 @@ const T = {
       city: "Ciudad",
       purse: "Bolsa",
       purseHidden: "Solo miembros",
-      noOpps: "Cargando oportunidades…",
+      noOpps: "Se están preparando nuevas oportunidades verificadas para los miembros de IFA. Completa tu solicitud para recibir un aviso cuando haya oportunidades que coincidan con tu perfil.",
     },
     contact: {
       label: "Contáctanos",

@@ -89,6 +89,19 @@
 }
 
 @layer base {
+  /* Hero background photo, served from /public with a stable filename so
+     index.html can preload it. Two background-image declarations for
+     real graceful degradation: browsers that don't understand
+     image-set() ignore that whole declaration and keep the plain url()
+     JPG above it; browsers that do understand it use the smaller WebP. */
+  .hero-photo-bg {
+    background-image: url('/hero-fighter-tunnel.jpg');
+    background-image: image-set(
+      url('/hero-fighter-tunnel.webp') type('image/webp'),
+      url('/hero-fighter-tunnel.jpg') type('image/jpeg')
+    );
+  }
+
   :root, .dark {
     --background: 0 0% 5%;
     --foreground: 0 0% 96%;

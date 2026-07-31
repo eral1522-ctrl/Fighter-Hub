@@ -13,7 +13,6 @@ import { useUser } from "@clerk/react";
 import { useGetDashboardStats, useListOpportunities } from "@workspace/api-client-react";
 import { usePageMeta } from "@/lib/use-page-meta";
 import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
-import heroFighterImg from "@assets/hero-fighter-tunnel_1.jpg";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
@@ -56,7 +55,7 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isSignedIn } = useUser();
   const { data: stats } = useGetDashboardStats();
-  const { data: allOpportunities } = useListOpportunities();
+  const { data: allOpportunities, isLoading: opportunitiesLoading } = useListOpportunities();
   const isPaid = !!isSignedIn && stats?.paymentStatus === "paid";
 
   const featuredOpps = (allOpportunities ?? [])
@@ -127,9 +126,14 @@ export default function LandingPage() {
         {/* ── HERO ── */}
         <section className="relative pt-32 pb-24 md:pt-52 md:pb-40 overflow-hidden border-b border-border min-h-[95vh] flex items-center">
           {/* Full-bleed photo — fighter kept on the right edge of frame */}
+          {/* Full-bleed photo — fighter kept on the right edge of frame.
+              Served from /public with a stable filename (not a hashed JS
+              import) so index.html can <link rel=preload> it and the
+              browser starts fetching before React even mounts. WebP first
+              (~44KB vs ~100KB JPG), JPG fallback via image-set() for
+              browsers that don't support it. */}
           <div
-            className="absolute inset-0 bg-cover bg-no-repeat bg-[73%_center] md:bg-[position:center_right]"
-            style={{ backgroundImage: `url(${heroFighterImg})` }}
+            className="absolute inset-0 bg-cover bg-no-repeat bg-[73%_center] md:bg-[position:center_right] hero-photo-bg"
           />
           {/* Cinematic gradient: solid dark on the left for the copy, fading out toward the fighter */}
           <div className="absolute inset-0 bg-gradient-to-r from-background from-15% via-background/90 via-40% to-transparent to-85% md:from-background md:from-0% md:via-background/75 md:via-50% md:to-transparent md:to-80%" />
@@ -344,8 +348,31 @@ export default function LandingPage() {
               <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t.liveOpps.subheading}</p>
             </div>
 
-            {featuredOpps.length === 0 ? (
-              <p className="text-center text-muted-foreground text-sm py-12">{t.liveOpps.noOpps}</p>
+            {opportunitiesLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="bg-zinc-950 border border-border rounded-md overflow-hidden animate-pulse">
+                    <div className="h-0.5 w-full bg-zinc-800" />
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-5">
+                        <div className="h-5 w-16 rounded-full bg-zinc-800" />
+                        <div className="h-3 w-10 rounded bg-zinc-800" />
+                      </div>
+                      <div className="h-5 w-3/4 rounded bg-zinc-800 mb-4" />
+                      <div className="space-y-2.5">
+                        <div className="h-3 w-full rounded bg-zinc-800" />
+                        <div className="h-3 w-full rounded bg-zinc-800" />
+                        <div className="h-3 w-full rounded bg-zinc-800" />
+                      </div>
+                    </div>
+                    <div className="border-t border-border/50 px-6 py-3">
+                      <div className="h-3 w-2/3 rounded bg-zinc-800" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : featuredOpps.length === 0 ? (
+              <p className="text-center text-muted-foreground text-sm max-w-md mx-auto py-12">{t.liveOpps.noOpps}</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
                 {featuredOpps.map((opp) => {
