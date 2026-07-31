@@ -13,14 +13,7 @@ const VALUES = [
   { icon: Heart, title: "Protection", desc: "No fighter should face the business side of combat sports alone. IFA exists to ensure every member has support when they need it most." },
 ];
 
-const TIMELINE = [
-  { year: "2020", title: "IFA Founded", desc: "The International Fighters Association was established with a mission to represent and protect combat sports athletes globally." },
-  { year: "2021", title: "First 50 Members", desc: "IFA reached its first milestone with fighters from 12 countries across boxing, MMA, and kickboxing disciplines." },
-  { year: "2022", title: "Expanded to 20 Countries", desc: "IFA opened regional partnerships across Europe, Latin America, and North Africa, building a truly international network." },
-  { year: "2023", title: "Digital Member Portal Launched", desc: "IFA launched its digital platform allowing fighters to manage profiles, apply for opportunities, and track their career directly online." },
-  { year: "2024", title: "1,000+ Members", desc: "Membership surpassed 1,000 registered fighters across 40+ countries, with opportunities spanning all major combat sports disciplines." },
-  { year: "2025", title: "International Events Program", desc: "IFA launched IFA-supported events and member participation programs, with member visibility across shows in Europe and expanding to the Americas." },
-];
+// IFA was established in 2026 — no history to fabricate before that.
 
 const BOARD = [
   { name: "Erik Alonso", role: "President" },
@@ -102,34 +95,13 @@ export default function AboutPage() {
 
       {/* Timeline */}
       <section className="py-20 md:py-28 border-b border-border">
-        <div className="container max-w-4xl">
-          <div className="text-center mb-16">
-            <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">History</p>
-            <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">Milestones</h2>
-            <div className="h-1 w-20 bg-primary mx-auto" />
-          </div>
-          <div className="relative">
-            <div className="absolute left-[60px] top-0 bottom-0 w-px bg-border hidden md:block" />
-            <div className="space-y-8">
-              {TIMELINE.map((item, i) => (
-                <div key={i} className="flex gap-8 items-start group">
-                  <div className="shrink-0 text-right w-[60px] hidden md:block">
-                    <span className="font-heading font-black text-primary text-lg">{item.year}</span>
-                  </div>
-                  <div className="relative hidden md:flex items-center justify-center shrink-0 mt-1">
-                    <div className="w-3 h-3 rounded-full bg-primary ring-4 ring-background" />
-                  </div>
-                  <div className="flex-1 bg-zinc-950 border border-border rounded-md p-6 group-hover:border-primary/30 transition-colors">
-                    <div className="md:hidden">
-                      <span className="font-heading font-black text-primary text-sm mb-2 block">{item.year}</span>
-                    </div>
-                    <h3 className="font-heading text-lg uppercase tracking-wide mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="container max-w-3xl text-center">
+          <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Our Origin</p>
+          <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Built for the Next Generation of Fighters</h2>
+          <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            IFA was established in 2026 to build the professional structure combat sports athletes have historically lacked: verified opportunities, career support, contract awareness, global visibility and a collective voice within the industry.
+          </p>
         </div>
       </section>
 

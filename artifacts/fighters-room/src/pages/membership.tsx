@@ -58,7 +58,7 @@ const TIERS = [
     period: "",
     desc: "For brands, promoters, and organizations wanting to partner with IFA and access our fighter network.",
     features: [
-      "Access to the full IFA fighter roster",
+      "Access to the IFA fighter network",
       "Brand placement across IFA events",
       "Co-marketing and media opportunities",
       "Dedicated partnership manager",

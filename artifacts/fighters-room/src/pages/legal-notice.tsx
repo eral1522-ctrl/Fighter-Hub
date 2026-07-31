@@ -1,5 +1,6 @@
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { usePageMeta } from "@/lib/use-page-meta";
+import { useLanguage } from "@/lib/i18n";
 
 const SECTIONS = [
   {
@@ -79,6 +80,7 @@ Last updated: June 2026`,
 ];
 
 export default function LegalNoticePage() {
+  const { t } = useLanguage();
   usePageMeta({
     title: "Legal Notice",
     description: "Legal information, organizational details, and terms governing the International Fighters Association website.",
@@ -89,7 +91,7 @@ export default function LegalNoticePage() {
       <section className="py-20 md:py-28 border-b border-border relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/8 via-transparent to-transparent pointer-events-none" />
         <div className="container relative z-10 max-w-3xl">
-          <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Legal</p>
+          <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">{t.footer.legalHeading}</p>
           <h1 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter mb-6">Legal Notice</h1>
           <div className="h-1 w-20 bg-primary mb-8" />
           <p className="text-muted-foreground text-lg leading-relaxed">

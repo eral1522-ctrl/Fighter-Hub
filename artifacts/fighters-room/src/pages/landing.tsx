@@ -6,6 +6,7 @@ import {
   ArrowRight, CheckCircle2, Shield, FileText, Globe, Eye,
   Users, Star, UserCheck, BookOpen, Mail, Instagram,
   MessageCircle, Lock, Quote, ChevronDown, Menu, X,
+  TrendingUp, Scale, Network, Award, GraduationCap,
 } from "lucide-react";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { useUser } from "@clerk/react";
@@ -16,7 +17,16 @@ import heroFighterImg from "@assets/hero-fighter-tunnel_1.jpg";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
-const WHY_JOIN_ICONS = [Globe, Star, UserCheck, BookOpen, FileText, Eye, Users, Shield];
+// Availability per category is my best-effort read of what the platform
+// can actually deliver today vs what still needs building or a partner —
+// NOT a confirmed business decision. Please review/correct before this
+// ships: 'now' = feature exists in the product today; 'development' = no
+// evidence of a live, staffed service yet; 'partner' = credible delivery
+// depends on an external partner (e.g. legal/mediation) not yet in place.
+const WHY_JOIN_ICONS = [Eye, UserCheck, Star, FileText, TrendingUp, Scale, Users, Network, Award, GraduationCap];
+const WHY_JOIN_STATUS: ("now" | "development" | "partner")[] = [
+  "now", "now", "now", "now", "development", "partner", "now", "development", "development", "development",
+];
 
 const LANDING_STATUSES = ["open", "scouting", "recruiting", "expected", "active"];
 
@@ -172,30 +182,31 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── STATS BAR ──
-             DISABLED: membersNum/countriesNum/eventsNum are hardcoded,
-             not backed by a live DB count, and unverified. Hiding the
-             whole bar rather than cherry-picking which numbers to trust.
-             Re-enable once real figures are confirmed. */}
-        {false && (
+        {/* ── AUTHORITY BAR ──
+             Rebuilt with only claims we can stand behind today (no member/
+             country/event counts until those are real and confirmed).
+             FUTURE: item2 (combat sports count) could be wired to
+             combatSports.length from the DB/CMS once disciplines are
+             admin-managed instead of hardcoded; item3/item4 (0% commission,
+             48h review) are policy statements, not counts, so they don't
+             need a live data source. */}
         <section className="py-6 bg-zinc-950 border-b border-border">
           <div className="container">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border">
               {[
-                { num: t.statsBar.membersNum, label: t.statsBar.membersLabel },
-                { num: t.statsBar.countriesNum, label: t.statsBar.countriesLabel },
-                { num: t.statsBar.sportsNum, label: t.statsBar.sportsLabel },
-                { num: t.statsBar.eventsNum, label: t.statsBar.eventsLabel },
-              ].map(({ num, label }) => (
+                { value: t.statsBar.item1Value, label: t.statsBar.item1Label },
+                { value: t.statsBar.item2Value, label: t.statsBar.item2Label },
+                { value: t.statsBar.item3Value, label: t.statsBar.item3Label },
+                { value: t.statsBar.item4Value, label: t.statsBar.item4Label },
+              ].map(({ value, label }) => (
                 <div key={label} className="py-6 text-center">
-                  <div className="font-heading font-black text-4xl md:text-5xl text-primary mb-1">{num}</div>
+                  <div className="font-heading font-black text-3xl md:text-5xl text-primary mb-1">{value}</div>
                   <div className="text-[11px] text-muted-foreground font-heading uppercase tracking-widest">{label}</div>
                 </div>
               ))}
             </div>
           </div>
         </section>
-        )}
 
         {/* ── ABOUT THE ASSOCIATION ── */}
         <section className="py-20 md:py-28 border-b border-border">
@@ -242,20 +253,28 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {t.whyJoin.benefits.map((benefit, i) => {
                 const Icon = WHY_JOIN_ICONS[i];
+                const status = WHY_JOIN_STATUS[i];
+                const statusLabel = status === "now" ? t.whyJoin.statusNow : status === "development" ? t.whyJoin.statusDevelopment : t.whyJoin.statusPartner;
+                const statusClass = status === "now" ? "bg-green-950 text-green-400 border-green-900" : status === "development" ? "bg-amber-950 text-amber-400 border-amber-900" : "bg-zinc-800 text-zinc-400 border-zinc-700";
                 return (
                   <div
                     key={i}
-                    className="group relative bg-background border border-border rounded-md p-7 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
+                    className="group relative bg-background border border-border rounded-md p-7 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 flex flex-col"
                   >
-                    <div className="w-12 h-12 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-6 w-6 text-primary" />
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="w-12 h-12 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <Icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <span className={`text-[9px] font-heading uppercase tracking-wider px-2 py-1 rounded border ${statusClass}`}>{statusLabel}</span>
                     </div>
-                    <p className="text-sm font-medium text-foreground/90 leading-snug">{benefit}</p>
+                    <h3 className="font-heading text-sm uppercase tracking-wide mb-2">{benefit.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed flex-1">{benefit.desc}</p>
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-b-md" />
                   </div>
                 );
               })}
             </div>
+            <p className="text-center text-[11px] text-muted-foreground/70 mt-8 max-w-2xl mx-auto">{t.whyJoin.disclaimer}</p>
             <div className="text-center mt-14">
               <Link href="/apply">
                 <Button size="lg" className="h-14 px-10 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
@@ -369,7 +388,7 @@ export default function LandingPage() {
                             <span className="font-medium text-foreground/80">{opp.weightClass ?? "—"}</span>
                           </div>
                           <div className="flex items-center justify-between border-t border-border/50 pt-2.5 mt-1">
-                            <span className="uppercase tracking-wider">Purse</span>
+                            <span className="uppercase tracking-wider">{t.liveOpps.purse}</span>
                             <span className="font-heading font-bold text-primary/40 text-xs blur-[4px] select-none">€ ——</span>
                           </div>
                         </div>
@@ -524,7 +543,7 @@ export default function LandingPage() {
               </Link>
               <Link href="/membership">
                 <Button size="lg" variant="outline" className="h-14 px-12 font-heading text-base uppercase tracking-wider border-white/20 text-white hover:bg-white/5">
-                  View Membership Plans
+                  {t.footer.viewPlansBtn}
                 </Button>
               </Link>
             </div>
@@ -586,7 +605,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">For Fighters</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.forFightersHeading}</h4>
               <nav className="space-y-3">
                 <Link href="/apply" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.apply}</Link>
                 <Link href="/membership" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.membership}</Link>
@@ -595,7 +614,7 @@ export default function LandingPage() {
               </nav>
             </div>
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Association</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.association}</h4>
               <nav className="space-y-3">
                 <Link href="/about" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.about}</Link>
                 <Link href="/association" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.association}</Link>
@@ -605,7 +624,7 @@ export default function LandingPage() {
               </nav>
             </div>
             <div>
-              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">Legal</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-foreground/80 mb-5">{t.footer.legalHeading}</h4>
               <nav className="space-y-3">
                 <Link href="/privacy-policy" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.privacyPolicy}</Link>
                 <Link href="/legal-notice" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.legalNotice}</Link>

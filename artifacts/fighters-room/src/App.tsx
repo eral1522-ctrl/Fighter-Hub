@@ -46,6 +46,16 @@ function stripBase(path: string): string {
   return basePath && path.startsWith(basePath) ? path.slice(basePath.length) || "/" : path;
 }
 
+// Clerk shows "Continue to {applicationName}" using the Application Name
+// configured in the Clerk Dashboard (Configure → General). This override
+// attempts to force it via localization, but the authoritative fix is
+// renaming the app in the Clerk Dashboard itself — that's the setting
+// this text actually reads from, and we can't confirm from code alone
+// that every Clerk surface respects this override.
+const clerkLocalization = {
+  unstable__applicationName: "IFA Member Portal",
+} as any;
+
 const clerkAppearance = {
   theme: shadcn,
   cssLayerName: "clerk",
@@ -55,7 +65,7 @@ const clerkAppearance = {
     logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
   },
   variables: {
-    colorPrimary: "hsl(43 89% 52%)",
+    colorPrimary: "hsl(0 85% 42%)",
     colorForeground: "hsl(0 0% 96%)",
     colorMutedForeground: "hsl(0 0% 55%)",
     colorDanger: "hsl(0 72% 51%)",
@@ -179,6 +189,7 @@ export default function App() {
             publishableKey={clerkPubKey}
             proxyUrl={clerkProxyUrl}
             appearance={clerkAppearance}
+            localization={clerkLocalization}
             signInUrl={`${basePath}/sign-in`}
             routerPush={(to) => setLocation(stripBase(to))}
             routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
