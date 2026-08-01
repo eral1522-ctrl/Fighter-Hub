@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { usePageMeta } from "@/lib/use-page-meta";
 
@@ -21,7 +21,7 @@ const TIERS = [
       "Sponsor & brand opportunity listings",
       "Career support & guidance",
       "International event access",
-      "Contract education & guidance",
+      "Basic legal support & representation",
       "Priority member support",
       "IFA fighter network access",
     ],
@@ -91,7 +91,7 @@ const FIRST_7_DAYS = [
 const FAQ = [
   {
     q: "Who can join IFA?",
-    a: "IFA is open to any active professional or amateur combat sports athlete — boxers, MMA fighters, kickboxers, Muay Thai practitioners, bare knuckle fighters, grapplers, and more. All levels are welcome, from regional competitors to world champions.",
+    a: "IFA is open to any active professional or amateur combat sports athlete — boxers, MMA fighters, kickboxers, Muay Thai practitioners, and bare knuckle fighters. All levels are welcome, from regional competitors to world champions.",
   },
   {
     q: "How long does the approval process take?",
@@ -113,6 +113,10 @@ const FAQ = [
     q: "Does IFA take a percentage of my fight earnings?",
     a: "No. IFA is a membership association, not a management company or promoter. We charge only the flat monthly membership fee. We do not take commissions on fights, sponsors, or any other income.",
   },
+  {
+    q: "Does membership include legal support?",
+    a: "Yes. IFA membership includes basic legal support and first-line representation in contractual, payment and professional disputes. This may include an initial assessment, basic contract review, identification of risks, assistance with communications and guidance on the appropriate next steps. Cases requiring court proceedings, formal litigation, extensive negotiations, specialist regulatory advice or work in a specific jurisdiction may require referral to a qualified external legal professional and may involve additional fees, which are always communicated and approved in advance.",
+  },
 ];
 
 export default function MembershipPage() {
@@ -132,6 +136,9 @@ export default function MembershipPage() {
           <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Invest in Your Career</p>
           <h1 className="font-heading text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 leading-[0.85]">IFA Membership</h1>
           <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+          <p className="text-muted-foreground text-lg leading-relaxed mb-2">
+            Professional support without giving away a percentage of your earnings.
+          </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
             Choose the right membership for your career stage. Apply first — membership is activated after IFA approval.
           </p>
@@ -193,6 +200,28 @@ export default function MembershipPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Trust block */}
+          <div className="mt-10 bg-zinc-950 border border-border rounded-md p-6 md:p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+              {[
+                "0% commission on fight earnings",
+                "Apply before paying",
+                "Review within 48 hours",
+                "Cancel anytime",
+                "Basic legal support included",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2.5 text-sm text-foreground/90">
+                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                  {item}
+                </div>
+              ))}
+              <div className="flex items-start gap-2.5 text-sm text-muted-foreground sm:col-span-2 pt-2 mt-1 border-t border-border/50">
+                <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                No guaranteed fights, sponsorships, payment recovery or commercial outcomes.
+              </div>
+            </div>
           </div>
         </div>
       </section>

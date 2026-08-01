@@ -34,7 +34,7 @@ Unauthorized use of the Platform, including attempting to access restricted area
     title: "Membership and Services",
     content: `IFA membership provides access to the member portal, fighter profile services, fight and sponsor opportunity listings, events, and career support resources. IFA makes reasonable efforts to ensure the accuracy and availability of listed opportunities but does not guarantee specific outcomes.
 
-IFA acts as a facilitator connecting fighters with opportunities, promoters, and sponsors. IFA is not a party to any fight contract, sponsorship agreement, or commercial arrangement between members and third parties. IFA does not provide legal advice.
+IFA acts as a facilitator connecting fighters with opportunities, promoters, and sponsors. IFA is not a party to any fight contract, sponsorship agreement, or commercial arrangement between members and third parties. IFA provides basic legal support, initial contract guidance and first-line representation within the scope of membership. Specialist legal advice, litigation and formal representation in a specific jurisdiction are provided through appropriately qualified legal professionals and may be subject to separate terms and fees.
 
 Membership fees are set by IFA and are subject to change. Current pricing is displayed on the membership page. Payment is processed through third-party payment providers.`,
   },

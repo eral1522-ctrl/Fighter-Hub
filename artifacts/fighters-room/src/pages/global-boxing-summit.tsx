@@ -1,74 +1,33 @@
-import { useState } from "react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { useLanguage } from "@/lib/i18n";
 import { usePageMeta } from "@/lib/use-page-meta";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Briefcase, Shield, Globe2, TrendingUp, Radio, Cpu,
-  Users, ArrowRight, CheckCircle2,
+  Users, ArrowRight, Mail,
 } from "lucide-react";
 
 const AREA_ICONS = [Briefcase, Shield, Globe2, TrendingUp, Radio, Cpu];
 
-type InterestKind = "attendee" | "partner" | "speaker";
+const GBS_CONTACT_EMAIL = "info@fightersassociation.com";
 
-// These three forms are intentionally NOT wired to a backend endpoint yet.
-// Submitting the contact form (/api/contact) fires an immediate automated
-// email - reusing it here would count as "connecting to automated
-// communications," which was explicitly ruled out until the intended flow
-// (storage, notifications, or otherwise) is confirmed. For now this is a
-// client-side-only confirmation state; the copy says so honestly rather
-// than implying the submission went anywhere.
-function InterestForm({ kind, title }: { kind: InterestKind; title: string }) {
+// No backend infrastructure exists yet to store/track these submissions
+// securely, so per instruction this does not simulate a working form.
+// A mailto CTA is the honest interim option until that infrastructure
+// is built and confirmed.
+function InterestCard({ title, subject }: { title: string; subject: string }) {
   const { t } = useLanguage();
-  const [submitted, setSubmitted] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
-  if (submitted) {
-    return (
-      <div className="bg-zinc-950 border border-primary/30 rounded-md p-8 text-center">
-        <CheckCircle2 className="h-8 w-8 text-primary mx-auto mb-4" />
-        <p className="text-sm text-foreground/90 leading-relaxed">{t.gbs.formSubmitted}</p>
-      </div>
-    );
-  }
-
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
-      className="bg-zinc-950 border border-border rounded-md p-8 space-y-4"
-    >
-      <h3 className="font-heading text-lg uppercase tracking-wide mb-2">{title}</h3>
-      <div>
-        <Label htmlFor={`${kind}-name`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formName}</Label>
-        <Input id={`${kind}-name`} required value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
-      <div>
-        <Label htmlFor={`${kind}-email`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formEmail}</Label>
-        <Input id={`${kind}-email`} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      {kind !== "attendee" && (
-        <div>
-          <Label htmlFor={`${kind}-org`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formOrganization}</Label>
-          <Input id={`${kind}-org`} />
-        </div>
-      )}
-      <div>
-        <Label htmlFor={`${kind}-message`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formMessage}</Label>
-        <Textarea id={`${kind}-message`} rows={3} />
-      </div>
-      <Button type="submit" className="w-full font-heading uppercase tracking-wider font-bold">
-        {t.gbs.formSubmit}
-      </Button>
-      <p className="text-[11px] text-muted-foreground/70 text-center pt-1">{t.gbs.formNote}</p>
-    </form>
+    <div className="bg-zinc-950 border border-border rounded-md p-8 flex flex-col">
+      <h3 className="font-heading text-lg uppercase tracking-wide mb-3">{title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">{t.gbs.formNote}</p>
+      <a href={`mailto:${GBS_CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`}>
+        <Button variant="outline" className="w-full font-heading uppercase tracking-wider font-bold border-white/20">
+          <Mail className="mr-2 h-4 w-4" />
+          {t.gbs.formSubmit}
+        </Button>
+      </a>
+    </div>
   );
 }
 
@@ -191,11 +150,11 @@ export default function GlobalBoxingSummitPage() {
       <section className="py-20 md:py-28">
         <div className="container">
           <div id="attend" className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto scroll-mt-24">
-            <InterestForm kind="attendee" title={t.gbs.formAttendeeTitle} />
+            <InterestCard title={t.gbs.formAttendeeTitle} subject="GBS — Attendee Interest" />
             <div id="partner" className="scroll-mt-24">
-              <InterestForm kind="partner" title={t.gbs.formPartnerTitle} />
+              <InterestCard title={t.gbs.formPartnerTitle} subject="GBS — Partner Interest" />
             </div>
-            <InterestForm kind="speaker" title={t.gbs.formSpeakerTitle} />
+            <InterestCard title={t.gbs.formSpeakerTitle} subject="GBS — Speaker Interest" />
           </div>
         </div>
       </section>

@@ -7,6 +7,7 @@ import {
   Users, Star, UserCheck, BookOpen, Mail, Instagram,
   MessageCircle, Lock, Quote, ChevronDown, Menu, X,
   TrendingUp, Scale, Network, Award, GraduationCap,
+  Swords, Octagon, Zap, Flame, Hand, Globe2,
 } from "lucide-react";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { useUser } from "@clerk/react";
@@ -15,6 +16,12 @@ import { usePageMeta } from "@/lib/use-page-meta";
 import ifaLogo from "@assets/ifa-logo-2026.png";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
+
+// Icons assigned positionally, matching combatSports.sports /
+// fighters.types order in i18n.tsx — replaced emoji with a consistent
+// monochrome lucide set (same stroke width/scale for all) per instruction.
+const COMBAT_SPORTS_ICONS = [Swords, Octagon, Zap, Flame, Hand]; // Boxing, MMA, Kickboxing, Muay Thai, Bare Knuckle
+const FIGHTER_TYPE_ICONS = [Award, TrendingUp, Globe2]; // Professional, Amateur, International
 
 // Availability per category is my best-effort read of what the platform
 // can actually deliver today vs what still needs building or a partner —
@@ -242,13 +249,16 @@ export default function LandingPage() {
               <div className="h-1 w-24 bg-primary mx-auto" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {t.combatSports.sports.map((sport) => (
-                <div key={sport.name} className="group bg-zinc-950 border border-border rounded-md p-7 hover:border-primary/40 transition-all duration-300">
-                  <div className="text-4xl mb-4">{sport.icon}</div>
-                  <h3 className="font-heading text-xl uppercase tracking-wide mb-3 group-hover:text-primary transition-colors">{sport.name}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{sport.desc}</p>
-                </div>
-              ))}
+              {t.combatSports.sports.map((sport, i) => {
+                const Icon = COMBAT_SPORTS_ICONS[i];
+                return (
+                  <div key={sport.name} className="group bg-zinc-950 border border-border rounded-md p-7 hover:border-primary/40 transition-all duration-300">
+                    <Icon className="h-9 w-9 mb-4 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.75} />
+                    <h3 className="font-heading text-xl uppercase tracking-wide mb-3 group-hover:text-primary transition-colors">{sport.name}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{sport.desc}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -330,16 +340,19 @@ export default function LandingPage() {
               <p className="text-muted-foreground text-lg max-w-2xl">{t.fighters.description}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {t.fighters.types.map((f) => (
-                <div key={f.name} className="relative group overflow-hidden rounded-md border border-border bg-background hover:border-primary/40 transition-colors">
-                  <div className="p-8">
-                    <div className="text-5xl mb-5">{f.flag}</div>
-                    <h3 className="font-heading text-2xl uppercase tracking-wide mb-3">{f.name}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{f.desc}</p>
+              {t.fighters.types.map((f, i) => {
+                const Icon = FIGHTER_TYPE_ICONS[i];
+                return (
+                  <div key={f.name} className="relative group overflow-hidden rounded-md border border-border bg-background hover:border-primary/40 transition-colors">
+                    <div className="p-8">
+                      <Icon className="h-10 w-10 mb-5 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={1.75} />
+                      <h3 className="font-heading text-2xl uppercase tracking-wide mb-3">{f.name}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{f.desc}</p>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -604,14 +617,14 @@ export default function LandingPage() {
               <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <Instagram className="h-5 w-5 text-primary" />
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest">Instagram</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest">IFA Instagram</div>
                   <div className="font-heading tracking-wide text-sm">@fighters_room</div>
                 </div>
               </a>
               <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <MessageCircle className="h-5 w-5 text-primary" />
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-widest">WhatsApp</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-widest">IFA Membership Support</div>
                   <div className="font-heading tracking-wide text-sm">+34 603 304 636</div>
                 </div>
               </a>

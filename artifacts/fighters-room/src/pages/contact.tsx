@@ -174,7 +174,7 @@ export default function ContactPage() {
                       <Instagram className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Instagram</div>
+                      <div className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">IFA Instagram</div>
                       <div className="font-heading tracking-wide text-sm">@fighters_room</div>
                     </div>
                   </a>
