@@ -576,6 +576,10 @@ router.post("/test-email", requireAdmin, async (req: any, res: any) => {
 // GET /api/admin/stats — admin overview stats
 router.get("/stats", requireAdmin, async (req: any, res: any) => {
   try {
+    // Legacy fields — unchanged queries, kept for AdminPage.tsx (the
+    // fighters/applications tables it reads from) which already renders
+    // these exact field names. Do not rename/remove without updating
+    // that page too.
     const [totalFighters] = await db
       .select({ count: count() })
       .from(fightersTable);
@@ -583,17 +587,7 @@ router.get("/stats", requireAdmin, async (req: any, res: any) => {
       .select({ count: count() })
       .from(fightersTable)
       .where(eq(fightersTable.approvalStatus, "pending"));
-    const [approvedFighters] = await db
-      .select({ count: count() })
-      .from(fightersTable)
-      .where(eq(fightersTable.approvalStatus, "approved"));
-    const [totalOpportunities] = await db
-      .select({ count: count() })
-      .from(opportunitiesTable);
-    const [totalEvents] = await db
-      .select({ count: count() })
-      .from(eventsTable);
-    const [totalApplications] = await db
+    const [legacyTotalApplications] = await db
       .select({ count: count() })
       .from(applicationsTable);
     const [pendingApplications] = await db
@@ -601,14 +595,70 @@ router.get("/stats", requireAdmin, async (req: any, res: any) => {
       .from(applicationsTable)
       .where(or(eq(applicationsTable.status, "pending"), eq(applicationsTable.status, "submitted")));
 
+    // Canonical fields — fighter_applications is the real source of
+    // truth for registration/approval/payment (see apply.ts, admin
+    // fighter-applications routes). Used by the new admin dashboard.
+    const [totalApplications] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable);
+    const [pendingReview] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.status, "pending"));
+    const [approved] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.status, "approved"));
+    const [rejected] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.status, "rejected"));
+    const [paidMembers] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable)
+      .where(eq(fighterApplicationsTable.paymentStatus, "paid"));
+    const [approvedUnpaid] = await db
+      .select({ count: count() })
+      .from(fighterApplicationsTable)
+      .where(and(eq(fighterApplicationsTable.status, "approved"), eq(fighterApplicationsTable.paymentStatus, "not_paid")));
+
+    const [totalOpportunities] = await db
+      .select({ count: count() })
+      .from(opportunitiesTable);
+    const [publishedOpportunities] = await db
+      .select({ count: count() })
+      .from(opportunitiesTable)
+      .where(or(
+        eq(opportunitiesTable.status, "published"),
+        eq(opportunitiesTable.status, "closing_soon"),
+        eq(opportunitiesTable.status, "matched"),
+        eq(opportunitiesTable.status, "closed"),
+      ));
+    const [draftOpportunities] = await db
+      .select({ count: count() })
+      .from(opportunitiesTable)
+      .where(or(eq(opportunitiesTable.status, "draft"), eq(opportunitiesTable.status, "verified")));
+    const [totalEvents] = await db
+      .select({ count: count() })
+      .from(eventsTable);
+
     return res.json({
+      // legacy (kept for AdminPage.tsx)
       totalFighters: Number(totalFighters.count),
       pendingApproval: Number(pendingApproval.count),
-      approvedFighters: Number(approvedFighters.count),
-      totalOpportunities: Number(totalOpportunities.count),
-      totalEvents: Number(totalEvents.count),
-      totalApplications: Number(totalApplications.count),
+      totalApplications: Number(legacyTotalApplications.count),
       pendingApplications: Number(pendingApplications.count),
+      totalEvents: Number(totalEvents.count),
+      // canonical (fighter_applications-based, used by the new dashboard)
+      canonicalTotalApplications: Number(totalApplications.count),
+      canonicalPendingReview: Number(pendingReview.count),
+      canonicalApproved: Number(approved.count),
+      canonicalRejected: Number(rejected.count),
+      canonicalPaidMembers: Number(paidMembers.count),
+      canonicalApprovedUnpaid: Number(approvedUnpaid.count),
+      totalOpportunities: Number(totalOpportunities.count),
+      publishedOpportunities: Number(publishedOpportunities.count),
+      draftOpportunities: Number(draftOpportunities.count),
     });
   } catch (err) {
     req.log.error({ err }, "Admin: failed to get stats");

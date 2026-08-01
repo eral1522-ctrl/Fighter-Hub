@@ -55,6 +55,10 @@ from = "/admin"
 to = "/index.html"
 
 [[services.production.rewrites]]
+from = "/admin/legacy"
+to = "/index.html"
+
+[[services.production.rewrites]]
 from = "/admin/applications"
 to = "/index.html"
 

@@ -12,7 +12,8 @@ import { useEffect, useRef } from "react";
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
 import ProfilePage from "@/pages/profile";
-import AdminPage from "@/pages/admin";
+import AdminLegacyPage from "@/pages/admin";
+import AdminDashboardPage from "@/pages/admin-dashboard";
 import ApplyPage from "@/pages/apply";
 import AdminApplicationsPage from "@/pages/admin-applications";
 import AdminOpportunitiesPage from "@/pages/admin-opportunities";
@@ -162,7 +163,8 @@ function Router() {
       <Route path="/sign-up/*?" component={SignUpPage} />
       <Route path="/dashboard"><ProtectedRoute component={DashboardPage} /></Route>
       <Route path="/profile"><ProtectedRoute component={ProfilePage} /></Route>
-      <Route path="/admin"><ProtectedRoute component={AdminPage} /></Route>
+      <Route path="/admin"><ProtectedRoute component={AdminDashboardPage} /></Route>
+      <Route path="/admin/legacy"><ProtectedRoute component={AdminLegacyPage} /></Route>
       <Route path="/admin/applications"><ProtectedRoute component={AdminApplicationsPage} /></Route>
       <Route path="/admin/opportunities"><ProtectedRoute component={AdminOpportunitiesPage} /></Route>
       <Route path="/apply" component={ApplyPage} />
