@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { Mail, Instagram, MessageCircle, Menu, X } from "lucide-react";
-import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
+import ifaLogo from "@assets/ifa-logo-2026.png";
 import { useState } from "react";
 
 export function PublicPageLayout({ children }: { children: React.ReactNode }) {

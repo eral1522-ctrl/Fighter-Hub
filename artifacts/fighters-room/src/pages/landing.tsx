@@ -12,7 +12,7 @@ import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { useUser } from "@clerk/react";
 import { useGetDashboardStats, useListOpportunities } from "@workspace/api-client-react";
 import { usePageMeta } from "@/lib/use-page-meta";
-import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
+import ifaLogo from "@assets/ifa-logo-2026.png";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 

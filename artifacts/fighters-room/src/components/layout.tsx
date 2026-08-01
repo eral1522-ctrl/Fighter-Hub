@@ -3,7 +3,7 @@ import { useClerk, useUser } from "@clerk/react";
 import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
-import ifaLogo from "@assets/LOGO_IFA_v2_1778057642238.png";
+import ifaLogo from "@assets/ifa-logo-2026.png";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { signOut } = useClerk();
