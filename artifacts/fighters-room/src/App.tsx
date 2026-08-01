@@ -47,15 +47,16 @@ function stripBase(path: string): string {
   return basePath && path.startsWith(basePath) ? path.slice(basePath.length) || "/" : path;
 }
 
-// Clerk shows "Continue to {applicationName}" using the Application Name
-// configured in the Clerk Dashboard (Configure → General). This override
-// attempts to force it via localization, but the authoritative fix is
-// renaming the app in the Clerk Dashboard itself — that's the setting
-// this text actually reads from, and we can't confirm from code alone
-// that every Clerk surface respects this override.
-const clerkLocalization = {
-  unstable__applicationName: "IFA Member Portal",
-} as any;
+// NOTE: Clerk's own internal "Continue to {applicationName}" text comes
+// from the Application Name set in the Clerk Dashboard (Configure →
+// General), not from anything in this codebase. A previous attempt to
+// override it via a guessed `localization` key
+// (`unstable__applicationName`) was not a real/verified Clerk API and
+// broke Clerk JS from loading at all, taking down the entire site (not
+// just the sign-in page) — removed. The custom "IFA Member Portal" text
+// rendered above the widget in SignInPage below is the verified-working
+// fix; renaming the app in the Clerk Dashboard is the only reliable way
+// to change Clerk's own internal text.
 
 const clerkAppearance = {
   theme: shadcn,
@@ -197,7 +198,6 @@ export default function App() {
             publishableKey={clerkPubKey}
             proxyUrl={clerkProxyUrl}
             appearance={clerkAppearance}
-            localization={clerkLocalization}
             signInUrl={`${basePath}/sign-in`}
             routerPush={(to) => setLocation(stripBase(to))}
             routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
