@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSubmitFighterApplication } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
@@ -19,6 +19,8 @@ const WEIGHT_CLASSES = [
   "Super Middleweight", "Light Heavyweight", "Cruiserweight", "Heavyweight", "Super Heavyweight",
 ];
 
+const TOTAL_STEPS = 3;
+
 export default function ApplyPage() {
   usePageMeta({
     title: "Apply as a Fighter",
@@ -29,6 +31,8 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [athleteType, setAthleteType] = useState<"professional" | "amateur">("professional");
+  const [step, setStep] = useState(1);
+  const [stepError, setStepError] = useState("");
   const [form, setForm] = useState({
     name: "", ringName: "", dateOfBirth: "", email: "", country: "", city: "",
     discipline: "", weightClass: "", record: "", sportingProfileUrl: "",
@@ -42,13 +46,36 @@ export default function ApplyPage() {
 
   const handleChange = (field: string, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
+    setStepError("");
     if (field === "sportingProfileUrl") setBoxrecError("");
     if (field === "discipline" && value !== "Boxing") setBoxrecError("");
   };
 
+  // Validation is per-step, and never clears anything the user has
+  // already typed — it just blocks Continue until the step's required
+  // fields are filled.
+  const step1Valid = Boolean(form.name.trim() && form.email.trim() && form.whatsapp.trim() && form.country.trim() && form.discipline.trim());
+  const step2Valid = Boolean(form.dateOfBirth && form.city.trim() && form.weightClass && form.record.trim() && form.gym.trim() && form.coach.trim());
+
+  const goToStep = (target: number) => {
+    if (target > step) {
+      if (step === 1 && !step1Valid) {
+        setStepError(t.apply.stepIncomplete);
+        return;
+      }
+      if (step === 2 && !step2Valid) {
+        setStepError(t.apply.stepIncomplete);
+        return;
+      }
+    }
+    setStepError("");
+    setStep(target);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!agreed) return;
+    if (!agreed || !step1Valid || !step2Valid) return;
 
     submitApplication.mutate(
       {
@@ -87,6 +114,9 @@ export default function ApplyPage() {
       }
     );
   };
+
+  const stepTitle = step === 1 ? t.apply.step1Title : step === 2 ? t.apply.step2Title : t.apply.step3Title;
+  const stepOfText = t.apply.stepOf.replace("{current}", String(step)).replace("{total}", String(TOTAL_STEPS));
 
   return (
     <div className="min-h-screen flex flex-col bg-background selection:bg-primary selection:text-primary-foreground">
@@ -138,7 +168,7 @@ export default function ApplyPage() {
         ) : (
           <>
             {/* Hero Banner */}
-            <section className="relative py-20 md:py-28 border-b border-border overflow-hidden">
+            <section className="relative py-16 md:py-20 border-b border-border overflow-hidden">
               <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=1600&q=80')" }}
@@ -157,297 +187,370 @@ export default function ApplyPage() {
               </div>
             </section>
 
+            {/* Step Progress */}
+            <div className="sticky top-16 z-40 bg-background/95 backdrop-blur border-b border-border">
+              <div className="container max-w-2xl mx-auto py-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest font-heading">{stepOfText}</span>
+                  <span className="text-xs text-primary uppercase tracking-widest font-heading font-bold">{stepTitle}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3].map((s) => (
+                    <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors ${s <= step ? "bg-primary" : "bg-border"}`} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {/* Form Section */}
-            <section className="py-16 md:py-24">
+            <section className="py-10 md:py-16">
               <div className="container max-w-2xl mx-auto">
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  {/* Athlete Type */}
-                  <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8">
-                    <Label className="uppercase text-xs tracking-wider text-muted-foreground mb-3 block">{t.apply.athleteTypeLabel}</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setAthleteType("professional")}
-                        className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "professional" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
-                      >
-                        {t.apply.athleteTypeProfessional}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAthleteType("amateur")}
-                        className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "amateur" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
-                      >
-                        {t.apply.athleteTypeAmateur}
-                      </button>
-                    </div>
-                  </div>
 
-                  {/* Personal Info */}
-                  <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
-                    <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionPersonal}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.nameLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="name"
-                          className="bg-background"
-                          placeholder={t.apply.namePlaceholder}
-                          value={form.name}
-                          onChange={e => handleChange("name", e.target.value)}
-                          required
-                        />
+                  {/* STEP 1: BASIC DETAILS */}
+                  {step === 1 && (
+                    <>
+                      <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8">
+                        <Label className="uppercase text-xs tracking-wider text-muted-foreground mb-3 block">{t.apply.athleteTypeLabel}</Label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setAthleteType("professional")}
+                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "professional" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                          >
+                            {t.apply.athleteTypeProfessional}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setAthleteType("amateur")}
+                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "amateur" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                          >
+                            {t.apply.athleteTypeAmateur}
+                          </button>
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="ringName" className="uppercase text-xs tracking-wider text-muted-foreground">
-                          {t.apply.ringNameLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
-                        </Label>
-                        <Input
-                          id="ringName"
-                          className="bg-background"
-                          placeholder={t.apply.ringNamePlaceholder}
-                          value={form.ringName}
-                          onChange={e => handleChange("ringName", e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="dateOfBirth" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.dobLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="dateOfBirth"
-                          type="date"
-                          className="bg-background"
-                          value={form.dateOfBirth}
-                          onChange={e => handleChange("dateOfBirth", e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.emailLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          className="bg-background"
-                          placeholder={t.apply.emailPlaceholder}
-                          value={form.email}
-                          onChange={e => handleChange("email", e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="country" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.countryLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="country"
-                          className="bg-background"
-                          placeholder={t.apply.countryPlaceholder}
-                          value={form.country}
-                          onChange={e => handleChange("country", e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="city" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.cityLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="city"
-                          className="bg-background"
-                          placeholder={t.apply.cityPlaceholder}
-                          value={form.city}
-                          onChange={e => handleChange("city", e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Athletic Profile */}
-                  <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
-                    <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionAthletic}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.disciplineLabel} <span className="text-primary">*</span></Label>
-                        <Select value={form.discipline} onValueChange={v => handleChange("discipline", v)} required>
-                          <SelectTrigger className="bg-background">
-                            <SelectValue placeholder={t.apply.disciplinePlaceholder} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Boxing">Boxing</SelectItem>
-                            <SelectItem value="MMA">MMA</SelectItem>
-                            <SelectItem value="Kickboxing">Kickboxing / Muay Thai</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
+                        <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionPersonal}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="name" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.nameLabel} <span className="text-primary">*</span></Label>
+                            <Input
+                              id="name" autoFocus
+                              className="bg-background"
+                              placeholder={t.apply.namePlaceholder}
+                              value={form.name}
+                              onChange={e => handleChange("name", e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="email" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.emailLabel} <span className="text-primary">*</span></Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              inputMode="email"
+                              className="bg-background"
+                              placeholder={t.apply.emailPlaceholder}
+                              value={form.email}
+                              onChange={e => handleChange("email", e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="whatsapp" className="uppercase text-xs tracking-wider text-muted-foreground">
+                              {t.apply.whatsappLabel} <span className="text-primary">*</span>
+                            </Label>
+                            <Input
+                              id="whatsapp"
+                              type="tel"
+                              inputMode="tel"
+                              className="bg-background"
+                              placeholder={t.apply.whatsappPlaceholder}
+                              value={form.whatsapp}
+                              onChange={e => handleChange("whatsapp", e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="country" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.countryLabel} <span className="text-primary">*</span></Label>
+                            <Input
+                              id="country"
+                              className="bg-background"
+                              placeholder={t.apply.countryPlaceholder}
+                              value={form.country}
+                              onChange={e => handleChange("country", e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.disciplineLabel} <span className="text-primary">*</span></Label>
+                            <Select value={form.discipline} onValueChange={v => handleChange("discipline", v)} required>
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder={t.apply.disciplinePlaceholder} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Boxing">Boxing</SelectItem>
+                                <SelectItem value="MMA">MMA</SelectItem>
+                                <SelectItem value="Kickboxing">Kickboxing / Muay Thai</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.weightClassLabel} <span className="text-primary">*</span></Label>
-                        <Select value={form.weightClass} onValueChange={v => handleChange("weightClass", v)} required>
-                          <SelectTrigger className="bg-background">
-                            <SelectValue placeholder={t.apply.weightClassPlaceholder} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {WEIGHT_CLASSES.map(wc => (
-                              <SelectItem key={wc} value={wc}>{wc}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="record" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.recordLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="record"
-                          className="bg-background font-mono text-center"
-                          placeholder={t.apply.recordPlaceholder}
-                          value={form.record}
-                          onChange={e => handleChange("record", e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="sportingProfileUrl" className="uppercase text-xs tracking-wider text-muted-foreground">
-                          {t.apply.boxrecLabel}{" "}
-                          <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
-                        </Label>
-                        <Input
-                          id="sportingProfileUrl"
-                          type="url"
-                          className={`bg-background ${boxrecError ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                          placeholder={t.apply.boxrecPlaceholder}
-                          value={form.sportingProfileUrl}
-                          onChange={e => handleChange("sportingProfileUrl", e.target.value)}
-                        />
-                        {boxrecError && (
-                          <p className="text-xs text-destructive mt-1">{boxrecError}</p>
-                        )}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="gym" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.gymLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="gym"
-                          className="bg-background"
-                          placeholder={t.apply.gymPlaceholder}
-                          value={form.gym}
-                          onChange={e => handleChange("gym", e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="coach" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.coachLabel} <span className="text-primary">*</span></Label>
-                        <Input
-                          id="coach"
-                          className="bg-background"
-                          placeholder={t.apply.coachPlaceholder}
-                          value={form.coach}
-                          onChange={e => handleChange("coach", e.target.value)}
-                          required
-                        />
-                      </div>
-                      {athleteType === "professional" ? (
-                        <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="manager" className="uppercase text-xs tracking-wider text-muted-foreground">
-                            {t.apply.managerLabel} <span className="text-muted-foreground/60">{t.apply.managerOptional}</span>
+                    </>
+                  )}
+
+                  {/* STEP 2: ATHLETIC PROFILE */}
+                  {step === 2 && (
+                    <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
+                      <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionAthletic}</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="ringName" className="uppercase text-xs tracking-wider text-muted-foreground">
+                            {t.apply.ringNameLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
                           </Label>
                           <Input
-                            id="manager"
+                            id="ringName" autoFocus
                             className="bg-background"
-                            placeholder={t.apply.managerPlaceholder}
-                            value={form.manager}
-                            onChange={e => handleChange("manager", e.target.value)}
+                            placeholder={t.apply.ringNamePlaceholder}
+                            value={form.ringName}
+                            onChange={e => handleChange("ringName", e.target.value)}
                           />
                         </div>
-                      ) : (
+                        <div className="space-y-2">
+                          <Label htmlFor="dateOfBirth" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.dobLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="dateOfBirth"
+                            type="date"
+                            className="bg-background"
+                            value={form.dateOfBirth}
+                            onChange={e => handleChange("dateOfBirth", e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="city" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.cityLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="city"
+                            className="bg-background"
+                            placeholder={t.apply.cityPlaceholder}
+                            value={form.city}
+                            onChange={e => handleChange("city", e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.weightClassLabel} <span className="text-primary">*</span></Label>
+                          <Select value={form.weightClass} onValueChange={v => handleChange("weightClass", v)} required>
+                            <SelectTrigger className="bg-background">
+                              <SelectValue placeholder={t.apply.weightClassPlaceholder} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {WEIGHT_CLASSES.map(wc => (
+                                <SelectItem key={wc} value={wc}>{wc}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="competitionExperience" className="uppercase text-xs tracking-wider text-muted-foreground">
-                            {t.apply.competitionExperienceLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
-                          </Label>
-                          <Textarea
-                            id="competitionExperience"
-                            className="bg-background resize-none h-20"
-                            placeholder={t.apply.competitionExperiencePlaceholder}
-                            value={form.competitionExperience}
-                            onChange={e => handleChange("competitionExperience", e.target.value)}
+                          <Label htmlFor="record" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.recordLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="record"
+                            className="bg-background font-mono text-center"
+                            placeholder={t.apply.recordPlaceholder}
+                            value={form.record}
+                            onChange={e => handleChange("record", e.target.value)}
+                            required
                           />
                         </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Bio + Contact */}
-                  <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
-                    <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionBio}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="whatsapp" className="uppercase text-xs tracking-wider text-muted-foreground">
-                          {t.apply.whatsappLabel} <span className="text-primary">*</span>
-                        </Label>
-                        <Input
-                          id="whatsapp"
-                          className="bg-background"
-                          placeholder={t.apply.whatsappPlaceholder}
-                          value={form.whatsapp}
-                          onChange={e => handleChange("whatsapp", e.target.value)}
-                          required
-                        />
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor="sportingProfileUrl" className="uppercase text-xs tracking-wider text-muted-foreground">
+                            {t.apply.boxrecLabel}{" "}
+                            <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
+                          </Label>
+                          <Input
+                            id="sportingProfileUrl"
+                            type="url"
+                            className={`bg-background ${boxrecError ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                            placeholder={t.apply.boxrecPlaceholder}
+                            value={form.sportingProfileUrl}
+                            onChange={e => handleChange("sportingProfileUrl", e.target.value)}
+                          />
+                          {boxrecError && (
+                            <p className="text-xs text-destructive mt-1">{boxrecError}</p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="gym" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.gymLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="gym"
+                            className="bg-background"
+                            placeholder={t.apply.gymPlaceholder}
+                            value={form.gym}
+                            onChange={e => handleChange("gym", e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="coach" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.coachLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="coach"
+                            className="bg-background"
+                            placeholder={t.apply.coachPlaceholder}
+                            value={form.coach}
+                            onChange={e => handleChange("coach", e.target.value)}
+                            required
+                          />
+                        </div>
+                        {athleteType === "professional" ? (
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="manager" className="uppercase text-xs tracking-wider text-muted-foreground">
+                              {t.apply.managerLabel} <span className="text-muted-foreground/60">{t.apply.managerOptional}</span>
+                            </Label>
+                            <Input
+                              id="manager"
+                              className="bg-background"
+                              placeholder={t.apply.managerPlaceholder}
+                              value={form.manager}
+                              onChange={e => handleChange("manager", e.target.value)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="space-y-2 md:col-span-2">
+                            <Label htmlFor="competitionExperience" className="uppercase text-xs tracking-wider text-muted-foreground">
+                              {t.apply.competitionExperienceLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
+                            </Label>
+                            <Textarea
+                              id="competitionExperience"
+                              className="bg-background resize-none h-20"
+                              placeholder={t.apply.competitionExperiencePlaceholder}
+                              value={form.competitionExperience}
+                              onChange={e => handleChange("competitionExperience", e.target.value)}
+                            />
+                          </div>
+                        )}
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="instagram" className="uppercase text-xs tracking-wider text-muted-foreground">
-                          {t.apply.instagramLabel} <span className="text-muted-foreground/60">{t.apply.instagramOptional}</span>
-                        </Label>
-                        <Input
-                          id="instagram"
-                          className="bg-background"
-                          placeholder={t.apply.instagramPlaceholder}
-                          value={form.instagram}
-                          onChange={e => handleChange("instagram", e.target.value)}
-                        />
+                    </div>
+                  )}
+
+                  {/* STEP 3: CAREER */}
+                  {step === 3 && (
+                    <>
+                      <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
+                        <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionBio}</h2>
+                        <div className="space-y-2">
+                          <Label htmlFor="instagram" className="uppercase text-xs tracking-wider text-muted-foreground">
+                            {t.apply.instagramLabel} <span className="text-muted-foreground/60">{t.apply.instagramOptional}</span>
+                          </Label>
+                          <Input
+                            id="instagram" autoFocus
+                            className="bg-background"
+                            placeholder={t.apply.instagramPlaceholder}
+                            value={form.instagram}
+                            onChange={e => handleChange("instagram", e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="bio" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.bioLabel}</Label>
+                          <Textarea
+                            id="bio"
+                            className="bg-background resize-none h-28"
+                            placeholder={t.apply.bioPlaceholder}
+                            value={form.bio}
+                            onChange={e => handleChange("bio", e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="careerObjective" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.careerObjectiveLabel}</Label>
+                          <Textarea
+                            id="careerObjective"
+                            className="bg-background resize-none h-20"
+                            placeholder={t.apply.careerObjectivePlaceholder}
+                            value={form.careerObjective}
+                            onChange={e => handleChange("careerObjective", e.target.value)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bio" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.bioLabel}</Label>
-                      <Textarea
-                        id="bio"
-                        className="bg-background resize-none h-28"
-                        placeholder={t.apply.bioPlaceholder}
-                        value={form.bio}
-                        onChange={e => handleChange("bio", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="careerObjective" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.careerObjectiveLabel}</Label>
-                      <Textarea
-                        id="careerObjective"
-                        className="bg-background resize-none h-20"
-                        placeholder={t.apply.careerObjectivePlaceholder}
-                        value={form.careerObjective}
-                        onChange={e => handleChange("careerObjective", e.target.value)}
-                      />
-                    </div>
-                  </div>
 
-                  {/* Terms */}
-                  <div className="flex items-start gap-3 bg-zinc-950 border border-border rounded-md p-4">
-                    <Checkbox
-                      id="terms"
-                      checked={agreed}
-                      onCheckedChange={(v) => setAgreed(!!v)}
-                      className="mt-0.5"
-                    />
-                    <Label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                      {t.apply.termsAgree}{" "}
-                      <Link href="/legal-notice" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
-                        {t.apply.termsLinkLabel}
-                      </Link>{" "}
-                      {t.apply.termsAnd}{" "}
-                      <Link href="/privacy-policy" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
-                        {t.apply.privacyLinkLabel}
-                      </Link>. {t.apply.termsConfirm}
-                    </Label>
-                  </div>
+                      {/* Review */}
+                      <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8">
+                        <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3 mb-4">{t.apply.reviewHeading}</h2>
+                        <p className="text-xs text-muted-foreground mb-5">{t.apply.reviewNote}</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                          <div><span className="text-muted-foreground">{t.apply.nameLabel}: </span><span className="text-foreground/90">{form.name || "—"}</span></div>
+                          <div><span className="text-muted-foreground">{t.apply.emailLabel}: </span><span className="text-foreground/90">{form.email || "—"}</span></div>
+                          <div><span className="text-muted-foreground">{t.apply.countryLabel}: </span><span className="text-foreground/90">{form.country || "—"}</span></div>
+                          <div><span className="text-muted-foreground">{t.apply.disciplineLabel}: </span><span className="text-foreground/90">{form.discipline || "—"}</span></div>
+                          <div><span className="text-muted-foreground">{t.apply.weightClassLabel}: </span><span className="text-foreground/90">{form.weightClass || "—"}</span></div>
+                          <div><span className="text-muted-foreground">{t.apply.recordLabel}: </span><span className="text-foreground/90">{form.record || "—"}</span></div>
+                        </div>
+                      </div>
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full h-14 font-heading text-xl uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]"
-                    disabled={!agreed || submitApplication.isPending}
-                  >
-                    {submitApplication.isPending ? t.apply.submittingBtn : t.apply.submitBtn}
-                  </Button>
+                      {/* Terms */}
+                      <div className="flex items-start gap-3 bg-zinc-950 border border-border rounded-md p-4">
+                        <Checkbox
+                          id="terms"
+                          checked={agreed}
+                          onCheckedChange={(v) => setAgreed(!!v)}
+                          className="mt-0.5"
+                        />
+                        <Label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                          {t.apply.termsAgree}{" "}
+                          <Link href="/legal-notice" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                            {t.apply.termsLinkLabel}
+                          </Link>{" "}
+                          {t.apply.termsAnd}{" "}
+                          <Link href="/privacy-policy" target="_blank" className="text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                            {t.apply.privacyLinkLabel}
+                          </Link>. {t.apply.termsConfirm}
+                        </Label>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground text-center">{t.apply.noPaymentNote}</p>
+                    </>
+                  )}
+
+                  {stepError && (
+                    <p className="text-sm text-destructive text-center" role="alert">{stepError}</p>
+                  )}
+
+                  {/* Navigation */}
+                  <div className="flex items-center gap-3">
+                    {step > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="flex-1 h-14 font-heading text-base uppercase tracking-wider font-bold border-white/20"
+                        onClick={() => goToStep(step - 1)}
+                      >
+                        <ChevronLeft className="mr-2 h-5 w-5" />
+                        {t.apply.backButton}
+                      </Button>
+                    )}
+                    {step < TOTAL_STEPS ? (
+                      <Button
+                        type="button"
+                        size="lg"
+                        className="flex-1 h-14 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                        onClick={() => goToStep(step + 1)}
+                      >
+                        {t.apply.continueButton}
+                        <ChevronRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="flex-1 h-14 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                        disabled={!agreed || submitApplication.isPending}
+                      >
+                        {submitApplication.isPending ? t.apply.submittingBtn : t.apply.submitBtn}
+                      </Button>
+                    )}
+                  </div>
                 </form>
               </div>
             </section>
