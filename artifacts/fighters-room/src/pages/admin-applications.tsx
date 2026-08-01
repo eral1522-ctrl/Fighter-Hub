@@ -171,6 +171,13 @@ function EmailHistory({ applicationId }: { applicationId: number }) {
   );
 }
 
+// Default €20/month Stripe Payment Link — same one used for the public
+// membership CTA (see STRIPE_LINK in landing.tsx). Pre-fills the payment
+// link field for any application that doesn't already have one saved,
+// so sending a payment link is a one-click action instead of needing to
+// paste it in every time.
+const DEFAULT_PAYMENT_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
+
 export default function AdminApplicationsPage() {
   const { toast } = useToast();
   const qc = useQueryClient();
@@ -335,7 +342,7 @@ export default function AdminApplicationsPage() {
   };
 
   const handleSendPaymentLink = (id: number, app: { name: string; email: string; paymentLink?: string | null }) => {
-    const link = paymentLinks[id] ?? app.paymentLink ?? "";
+    const link = paymentLinks[id] ?? app.paymentLink ?? DEFAULT_PAYMENT_LINK;
     if (!link.trim()) {
       toast({ title: "Paste a payment link first", variant: "destructive" });
       return;
@@ -614,7 +621,7 @@ export default function AdminApplicationsPage() {
           <div className="space-y-4">
             {filtered.map(app => {
               const notesValue = editingNotes[app.id] !== undefined ? editingNotes[app.id] : (app.adminNotes ?? "");
-              const linkValue = paymentLinks[app.id] !== undefined ? paymentLinks[app.id] : (app.paymentLink ?? "");
+              const linkValue = paymentLinks[app.id] !== undefined ? paymentLinks[app.id] : (app.paymentLink ?? DEFAULT_PAYMENT_LINK);
               const isSending = sendingLink[app.id] ?? false;
               const isResending = resendingNotification[app.id] ?? false;
               const isApproved = app.status === "approved";
