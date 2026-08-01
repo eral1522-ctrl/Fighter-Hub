@@ -150,9 +150,9 @@ async function deliver(opts: nodemailer.SendMailOptions) {
 }
 
 function header() {
+  const logoUrl = process.env.APP_URL || "https://www.fightersassociation.com";
   return `
-    <div style="font-size:28px;font-weight:900;color:#c61010;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;">IFA</div>
-    <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:3px;margin-bottom:32px;">International Fighters Association</div>
+    <img src="${esc(logoUrl)}/ifa-logo-2026.png" alt="IFA - International Fighters Association" width="160" style="display:block;margin-bottom:24px;" />
   `;
 }
 
@@ -323,7 +323,7 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
         </table>
       </div>
       <div style="text-align:center;">
-        <a href="${esc(process.env.APP_URL || "https://ifa-fighters.org")}/admin"
+        <a href="${esc(process.env.APP_URL || "https://www.fightersassociation.com")}/admin"
            style="display:inline-block;background:#c61010;color:#ffffff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
           Review in Admin Panel
         </a>
@@ -437,7 +437,7 @@ export async function sendApplicationApproved(name: string, email: string, appli
     return;
   }
 
-  const loginUrl = esc(`${process.env.APP_URL || "https://ifa-fighters.org"}/sign-in`);
+  const loginUrl = esc(`${process.env.APP_URL || "https://www.fightersassociation.com"}/sign-in`);
 
   const html = `
 <!DOCTYPE html>
