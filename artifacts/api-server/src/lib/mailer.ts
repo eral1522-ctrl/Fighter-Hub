@@ -151,7 +151,7 @@ async function deliver(opts: nodemailer.SendMailOptions) {
 
 function header() {
   return `
-    <div style="font-size:28px;font-weight:900;color:#f5c518;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;">IFA</div>
+    <div style="font-size:28px;font-weight:900;color:#c61010;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;">IFA</div>
     <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:3px;margin-bottom:32px;">International Fighters Association</div>
   `;
 }
@@ -220,7 +220,7 @@ export async function sendApplicationConfirmation(details: ApplicationDetails, a
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Received</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
         Thank you for applying to IFA – International Fighters Association, <strong style="color:#f5f5f5;">${esc(details.name)}</strong>.
@@ -241,7 +241,7 @@ export async function sendApplicationConfirmation(details: ApplicationDetails, a
         </table>
       </div>
 
-      <div style="border-left:3px solid #f5c518;padding-left:16px;margin-bottom:24px;">
+      <div style="border-left:3px solid #c61010;padding-left:16px;margin-bottom:24px;">
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
           Gracias por aplicar a IFA – International Fighters Association.<br/>
           Tu solicitud está en revisión. Nuestro equipo revisa todas las solicitudes en un plazo de <strong style="color:#ccc;">5–7 días hábiles</strong>. Si eres seleccionado, recibirás los siguientes pasos para activar tu membresía.
@@ -308,13 +308,13 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 8px;">New Application Received</h2>
       <p style="color:#888;font-size:13px;margin:0 0 24px;">A fighter has just submitted an application for review.</p>
       <div style="background:#111;border:1px solid #222;border-radius:4px;padding:16px 20px;margin-bottom:24px;">
         <table style="width:100%;border-collapse:collapse;">
           ${fieldRow("Name", esc(details.name))}
-          ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#f5c518;text-decoration:none;">${esc(details.email)}</a>`)}
+          ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#c61010;text-decoration:none;">${esc(details.email)}</a>`)}
           ${fieldRow("Country", esc(details.country))}
           ${fieldRow("Discipline", esc(details.discipline))}
           ${fieldRow("Weight Class", esc(details.weightClass))}
@@ -324,7 +324,7 @@ export async function sendAdminNewApplicationNotification(details: ApplicationDe
       </div>
       <div style="text-align:center;">
         <a href="${esc(process.env.APP_URL || "https://ifa-fighters.org")}/admin"
-           style="display:inline-block;background:#f5c518;color:#0d0d0d;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
+           style="display:inline-block;background:#c61010;color:#ffffff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
           Review in Admin Panel
         </a>
       </div>
@@ -375,7 +375,7 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">IFA Membership Payment</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:6px;">
         <strong style="color:#f5f5f5;">${name}</strong>,
@@ -385,24 +385,24 @@ export async function sendPaymentLink(to: string, name: string, paymentLink: str
       </p>
       <div style="text-align:center;margin:32px 0;">
         <a href="${paymentLink}"
-           style="display:inline-block;background:#f5c518;color:#0d0d0d;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:2px;padding:16px 40px;border-radius:4px;text-decoration:none;">
+           style="display:inline-block;background:#c61010;color:#ffffff;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:2px;padding:16px 40px;border-radius:4px;text-decoration:none;">
           Complete Payment — €20/month
         </a>
       </div>
       <p style="color:#888;font-size:12px;line-height:1.6;margin-bottom:4px;text-align:center;">
         Or copy this link into your browser:
       </p>
-      <p style="color:#f5c518;font-size:12px;word-break:break-all;text-align:center;margin-bottom:24px;">
+      <p style="color:#c61010;font-size:12px;word-break:break-all;text-align:center;margin-bottom:24px;">
         ${paymentLink}
       </p>
-      <div style="border-left:3px solid #f5c518;padding-left:16px;">
+      <div style="border-left:3px solid #c61010;padding-left:16px;">
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0 0 6px;">
           Tu solicitud para IFA ha sido aprobada.
         </p>
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
           Para activar tu membresía, completa el pago de €20/mes usando el siguiente enlace:
           <br/>
-          <a href="${paymentLink}" style="color:#f5c518;word-break:break-all;">${paymentLink}</a>
+          <a href="${paymentLink}" style="color:#c61010;word-break:break-all;">${paymentLink}</a>
         </p>
       </div>
     </div>
@@ -446,23 +446,23 @@ export async function sendApplicationApproved(name: string, email: string, appli
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Approved</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
         Congratulations, <strong style="color:#f5f5f5;">${esc(name)}</strong>!
       </p>
       <p style="color:#ccc;line-height:1.7;margin-bottom:24px;">
-        Your IFA application has been <strong style="color:#f5c518;">approved</strong>. You now have access to fight opportunities, sponsors, events, and global boxing campaigns. Log in to your account to get started.
+        Your IFA application has been <strong style="color:#c61010;">approved</strong>. You now have access to fight opportunities, sponsors, events, and global boxing campaigns. Log in to your account to get started.
       </p>
       <div style="text-align:center;margin:32px 0;">
         <a href="${loginUrl}"
-           style="display:inline-block;background:#f5c518;color:#0d0d0d;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
+           style="display:inline-block;background:#c61010;color:#ffffff;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;padding:14px 32px;border-radius:4px;text-decoration:none;">
           Log In to Your Account
         </a>
       </div>
-      <div style="border-left:3px solid #f5c518;padding-left:16px;margin-top:8px;">
+      <div style="border-left:3px solid #c61010;padding-left:16px;margin-top:8px;">
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
-          ¡Felicidades, <strong style="color:#ccc;">${esc(name)}</strong>! Tu solicitud ha sido <strong style="color:#f5c518;">aprobada</strong>. Inicia sesión para acceder a peleas, patrocinadores, eventos y campañas internacionales de boxeo.
+          ¡Felicidades, <strong style="color:#ccc;">${esc(name)}</strong>! Tu solicitud ha sido <strong style="color:#c61010;">aprobada</strong>. Inicia sesión para acceder a peleas, patrocinadores, eventos y campañas internacionales de boxeo.
         </p>
       </div>
     </div>
@@ -504,7 +504,7 @@ export async function sendApplicationRejected(name: string, email: string, appli
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Application Update</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
         Dear <strong style="color:#f5f5f5;">${esc(name)}</strong>,
@@ -513,11 +513,11 @@ export async function sendApplicationRejected(name: string, email: string, appli
         Thank you for your interest in IFA – International Fighters Association. After careful review, we are unable to approve your application at this time.
       </p>
       <p style="color:#ccc;line-height:1.7;margin-bottom:24px;">
-        We encourage you to continue training and to reapply in the future. If you have any questions or would like feedback, please contact us at <a href="mailto:contact@ifa-fighters.org" style="color:#f5c518;text-decoration:none;">contact@ifa-fighters.org</a>.
+        We encourage you to continue training and to reapply in the future. If you have any questions or would like feedback, please contact us at <a href="mailto:contact@ifa-fighters.org" style="color:#c61010;text-decoration:none;">contact@ifa-fighters.org</a>.
       </p>
-      <div style="border-left:3px solid #f5c518;padding-left:16px;margin-top:8px;">
+      <div style="border-left:3px solid #c61010;padding-left:16px;margin-top:8px;">
         <p style="color:#999;font-style:italic;line-height:1.7;margin:0;">
-          Estimado/a <strong style="color:#ccc;">${esc(name)}</strong>, tras una revisión cuidadosa, no hemos podido aprobar tu solicitud en este momento. Te animamos a seguir entrenando y a volver a solicitar en el futuro. Para preguntas, escríbenos a <a href="mailto:contact@ifa-fighters.org" style="color:#f5c518;text-decoration:none;">contact@ifa-fighters.org</a>.
+          Estimado/a <strong style="color:#ccc;">${esc(name)}</strong>, tras una revisión cuidadosa, no hemos podido aprobar tu solicitud en este momento. Te animamos a seguir entrenando y a volver a solicitar en el futuro. Para preguntas, escríbenos a <a href="mailto:contact@ifa-fighters.org" style="color:#c61010;text-decoration:none;">contact@ifa-fighters.org</a>.
         </p>
       </div>
     </div>
@@ -572,11 +572,11 @@ export async function sendContactMessage(details: {
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">New Contact Form Message</h2>
       <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
         ${fieldRow("Name", esc(details.name))}
-        ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#f5c518;text-decoration:none;">${esc(details.email)}</a>`)}
+        ${fieldRow("Email", `<a href="mailto:${esc(details.email)}" style="color:#c61010;text-decoration:none;">${esc(details.email)}</a>`)}
         ${fieldRow("Subject", esc(details.subject))}
       </table>
       <div style="background:#111;border:1px solid #333;border-radius:4px;padding:16px;">
@@ -634,14 +634,14 @@ export async function sendTestEmail(to: string): Promise<void> {
 <body style="background:#0d0d0d;color:#f5f5f5;font-family:Arial,sans-serif;padding:40px 20px;margin:0;">
   <div style="max-width:560px;margin:0 auto;">
     ${header()}
-    <div style="border-top:2px solid #f5c518;padding-top:24px;margin-bottom:24px;">
+    <div style="border-top:2px solid #c61010;padding-top:24px;margin-bottom:24px;">
       <h2 style="font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px;">Email Test — IFA Admin</h2>
       <p style="color:#ccc;line-height:1.7;margin-bottom:8px;">
         This is a test email from the IFA admin panel. If you received this, your SMTP configuration is working correctly.
       </p>
       <div style="background:#111;border:1px solid #333;border-radius:4px;padding:16px;margin-top:16px;">
         <p style="color:#888;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin:0 0 8px;">Config used</p>
-        <p style="color:#f5c518;font-size:12px;font-family:monospace;margin:0;">
+        <p style="color:#c61010;font-size:12px;font-family:monospace;margin:0;">
           Host: ${SMTP_HOST}<br/>
           Port: ${SMTP_PORT}<br/>
           User: ${SMTP_USER}<br/>
