@@ -12,18 +12,22 @@ import { useEffect, useRef } from "react";
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
 import ProfilePage from "@/pages/profile";
-import AdminLegacyPage from "@/pages/admin";
-import AdminDashboardPage from "@/pages/admin-dashboard";
+// Admin pages are lazy-loaded: they're a large share of the bundle
+// (5 full admin panels) and irrelevant to the public-facing critical
+// path — nobody browsing the homepage should pay for downloading them.
+const AdminLegacyPage = React.lazy(() => import("@/pages/admin"));
+const AdminDashboardPage = React.lazy(() => import("@/pages/admin-dashboard"));
 import ApplyPage from "@/pages/apply";
-import AdminApplicationsPage from "@/pages/admin-applications";
-import AdminOpportunitiesPage from "@/pages/admin-opportunities";
-import AdminTeamPage from "@/pages/admin-team";
+const AdminApplicationsPage = React.lazy(() => import("@/pages/admin-applications"));
+const AdminOpportunitiesPage = React.lazy(() => import("@/pages/admin-opportunities"));
+const AdminTeamPage = React.lazy(() => import("@/pages/admin-team"));
 import StatutesPage from "@/pages/statutes";
 import AssociationPage from "@/pages/association";
 import PresidentMessagePage from "@/pages/president-message";
 import AboutPage from "@/pages/about";
 import MembershipPage from "@/pages/membership";
 import GlobalBoxingSummitPage from "@/pages/global-boxing-summit";
+import ForIndustryPage from "@/pages/for-the-industry";
 import ContactPage from "@/pages/contact";
 import PrivacyPolicyPage from "@/pages/privacy-policy";
 import LegalNoticePage from "@/pages/legal-notice";
@@ -150,7 +154,11 @@ function HomeRedirect() {
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   return (
     <>
-      <Show when="signed-in"><Component /></Show>
+      <Show when="signed-in">
+        <React.Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+          <Component />
+        </React.Suspense>
+      </Show>
       <Show when="signed-out"><Redirect to="/" /></Show>
     </>
   );
@@ -176,6 +184,7 @@ function Router() {
       <Route path="/about" component={AboutPage} />
       <Route path="/membership" component={MembershipPage} />
       <Route path="/global-boxing-summit" component={GlobalBoxingSummitPage} />
+      <Route path="/for-the-industry" component={ForIndustryPage} />
       <Route path="/news-events">
         {/* Old News & Events route — unconfirmed news/events content was
             removed per instruction. Redirect rather than 404 so existing

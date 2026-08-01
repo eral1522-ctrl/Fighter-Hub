@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap');
 @layer theme, base, clerk, components, utilities;
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -146,5 +145,18 @@
     font-family: var(--font-heading);
     text-transform: uppercase;
     letter-spacing: 0.02em;
+  }
+}
+
+/* Respect the OS-level reduced-motion preference: near-instant
+   transitions/animations instead of disabling them outright, so
+   state changes (hover, loading skeletons, step transitions) are
+   still visible, just without motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

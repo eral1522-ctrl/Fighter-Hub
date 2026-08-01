@@ -103,6 +103,10 @@ from = "/global-boxing-summit"
 to = "/index.html"
 
 [[services.production.rewrites]]
+from = "/for-the-industry"
+to = "/index.html"
+
+[[services.production.rewrites]]
 from = "/contact"
 to = "/index.html"
 

@@ -90,6 +90,7 @@ export default function LandingPage() {
             <Link href="/association" className="hover:text-primary transition-colors">{t.header.association}</Link>
             <Link href="/membership" className="hover:text-primary transition-colors">{t.footer.membership}</Link>
             <Link href="/global-boxing-summit" className="hover:text-primary transition-colors">{t.footer.gbs}</Link>
+            <Link href="/for-the-industry" className="hover:text-primary transition-colors">{t.footer.forIndustryNav}</Link>
           </nav>
           <div className="flex items-center gap-3 sm:gap-4">
             <LangSwitcher />
@@ -116,6 +117,7 @@ export default function LandingPage() {
               { href: "/association", label: t.header.association },
               { href: "/membership", label: t.footer.membership },
               { href: "/global-boxing-summit", label: t.footer.gbs },
+              { href: "/for-the-industry", label: t.footer.forIndustryNav },
               { href: "/contact", label: t.footer.contact },
               { href: "/sign-in", label: t.header.login },
             ].map(({ href, label }) => (
@@ -674,6 +676,7 @@ export default function LandingPage() {
                 <Link href="/membership" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.membership}</Link>
                 <Link href="/sign-in" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.login}</Link>
                 <Link href="/global-boxing-summit" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.gbs}</Link>
+                <Link href="/for-the-industry" className="block text-xs text-muted-foreground hover:text-primary transition-colors">{t.footer.forIndustryNav}</Link>
               </nav>
             </div>
             <div>

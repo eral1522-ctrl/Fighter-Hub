@@ -216,14 +216,14 @@ export default function ApplyPage() {
                           <button
                             type="button"
                             onClick={() => setAthleteType("professional")}
-                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "professional" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${athleteType === "professional" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
                           >
                             {t.apply.athleteTypeProfessional}
                           </button>
                           <button
                             type="button"
                             onClick={() => setAthleteType("amateur")}
-                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "amateur" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                            className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${athleteType === "amateur" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
                           >
                             {t.apply.athleteTypeAmateur}
                           </button>
