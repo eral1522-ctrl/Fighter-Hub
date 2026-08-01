@@ -28,38 +28,53 @@ export default function ApplyPage() {
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [athleteType, setAthleteType] = useState<"professional" | "amateur">("professional");
   const [form, setForm] = useState({
-    name: "", email: "", country: "", weightClass: "", record: "", discipline: "", bio: "", boxrecLink: "", whatsapp: "",
+    name: "", ringName: "", dateOfBirth: "", email: "", country: "", city: "",
+    discipline: "", weightClass: "", record: "", sportingProfileUrl: "",
+    gym: "", coach: "", manager: "", whatsapp: "", instagram: "",
+    bio: "", careerObjective: "", competitionExperience: "",
   });
   const [boxrecError, setBoxrecError] = useState("");
 
   const submitApplication = useSubmitFighterApplication();
   const { toast } = useToast();
 
-  const isBoxing = form.discipline === "Boxing";
-
   const handleChange = (field: string, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
-    if (field === "boxrecLink") setBoxrecError("");
+    if (field === "sportingProfileUrl") setBoxrecError("");
     if (field === "discipline" && value !== "Boxing") setBoxrecError("");
-  };
-
-  const validateBoxrec = (): boolean => {
-    if (!isBoxing) return true;
-    if (!form.boxrecLink.trim() || !form.boxrecLink.includes("boxrec.com")) {
-      setBoxrecError(t.apply.boxrecError);
-      return false;
-    }
-    return true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreed) return;
-    if (!validateBoxrec()) return;
 
     submitApplication.mutate(
-      { data: { ...form, bio: form.bio || null, boxrecLink: form.boxrecLink.trim() || null, whatsapp: form.whatsapp.trim() || null } },
+      {
+        data: {
+          name: form.name,
+          ringName: form.ringName || null,
+          dateOfBirth: form.dateOfBirth,
+          email: form.email,
+          country: form.country,
+          city: form.city,
+          discipline: form.discipline,
+          weightClass: form.weightClass,
+          record: form.record,
+          athleteType,
+          sportingProfileUrl: form.sportingProfileUrl.trim() || null,
+          currentGym: form.gym.trim() || null,
+          coach: form.coach.trim() || null,
+          currentManager: athleteType === "professional" ? (form.manager.trim() || null) : null,
+          whatsapp: form.whatsapp.trim() || null,
+          instagram: form.instagram.trim() || null,
+          bio: form.bio || null,
+          careerObjective: form.careerObjective.trim() || null,
+          competitionExperience: athleteType === "amateur" ? (form.competitionExperience.trim() || null) : null,
+          consent: agreed,
+        } as any,
+      },
       {
         onSuccess: () => setSubmitted(true),
         onError: () => {
@@ -146,6 +161,27 @@ export default function ApplyPage() {
             <section className="py-16 md:py-24">
               <div className="container max-w-2xl mx-auto">
                 <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Athlete Type */}
+                  <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8">
+                    <Label className="uppercase text-xs tracking-wider text-muted-foreground mb-3 block">{t.apply.athleteTypeLabel}</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setAthleteType("professional")}
+                        className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "professional" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                      >
+                        {t.apply.athleteTypeProfessional}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAthleteType("amateur")}
+                        className={`py-3 px-4 rounded-md border text-sm font-heading uppercase tracking-wide transition-colors ${athleteType === "amateur" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+                      >
+                        {t.apply.athleteTypeAmateur}
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Personal Info */}
                   <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
                     <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionPersonal}</h2>
@@ -162,6 +198,29 @@ export default function ApplyPage() {
                         />
                       </div>
                       <div className="space-y-2">
+                        <Label htmlFor="ringName" className="uppercase text-xs tracking-wider text-muted-foreground">
+                          {t.apply.ringNameLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
+                        </Label>
+                        <Input
+                          id="ringName"
+                          className="bg-background"
+                          placeholder={t.apply.ringNamePlaceholder}
+                          value={form.ringName}
+                          onChange={e => handleChange("ringName", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="dateOfBirth" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.dobLabel} <span className="text-primary">*</span></Label>
+                        <Input
+                          id="dateOfBirth"
+                          type="date"
+                          className="bg-background"
+                          value={form.dateOfBirth}
+                          onChange={e => handleChange("dateOfBirth", e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
                         <Label htmlFor="email" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.emailLabel} <span className="text-primary">*</span></Label>
                         <Input
                           id="email"
@@ -173,7 +232,7 @@ export default function ApplyPage() {
                           required
                         />
                       </div>
-                      <div className="space-y-2 md:col-span-2">
+                      <div className="space-y-2">
                         <Label htmlFor="country" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.countryLabel} <span className="text-primary">*</span></Label>
                         <Input
                           id="country"
@@ -181,6 +240,17 @@ export default function ApplyPage() {
                           placeholder={t.apply.countryPlaceholder}
                           value={form.country}
                           onChange={e => handleChange("country", e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="city" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.cityLabel} <span className="text-primary">*</span></Label>
+                        <Input
+                          id="city"
+                          className="bg-background"
+                          placeholder={t.apply.cityPlaceholder}
+                          value={form.city}
+                          onChange={e => handleChange("city", e.target.value)}
                           required
                         />
                       </div>
@@ -230,51 +300,122 @@ export default function ApplyPage() {
                         />
                       </div>
                       <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="boxrecLink" className="uppercase text-xs tracking-wider text-muted-foreground">
+                        <Label htmlFor="sportingProfileUrl" className="uppercase text-xs tracking-wider text-muted-foreground">
                           {t.apply.boxrecLabel}{" "}
-                          {isBoxing
-                            ? <span className="text-primary">*</span>
-                            : <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>}
+                          <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
                         </Label>
                         <Input
-                          id="boxrecLink"
+                          id="sportingProfileUrl"
                           type="url"
                           className={`bg-background ${boxrecError ? "border-destructive focus-visible:ring-destructive" : ""}`}
                           placeholder={t.apply.boxrecPlaceholder}
-                          value={form.boxrecLink}
-                          onChange={e => handleChange("boxrecLink", e.target.value)}
+                          value={form.sportingProfileUrl}
+                          onChange={e => handleChange("sportingProfileUrl", e.target.value)}
                         />
                         {boxrecError && (
                           <p className="text-xs text-destructive mt-1">{boxrecError}</p>
                         )}
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="gym" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.gymLabel} <span className="text-primary">*</span></Label>
+                        <Input
+                          id="gym"
+                          className="bg-background"
+                          placeholder={t.apply.gymPlaceholder}
+                          value={form.gym}
+                          onChange={e => handleChange("gym", e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="coach" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.coachLabel} <span className="text-primary">*</span></Label>
+                        <Input
+                          id="coach"
+                          className="bg-background"
+                          placeholder={t.apply.coachPlaceholder}
+                          value={form.coach}
+                          onChange={e => handleChange("coach", e.target.value)}
+                          required
+                        />
+                      </div>
+                      {athleteType === "professional" ? (
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor="manager" className="uppercase text-xs tracking-wider text-muted-foreground">
+                            {t.apply.managerLabel} <span className="text-muted-foreground/60">{t.apply.managerOptional}</span>
+                          </Label>
+                          <Input
+                            id="manager"
+                            className="bg-background"
+                            placeholder={t.apply.managerPlaceholder}
+                            value={form.manager}
+                            onChange={e => handleChange("manager", e.target.value)}
+                          />
+                        </div>
+                      ) : (
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor="competitionExperience" className="uppercase text-xs tracking-wider text-muted-foreground">
+                            {t.apply.competitionExperienceLabel} <span className="text-muted-foreground/60">{t.apply.boxrecOptional}</span>
+                          </Label>
+                          <Textarea
+                            id="competitionExperience"
+                            className="bg-background resize-none h-20"
+                            placeholder={t.apply.competitionExperiencePlaceholder}
+                            value={form.competitionExperience}
+                            onChange={e => handleChange("competitionExperience", e.target.value)}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Bio + Contact */}
                   <div className="bg-zinc-950 border border-border rounded-md p-6 md:p-8 space-y-6">
                     <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{t.apply.sectionBio}</h2>
-                    <div className="space-y-2">
-                      <Label htmlFor="whatsapp" className="uppercase text-xs tracking-wider text-muted-foreground">
-                        {(t.apply as any).whatsappLabel} <span className="text-primary">*</span>
-                      </Label>
-                      <Input
-                        id="whatsapp"
-                        className="bg-background"
-                        placeholder={(t.apply as any).whatsappPlaceholder}
-                        value={form.whatsapp}
-                        onChange={e => handleChange("whatsapp", e.target.value)}
-                        required
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="whatsapp" className="uppercase text-xs tracking-wider text-muted-foreground">
+                          {t.apply.whatsappLabel} <span className="text-primary">*</span>
+                        </Label>
+                        <Input
+                          id="whatsapp"
+                          className="bg-background"
+                          placeholder={t.apply.whatsappPlaceholder}
+                          value={form.whatsapp}
+                          onChange={e => handleChange("whatsapp", e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="instagram" className="uppercase text-xs tracking-wider text-muted-foreground">
+                          {t.apply.instagramLabel} <span className="text-muted-foreground/60">{t.apply.instagramOptional}</span>
+                        </Label>
+                        <Input
+                          id="instagram"
+                          className="bg-background"
+                          placeholder={t.apply.instagramPlaceholder}
+                          value={form.instagram}
+                          onChange={e => handleChange("instagram", e.target.value)}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="bio" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.bioLabel}</Label>
                       <Textarea
                         id="bio"
-                        className="bg-background resize-none h-32"
+                        className="bg-background resize-none h-28"
                         placeholder={t.apply.bioPlaceholder}
                         value={form.bio}
                         onChange={e => handleChange("bio", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="careerObjective" className="uppercase text-xs tracking-wider text-muted-foreground">{t.apply.careerObjectiveLabel}</Label>
+                      <Textarea
+                        id="careerObjective"
+                        className="bg-background resize-none h-20"
+                        placeholder={t.apply.careerObjectivePlaceholder}
+                        value={form.careerObjective}
+                        onChange={e => handleChange("careerObjective", e.target.value)}
                       />
                     </div>
                   </div>

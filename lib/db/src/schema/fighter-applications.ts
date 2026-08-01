@@ -3,6 +3,7 @@ import {
   text,
   serial,
   timestamp,
+  date,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -37,10 +38,12 @@ export const fighterApplicationsTable = pgTable("fighter_applications", {
   // "professional" | "amateur" — nullable until backfilled
   athleteType: text("athlete_type"),
   ringName: text("ring_name"),
+  dateOfBirth: date("date_of_birth"),
   city: text("city"),
   // Separated from whatsapp per the professional/amateur form redesign
   instagram: text("instagram"),
   currentGym: text("current_gym"),
+  coach: text("coach"),
   careerObjective: text("career_objective"),
   // Professional-only, optional even for professionals
   currentManager: text("current_manager"),

@@ -703,18 +703,27 @@ export default function AdminApplicationsPage() {
                       </div>
                     </div>
 
-                    {app.boxrecLink && (
+                    {((app as any).sportingProfileUrl || app.boxrecLink) && (
                       <div className="flex items-center gap-2 text-sm">
-                        <div className="text-xs text-muted-foreground uppercase tracking-widest shrink-0">BoxRec</div>
+                        <div className="text-xs text-muted-foreground uppercase tracking-widest shrink-0">Sporting Profile</div>
                         <a
-                          href={app.boxrecLink}
+                          href={(app as any).sportingProfileUrl || app.boxrecLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1.5 text-primary hover:underline truncate font-medium"
                         >
                           <Link2 className="h-3.5 w-3.5 shrink-0" />
-                          <span className="truncate">{app.boxrecLink}</span>
+                          <span className="truncate">{(app as any).sportingProfileUrl || app.boxrecLink}</span>
                         </a>
+                      </div>
+                    )}
+
+                    {((app as any).athleteType || (app as any).ringName || (app as any).city) && (
+                      <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground">
+                        {(app as any).athleteType && <span>Type: <span className="text-foreground/80 capitalize">{(app as any).athleteType}</span></span>}
+                        {(app as any).ringName && <span>Ring name: <span className="text-foreground/80">{(app as any).ringName}</span></span>}
+                        {(app as any).city && <span>City: <span className="text-foreground/80">{(app as any).city}</span></span>}
+                        {(app as any).coach && <span>Coach: <span className="text-foreground/80">{(app as any).coach}</span></span>}
                       </div>
                     )}
 
