@@ -1,16 +1,23 @@
 import { Router } from "express";
 import { db, opportunitiesTable, fightersTable, fighterApplicationsTable, type Opportunity } from "@workspace/db";
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, or, isNull, gte, inArray } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import { ListOpportunitiesQueryParams } from "@workspace/api-zod";
 
 const router = Router();
 
 // An opportunity is only visible publicly once it's moved through the
-// admin workflow to one of these statuses. "draft" and "verified" (not
-// yet published) are never returned by this route, no matter who's
+// admin workflow to Verified or Published. Draft, Under Review, Closed
+// and Archived are never returned by this route, no matter who's
 // asking — that's what the /api/admin/opportunities routes are for.
-const PUBLIC_STATUSES = ["published", "closing_soon", "matched", "closed"];
+const PUBLIC_STATUSES = ["verified", "published"];
+
+function notExpired() {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  // No expirationDate set -> never auto-hides on that basis. Otherwise
+  // must be today or later.
+  return or(isNull(opportunitiesTable.expirationDate), gte(opportunitiesTable.expirationDate, today))!;
+}
 
 // Short in-memory cache for the public (redacted/unpaid) opportunities
 // list. This is the overwhelming majority of traffic (anonymous visitors
@@ -89,7 +96,7 @@ router.get("/", async (req: any, res: any) => {
       return res.json(publicListCache.data);
     }
 
-    const conditions = [inArray(opportunitiesTable.status, PUBLIC_STATUSES)];
+    const conditions = [inArray(opportunitiesTable.status, PUBLIC_STATUSES), notExpired()];
     if (parsed.success) {
       if (parsed.data.type) {
         conditions.push(eq(opportunitiesTable.type, parsed.data.type));
@@ -139,6 +146,12 @@ router.get("/:id", async (req: any, res: any) => {
 
     if (!opportunity || !PUBLIC_STATUSES.includes(opportunity.status)) {
       return res.status(404).json({ error: "Opportunity not found" });
+    }
+    if (opportunity.expirationDate) {
+      const today = new Date().toISOString().slice(0, 10);
+      if (opportunity.expirationDate < today) {
+        return res.status(404).json({ error: "Opportunity not found" });
+      }
     }
 
     const paid = await isRequestFromPaidMember(req);

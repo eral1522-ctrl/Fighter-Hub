@@ -126,7 +126,7 @@ router.get("/opportunities", requireAdmin, async (req: any, res: any) => {
   }
 });
 
-const OPPORTUNITY_STATUSES = ["draft", "verified", "published", "closing_soon", "matched", "closed"];
+const OPPORTUNITY_STATUSES = ["draft", "under_review", "verified", "published", "closed", "archived"];
 const OPPORTUNITY_TYPES = ["fight", "sponsor"];
 // Fields PATCH is allowed to touch. Anything not listed here is ignored
 // rather than erroring, so unrelated request-body noise can't slip through.
@@ -136,6 +136,7 @@ const OPPORTUNITY_EDITABLE_FIELDS = [
   "travelIncluded", "accommodationIncluded", "promoterOrganization", "gender",
   "requiredExperience", "applicationDeadline", "travelAccommodationDetails",
   "memberOnlyDetails", "applicationInstructions", "adminVerificationNotes",
+  "expirationDate",
 ];
 
 function validateOpportunityUpdate(body: any): { data?: Record<string, unknown>; error?: string } {

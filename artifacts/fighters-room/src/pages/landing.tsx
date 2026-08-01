@@ -358,6 +358,23 @@ export default function LandingPage() {
         </section>
 
         {/* ── LIVE OPPORTUNITIES PREVIEW ── */}
+        {!opportunitiesLoading && featuredOpps.length === 0 ? (
+          <section className="py-20 md:py-28 border-b border-border relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/8 via-transparent to-transparent pointer-events-none" />
+            <div className="container relative z-10 max-w-2xl text-center">
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">{t.liveOpps.noOppsLabel}</p>
+              <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">{t.liveOpps.noOppsHeading}</h2>
+              <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+              <p className="text-muted-foreground text-lg leading-relaxed mb-10">{t.liveOpps.noOppsText}</p>
+              <Link href="/apply">
+                <Button size="lg" className="h-14 px-12 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
+                  {t.liveOpps.noOppsCta}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </section>
+        ) : (
         <section className="py-24 md:py-36 border-b border-border relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/8 via-transparent to-transparent pointer-events-none" />
           <div className="container relative z-10">
@@ -391,8 +408,6 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-            ) : featuredOpps.length === 0 ? (
-              <p className="text-center text-muted-foreground text-sm max-w-md mx-auto py-12">{t.liveOpps.noOpps}</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
                 {featuredOpps.map((opp) => {
@@ -469,6 +484,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* ── WHAT FIGHTERS NEED TODAY (testimonials) ──
              DISABLED: these quotes/names are placeholder content, not

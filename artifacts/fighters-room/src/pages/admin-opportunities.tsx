@@ -37,17 +37,18 @@ type Opportunity = {
   memberOnlyDetails: string | null;
   applicationInstructions: string | null;
   adminVerificationNotes: string | null;
+  expirationDate: string | null;
 };
 
-const STATUSES = ["draft", "verified", "published", "closing_soon", "matched", "closed"];
+const STATUSES = ["draft", "under_review", "verified", "published", "closed", "archived"];
 
 const STATUS_STYLE: Record<string, string> = {
   draft: "bg-zinc-800 text-zinc-300 border-zinc-700",
+  under_review: "bg-amber-950 text-amber-400 border-amber-900",
   verified: "bg-blue-950 text-blue-400 border-blue-900",
   published: "bg-green-950 text-green-400 border-green-900",
-  closing_soon: "bg-amber-950 text-amber-400 border-amber-900",
-  matched: "bg-purple-950 text-purple-400 border-purple-900",
   closed: "bg-zinc-900 text-zinc-500 border-zinc-800",
+  archived: "bg-zinc-900 text-zinc-600 border-zinc-800",
 };
 
 async function fetchOpportunities(): Promise<Opportunity[]> {
@@ -170,12 +171,15 @@ function OpportunityRow({ opp, onUpdated }: { opp: Opportunity; onUpdated: () =>
   const { toast } = useToast();
   const [editing, setEditing] = useState(false);
   const [notes, setNotes] = useState(opp.adminVerificationNotes ?? "");
+  const [expirationDate, setExpirationDate] = useState(opp.expirationDate ?? "");
 
   const update = useMutation({
     mutationFn: (patch: Partial<Opportunity>) => updateOpportunity(opp.id, patch),
     onSuccess: () => { toast({ title: "Updated" }); onUpdated(); },
     onError: (err: any) => toast({ title: "Update failed", description: err?.error, variant: "destructive" }),
   });
+
+  const isExpired = opp.expirationDate ? opp.expirationDate < new Date().toISOString().slice(0, 10) : false;
 
   return (
     <div className="border border-border rounded-md p-4 bg-zinc-950">
@@ -184,6 +188,7 @@ function OpportunityRow({ opp, onUpdated }: { opp: Opportunity; onUpdated: () =>
           <div className="font-heading text-sm uppercase tracking-wide">{opp.title}</div>
           <div className="text-xs text-muted-foreground">
             {opp.type} · {opp.promoterOrganization || "no promoter set"} · {[opp.city, opp.country].filter(Boolean).join(", ") || "no location"}
+            {opp.expirationDate && <span className={isExpired ? "text-destructive" : ""}> · expires {opp.expirationDate}{isExpired ? " (expired, hidden from public)" : ""}</span>}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -200,10 +205,16 @@ function OpportunityRow({ opp, onUpdated }: { opp: Opportunity; onUpdated: () =>
         </div>
       </div>
       {editing && (
-        <div className="mt-3 pt-3 border-t border-border space-y-2">
-          <Label className="text-xs">Admin verification notes (never shown to anyone but admins)</Label>
-          <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
-          <Button size="sm" onClick={() => update.mutate({ adminVerificationNotes: notes })}>Save Notes</Button>
+        <div className="mt-3 pt-3 border-t border-border space-y-3">
+          <div>
+            <Label className="text-xs">Expiration date (auto-hides from public after this date)</Label>
+            <Input type="date" className="mt-1 h-9 max-w-[200px]" value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Admin verification notes (never shown to anyone but admins)</Label>
+            <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className="mt-1" />
+          </div>
+          <Button size="sm" onClick={() => update.mutate({ adminVerificationNotes: notes, expirationDate: expirationDate || null })}>Save</Button>
         </div>
       )}
     </div>

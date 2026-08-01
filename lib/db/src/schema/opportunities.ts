@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, boolean, date } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -12,11 +12,16 @@ export const opportunitiesTable = pgTable("opportunities", {
   date: text("date"),
   weightClass: text("weight_class"),
   compensation: text("compensation"),
-  // draft | verified | published | closing_soon | matched | closed
-  // A new opportunity is created as "draft" by default and must be
-  // explicitly moved through verified -> published before it is visible
-  // publicly (enforced in the public API route, not just the admin UI).
+  // draft | under_review | verified | published | closed | archived
+  // A new opportunity is created as "draft" by default. Only "verified"
+  // and "published" are ever visible publicly (enforced in the public
+  // API route, not just the admin UI) — draft/under_review/closed/
+  // archived stay admin-only.
   status: text("status").notNull().default("draft"),
+  // Opportunities past this date are automatically hidden from the
+  // public API regardless of status. Nullable — an opportunity without
+  // an expiration date never auto-hides on that basis.
+  expirationDate: date("expiration_date"),
   // extended fields
   country: text("country"),
   city: text("city"),

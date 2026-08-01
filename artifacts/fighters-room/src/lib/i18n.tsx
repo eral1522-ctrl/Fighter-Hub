@@ -161,6 +161,10 @@ const T = {
       purse: "Purse",
       purseHidden: "Members only",
       noOpps: "New verified opportunities are being prepared for IFA members. Complete your application to be notified when opportunities matching your profile become available.",
+      noOppsLabel: "Get Matched",
+      noOppsHeading: "Be First to Know",
+      noOppsText: "New fight and sponsor opportunities are verified and published as they become available. Create your professional profile now to be notified the moment one matches your discipline, weight class and location.",
+      noOppsCta: "Apply for Membership",
     },
     contact: {
       label: "Get in Touch",
@@ -621,6 +625,10 @@ const T = {
       purse: "Bolsa",
       purseHidden: "Solo miembros",
       noOpps: "Se están preparando nuevas oportunidades verificadas para los miembros de IFA. Completa tu solicitud para recibir un aviso cuando haya oportunidades que coincidan con tu perfil.",
+      noOppsLabel: "Recibe Coincidencias",
+      noOppsHeading: "Sé el Primero en Saberlo",
+      noOppsText: "Las nuevas oportunidades de pelea y patrocinio se verifican y publican a medida que están disponibles. Crea tu perfil profesional ahora para recibir un aviso en el momento en que una coincida con tu disciplina, categoría de peso y ubicación.",
+      noOppsCta: "Aplicar para la Membresía",
     },
     contact: {
       label: "Contáctanos",
