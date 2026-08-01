@@ -47,7 +47,9 @@ const T = {
     aboutSection: {
       label: "Who We Are",
       heading: "The International Fighters Association",
-      text: "Established in 2026, IFA is an independent global association built to represent and protect combat sports athletes — with no conflicts of interest and no loyalty except to our members. IFA supports athletes across boxing, MMA, kickboxing, Muay Thai and beyond, giving them access to legitimate opportunities, fair contracts, career guidance and an international network built to work in their favor.",
+      text1: "IFA is the international association representing professional and amateur athletes across boxing, MMA, kickboxing, Muay Thai and bare knuckle. Established in 2026, IFA acts independently on behalf of its members, with no ties to promoters, managers or brands that could create a conflict of interest.",
+      text2: "As a membership association, IFA works to give fighters verified access to opportunities, education on contracts and career decisions, and a collective voice within an industry that has historically lacked structure for the athletes competing in it.",
+      text3: "IFA also provides career guidance, contract education, initial support in payment and professional disputes, and priority access to Global Boxing Summit, the association's flagship industry event.",
       cta: "Learn more about IFA",
     },
     whyJoin: {
@@ -510,7 +512,9 @@ const T = {
     aboutSection: {
       label: "Quiénes Somos",
       heading: "La Asociación Internacional de Luchadores",
-      text: "Establecida en 2026, IFA es una asociación global independiente creada para representar y proteger a los atletas de deportes de combate — sin conflictos de interés y con lealtad única a sus miembros. IFA apoya a atletas de boxeo, MMA, kickboxing, Muay Thai y más, dándoles acceso a oportunidades legítimas, contratos justos, orientación de carrera y una red internacional creada para trabajar a su favor.",
+      text1: "IFA es la asociación internacional que representa a atletas profesionales y amateur de boxeo, MMA, kickboxing, Muay Thai y bare knuckle. Establecida en 2026, IFA actúa de forma independiente en nombre de sus miembros, sin vínculos con promotores, managers o marcas que puedan suponer un conflicto de interés.",
+      text2: "Como asociación de miembros, IFA trabaja para dar a los luchadores acceso verificado a oportunidades, formación sobre contratos y decisiones de carrera, y una voz colectiva dentro de una industria que históricamente ha carecido de estructura para los atletas que compiten en ella.",
+      text3: "IFA también ofrece orientación de carrera, formación contractual, apoyo inicial en disputas de pago y profesionales, y acceso prioritario a Global Boxing Summit, el evento insignia de la industria de la asociación.",
       cta: "Conoce más sobre IFA",
     },
     whyJoin: {
