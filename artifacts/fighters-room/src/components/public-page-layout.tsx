@@ -15,8 +15,7 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/95 backdrop-blur-sm">
         <div className="container flex h-20 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="font-heading font-black text-3xl text-primary tracking-widest uppercase">IFA</span>
-            <span className="hidden md:block text-xs text-muted-foreground uppercase tracking-widest font-medium border-l border-border pl-3">International Fighters Association</span>
+            <img src={ifaLogo} alt="IFA – International Fighters Association" className="h-10 md:h-12 w-auto" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-xs font-heading uppercase tracking-widest text-muted-foreground">
