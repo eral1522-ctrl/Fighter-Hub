@@ -17,6 +17,7 @@ import AdminDashboardPage from "@/pages/admin-dashboard";
 import ApplyPage from "@/pages/apply";
 import AdminApplicationsPage from "@/pages/admin-applications";
 import AdminOpportunitiesPage from "@/pages/admin-opportunities";
+import AdminTeamPage from "@/pages/admin-team";
 import StatutesPage from "@/pages/statutes";
 import AssociationPage from "@/pages/association";
 import PresidentMessagePage from "@/pages/president-message";
@@ -167,6 +168,7 @@ function Router() {
       <Route path="/admin/legacy"><ProtectedRoute component={AdminLegacyPage} /></Route>
       <Route path="/admin/applications"><ProtectedRoute component={AdminApplicationsPage} /></Route>
       <Route path="/admin/opportunities"><ProtectedRoute component={AdminOpportunitiesPage} /></Route>
+      <Route path="/admin/team"><ProtectedRoute component={AdminTeamPage} /></Route>
       <Route path="/apply" component={ApplyPage} />
       <Route path="/statutes" component={StatutesPage} />
       <Route path="/association" component={AssociationPage} />

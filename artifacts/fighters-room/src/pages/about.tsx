@@ -3,6 +3,35 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Globe, Target, Users, Star, Heart } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { usePageMeta } from "@/lib/use-page-meta";
+import { useQuery } from "@tanstack/react-query";
+
+type TeamMember = {
+  id: number;
+  name: string;
+  role: string;
+  category: string;
+  photoUrl: string | null;
+  bio: string | null;
+  country: string | null;
+  disciplineOrArea: string | null;
+  externalUrl: string | null;
+};
+
+const TEAM_CATEGORY_ORDER = ["board", "founding_fighter", "advisory", "legal", "medical", "partner"];
+const TEAM_CATEGORY_LABELS: Record<string, string> = {
+  board: "Board Members",
+  founding_fighter: "Founding Fighters",
+  advisory: "Advisory Board",
+  legal: "Legal Team & Legal Partners",
+  medical: "Medical & Athlete Welfare Partners",
+  partner: "Gyms, Promoters & Strategic Partners",
+};
+
+async function fetchPublicTeam(): Promise<TeamMember[]> {
+  const res = await fetch("/api/team");
+  if (!res.ok) return [];
+  return res.json();
+}
 
 const VALUES = [
   { icon: Shield, title: "Fighter First", desc: "Every decision IFA makes is guided by what is best for the athletes we represent. Fighters are the heart of combat sports and must be treated as such." },
@@ -25,6 +54,10 @@ export default function AboutPage() {
     description: "IFA's mission, vision, values, and timeline as the independent global association representing combat sports athletes.",
     path: "/about",
   });
+  const { data: teamMembers } = useQuery({ queryKey: ["public-team"], queryFn: fetchPublicTeam });
+  const membersByCategory = (cat: string) => (teamMembers ?? []).filter((m) => m.category === cat);
+  const hasAnyTeamMembers = (teamMembers ?? []).length > 0;
+
   return (
     <PublicPageLayout>
       {/* Hero */}
@@ -125,9 +158,60 @@ export default function AboutPage() {
               </Link>
             ))}
           </div>
-          <p className="text-center text-xs text-muted-foreground mt-8">Additional board profiles will be published as they are confirmed.</p>
+
         </div>
       </section>
+
+      {/* The People Behind IFA — infrastructure-driven, hidden entirely
+          if nothing is active yet. No placeholder/ficticious cards. */}
+      {hasAnyTeamMembers && (
+        <section className="py-20 md:py-28 border-b border-border bg-zinc-950">
+          <div className="container">
+            <div className="text-center mb-16">
+              <p className="text-primary text-xs font-bold uppercase tracking-widest mb-3 font-heading">Built With the Combat Sports Industry</p>
+              <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">The People Behind IFA</h2>
+              <div className="h-1 w-20 bg-primary mx-auto" />
+            </div>
+            <div className="space-y-14">
+              {TEAM_CATEGORY_ORDER.map((cat) => {
+                const items = membersByCategory(cat);
+                if (items.length === 0) return null;
+                return (
+                  <div key={cat}>
+                    <h3 className="font-heading text-sm uppercase tracking-widest text-muted-foreground mb-6">{TEAM_CATEGORY_LABELS[cat]}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {items.map((m) => {
+                        const Card = m.externalUrl ? "a" : "div";
+                        return (
+                          <Card
+                            key={m.id}
+                            {...(m.externalUrl ? { href: m.externalUrl, target: "_blank", rel: "noopener noreferrer" } : {})}
+                            className="bg-background border border-border rounded-md p-6 hover:border-primary/30 transition-colors"
+                          >
+                            {m.photoUrl ? (
+                              <img src={m.photoUrl} alt={m.name} className="w-16 h-16 rounded-full object-cover mb-4 border border-border" />
+                            ) : (
+                              <div className="w-16 h-16 rounded-full bg-zinc-800 border border-border mb-4 flex items-center justify-center">
+                                <Users className="h-6 w-6 text-muted-foreground" />
+                              </div>
+                            )}
+                            <h4 className="font-heading text-base uppercase tracking-wide mb-1">{m.name}</h4>
+                            <p className="text-primary text-xs font-heading uppercase tracking-wider mb-2">{m.role}</p>
+                            {(m.country || m.disciplineOrArea) && (
+                              <p className="text-muted-foreground text-xs mb-2">{[m.disciplineOrArea, m.country].filter(Boolean).join(" · ")}</p>
+                            )}
+                            {m.bio && <p className="text-muted-foreground text-sm leading-relaxed">{m.bio}</p>}
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-20 md:py-28">

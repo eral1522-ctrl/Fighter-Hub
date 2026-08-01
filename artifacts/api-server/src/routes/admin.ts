@@ -9,8 +9,9 @@ import {
   fighterApplicationsTable,
   emailLogTable,
   unmatchedPaymentsTable,
+  teamMembersTable,
 } from "@workspace/db";
-import { eq, count, ilike, and, or, desc, SQL } from "drizzle-orm";
+import { eq, count, ilike, and, or, desc, asc, SQL } from "drizzle-orm";
 import {
   AdminCreateOpportunityBody,
   AdminCreateEventBody,
@@ -207,6 +208,110 @@ router.post("/opportunities", requireAdmin, async (req: any, res: any) => {
     return res.status(201).json(opportunity);
   } catch (err) {
     req.log.error({ err }, "Admin: failed to create opportunity");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+const TEAM_CATEGORIES = ["board", "founding_fighter", "advisory", "legal", "medical", "partner"];
+
+// GET /api/admin/team — list ALL team members (active and inactive)
+router.get("/team", requireAdmin, async (req: any, res: any) => {
+  try {
+    const members = await db
+      .select()
+      .from(teamMembersTable)
+      .orderBy(asc(teamMembersTable.category), asc(teamMembersTable.sortOrder), asc(teamMembersTable.id));
+    return res.json(members);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to list team members");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// POST /api/admin/team — create a team member profile
+router.post("/team", requireAdmin, async (req: any, res: any) => {
+  const { name, role, category } = req.body ?? {};
+  if (typeof name !== "string" || !name.trim()) return res.status(400).json({ error: "name is required" });
+  if (typeof role !== "string" || !role.trim()) return res.status(400).json({ error: "role is required" });
+  if (!TEAM_CATEGORIES.includes(category)) {
+    return res.status(400).json({ error: `category must be one of: ${TEAM_CATEGORIES.join(", ")}` });
+  }
+
+  try {
+    const [member] = await db
+      .insert(teamMembersTable)
+      .values({
+        name: name.trim(),
+        role: role.trim(),
+        category,
+        photoUrl: typeof req.body.photoUrl === "string" ? req.body.photoUrl.trim() || null : null,
+        bio: typeof req.body.bio === "string" ? req.body.bio.trim() || null : null,
+        country: typeof req.body.country === "string" ? req.body.country.trim() || null : null,
+        disciplineOrArea: typeof req.body.disciplineOrArea === "string" ? req.body.disciplineOrArea.trim() || null : null,
+        externalUrl: typeof req.body.externalUrl === "string" ? req.body.externalUrl.trim() || null : null,
+        active: req.body.active === false ? false : true,
+        sortOrder: typeof req.body.sortOrder === "number" ? req.body.sortOrder : 0,
+      })
+      .returning();
+    return res.status(201).json(member);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to create team member");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+const TEAM_EDITABLE_FIELDS = [
+  "name", "role", "category", "photoUrl", "bio", "country",
+  "disciplineOrArea", "externalUrl", "active", "sortOrder",
+];
+
+// PATCH /api/admin/team/:id — update a team member profile
+router.patch("/team/:id", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  if (req.body?.category !== undefined && !TEAM_CATEGORIES.includes(req.body.category)) {
+    return res.status(400).json({ error: `category must be one of: ${TEAM_CATEGORIES.join(", ")}` });
+  }
+
+  const data: Record<string, unknown> = {};
+  for (const key of TEAM_EDITABLE_FIELDS) {
+    if (key in (req.body ?? {})) data[key] = req.body[key];
+  }
+  if (Object.keys(data).length === 0) {
+    return res.status(400).json({ error: "No fields to update" });
+  }
+
+  try {
+    const [member] = await db
+      .update(teamMembersTable)
+      .set(data)
+      .where(eq(teamMembersTable.id, id))
+      .returning();
+    if (!member) return res.status(404).json({ error: "Team member not found" });
+    return res.json(member);
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to update team member");
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// DELETE /api/admin/team/:id — remove a team member profile entirely
+// (as opposed to just setting active=false, for genuine mistakes/test
+// entries that should never have existed)
+router.delete("/team/:id", requireAdmin, async (req: any, res: any) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  try {
+    const [deleted] = await db
+      .delete(teamMembersTable)
+      .where(eq(teamMembersTable.id, id))
+      .returning({ id: teamMembersTable.id });
+    if (!deleted) return res.status(404).json({ error: "Team member not found" });
+    return res.json({ success: true });
+  } catch (err) {
+    req.log.error({ err }, "Admin: failed to delete team member");
     return res.status(500).json({ error: "Internal server error" });
   }
 });

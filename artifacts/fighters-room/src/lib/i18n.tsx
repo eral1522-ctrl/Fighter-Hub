@@ -27,6 +27,7 @@ const T = {
       admin: "Admin",
       applications: "Applications",
       opportunities: "Opportunities",
+      team: "People",
       signOut: "Sign out",
     },
     hero: {
@@ -491,6 +492,7 @@ const T = {
       admin: "Admin",
       applications: "Solicitudes",
       opportunities: "Oportunidades",
+      team: "Personas",
       signOut: "Cerrar sesión",
     },
     hero: {

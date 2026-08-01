@@ -51,6 +51,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             >
               {t.layout.opportunities}
             </Link>
+            <Link
+              href="/admin/team"
+              className={`transition-colors hover:text-foreground/80 uppercase font-heading tracking-wider text-xs ${location === "/admin/team" ? "text-foreground" : "text-foreground/60"}`}
+            >
+              {t.layout.team}
+            </Link>
           </nav>
           <div className="ml-auto flex items-center gap-4">
             <LangSwitcher />
