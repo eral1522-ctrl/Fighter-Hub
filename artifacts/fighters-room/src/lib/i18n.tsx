@@ -98,14 +98,12 @@ const T = {
     },
     fighters: {
       label: "Who We Represent",
-      heading: "The Fighters",
-      description: "The IFA represents professional and amateur athletes across boxing, MMA, kickboxing, Muay Thai and bare knuckle — at every level, from rising prospects to world champions.",
+      heading: "Built for Every Fighter",
+      description: "IFA represents athletes across every stage of a combat sports career — from amateur competitors building their record to established professionals competing internationally.",
       types: [
-        { name: "Boxers", flag: "🥊", desc: "Pro boxing athletes seeking global bouts and career management support." },
-        { name: "MMA Fighters", flag: "🥋", desc: "Mixed martial artists competing across promotions worldwide, supported by IFA membership." },
-        { name: "Kickboxers", flag: "🦵", desc: "K-1 and full-contact kickboxing competitors backed by IFA's international network." },
-        { name: "Muay Thai Fighters", flag: "🏆", desc: "Muay Thai athletes competing from local stadiums to international championships." },
-        { name: "Bare Knuckle Fighters", flag: "✊", desc: "Athletes in one of the fastest-growing combat sports, supported by IFA worldwide." },
+        { name: "Professional Fighters", flag: "🥊", desc: "Established athletes competing at every level, from regional cards to world title fights, seeking verified opportunities and career protection." },
+        { name: "Amateur Fighters", flag: "🥋", desc: "Competitors building their record and reputation, gaining structure, guidance and visibility as they work toward turning professional." },
+        { name: "International Fighters", flag: "🌍", desc: "Athletes competing across borders, countries and promotions, represented by an association built for the international side of the sport." },
       ],
     },
     membership: {
@@ -563,14 +561,12 @@ const T = {
     },
     fighters: {
       label: "A Quién Representamos",
-      heading: "Los Luchadores",
-      description: "IFA representa a atletas profesionales y amateur de boxeo, MMA, kickboxing, Muay Thai y bare knuckle — en todos los niveles, desde promesas hasta campeones del mundo.",
+      heading: "Creado para Cada Luchador",
+      description: "IFA representa a atletas en cada etapa de su carrera en deportes de combate — desde competidores amateur construyendo su récord hasta profesionales consolidados compitiendo a nivel internacional.",
       types: [
-        { name: "Boxeadores", flag: "🥊", desc: "Atletas de boxeo profesional que buscan combates internacionales y apoyo en gestión de carrera." },
-        { name: "Luchadores de MMA", flag: "🥋", desc: "Luchadores de artes marciales mixtas que compiten en promociones de todo el mundo, respaldados por la membresía de IFA." },
-        { name: "Kickboxers", flag: "🦵", desc: "Competidores de K-1 y kickboxing de contacto pleno respaldados por la red internacional de IFA." },
-        { name: "Luchadores de Muay Thai", flag: "🏆", desc: "Atletas de Muay Thai que compiten desde estadios locales hasta campeonatos internacionales." },
-        { name: "Luchadores de Bare Knuckle", flag: "✊", desc: "Atletas de uno de los deportes de combate de más rápido crecimiento, apoyados por IFA en todo el mundo." },
+        { name: "Luchadores Profesionales", flag: "🥊", desc: "Atletas consolidados compitiendo en todos los niveles, desde carteleras regionales hasta combates por el título mundial, buscando oportunidades verificadas y protección de carrera." },
+        { name: "Luchadores Amateur", flag: "🥋", desc: "Competidores construyendo su récord y reputación, ganando estructura, orientación y visibilidad mientras avanzan hacia el profesionalismo." },
+        { name: "Luchadores Internacionales", flag: "🌍", desc: "Atletas que compiten a través de fronteras, países y promotoras, representados por una asociación creada para el lado internacional del deporte." },
       ],
     },
     membership: {
