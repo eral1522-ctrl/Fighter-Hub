@@ -321,7 +321,7 @@ export default function LandingPage() {
               <div className="h-1 w-20 bg-primary mb-4" />
               <p className="text-muted-foreground text-lg max-w-2xl">{t.fighters.description}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {t.fighters.types.map((f) => (
                 <div key={f.name} className="relative group overflow-hidden rounded-md border border-border bg-background hover:border-primary/40 transition-colors">
                   <div className="p-8">

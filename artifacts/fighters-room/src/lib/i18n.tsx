@@ -84,13 +84,12 @@ const T = {
         { name: "Kickboxing", icon: "🦵", desc: "K-1 rules, full contact, and all kickboxing formats with global competition access." },
         { name: "Muay Thai", icon: "🏆", desc: "The art of eight limbs — from local stadiums to international Muay Thai championships." },
         { name: "Bare Knuckle", icon: "✊", desc: "The fastest-growing combat sport. IFA supports bare knuckle fighters worldwide." },
-        { name: "Grappling", icon: "🤼", desc: "Submission wrestling, BJJ, and no-gi grappling athletes represented internationally." },
       ],
     },
     statsBar: {
       item1Value: "Global",
       item1Label: "Association",
-      item2Value: "6",
+      item2Value: "5",
       item2Label: "Combat Sports",
       item3Value: "0%",
       item3Label: "Commission",
@@ -100,11 +99,13 @@ const T = {
     fighters: {
       label: "Who We Represent",
       heading: "The Fighters",
-      description: "The IFA represents professional boxers, MMA fighters, and kickboxers at every level — from rising prospects to world champions.",
+      description: "The IFA represents professional and amateur athletes across boxing, MMA, kickboxing, Muay Thai and bare knuckle — at every level, from rising prospects to world champions.",
       types: [
         { name: "Boxers", flag: "🥊", desc: "Pro boxing athletes seeking global bouts and career management support." },
         { name: "MMA Fighters", flag: "🥋", desc: "Mixed martial artists competing across promotions worldwide, supported by IFA membership." },
-        { name: "Kickboxers", flag: "🦵", desc: "K-1, Glory, and Muay Thai competitors backed by IFA's international promoter network." },
+        { name: "Kickboxers", flag: "🦵", desc: "K-1 and full-contact kickboxing competitors backed by IFA's international network." },
+        { name: "Muay Thai Fighters", flag: "🏆", desc: "Muay Thai athletes competing from local stadiums to international championships." },
+        { name: "Bare Knuckle Fighters", flag: "✊", desc: "Athletes in one of the fastest-growing combat sports, supported by IFA worldwide." },
       ],
     },
     membership: {
@@ -548,13 +549,12 @@ const T = {
         { name: "Kickboxing", icon: "🦵", desc: "Reglas K-1, contacto pleno y todos los formatos de kickboxing con acceso a competición global." },
         { name: "Muay Thai", icon: "🏆", desc: "El arte de los ocho miembros — desde estadios locales hasta campeonatos internacionales de Muay Thai." },
         { name: "Bare Knuckle", icon: "✊", desc: "El deporte de combate de más rápido crecimiento. IFA apoya a los luchadores de bare knuckle en todo el mundo." },
-        { name: "Grappling", icon: "🤼", desc: "Atletas de lucha de sumisión, BJJ y grappling sin gi representados internacionalmente." },
       ],
     },
     statsBar: {
       item1Value: "Global",
       item1Label: "Asociación",
-      item2Value: "6",
+      item2Value: "5",
       item2Label: "Deportes de Combate",
       item3Value: "0%",
       item3Label: "Comisión",
@@ -564,11 +564,13 @@ const T = {
     fighters: {
       label: "A Quién Representamos",
       heading: "Los Luchadores",
-      description: "La IFA representa a boxeadores profesionales, luchadores de MMA y kickboxers de todos los niveles — desde promesas hasta campeones del mundo.",
+      description: "IFA representa a atletas profesionales y amateur de boxeo, MMA, kickboxing, Muay Thai y bare knuckle — en todos los niveles, desde promesas hasta campeones del mundo.",
       types: [
         { name: "Boxeadores", flag: "🥊", desc: "Atletas de boxeo profesional que buscan combates internacionales y apoyo en gestión de carrera." },
         { name: "Luchadores de MMA", flag: "🥋", desc: "Luchadores de artes marciales mixtas que compiten en promociones de todo el mundo, respaldados por la membresía de IFA." },
-        { name: "Kickboxers", flag: "🦵", desc: "Competidores de K-1, Glory y Muay Thai respaldados por la red internacional de promotores de IFA." },
+        { name: "Kickboxers", flag: "🦵", desc: "Competidores de K-1 y kickboxing de contacto pleno respaldados por la red internacional de IFA." },
+        { name: "Luchadores de Muay Thai", flag: "🏆", desc: "Atletas de Muay Thai que compiten desde estadios locales hasta campeonatos internacionales." },
+        { name: "Luchadores de Bare Knuckle", flag: "✊", desc: "Atletas de uno de los deportes de combate de más rápido crecimiento, apoyados por IFA en todo el mundo." },
       ],
     },
     membership: {
