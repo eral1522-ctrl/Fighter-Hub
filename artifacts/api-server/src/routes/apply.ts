@@ -56,6 +56,57 @@ function validateApplication(body: any): { data?: Record<string, unknown>; error
     data.sportingProfileUrl = body.boxrecLink.trim();
   }
 
+  // --- Minor applicants: guardian details required when under 18 ---
+  // Age is computed server-side from dateOfBirth; never trusted from a
+  // client-supplied "isMinor" flag.
+  const dobStr = String(data.dateOfBirth);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) {
+    return { error: "dateOfBirth must be a valid date (YYYY-MM-DD)" };
+  }
+  const dob = new Date(`${dobStr}T00:00:00Z`);
+  // Reject impossible calendar dates (e.g. 2012-02-31), which Date()
+  // would silently normalize into March.
+  if (isNaN(dob.getTime()) || dob.toISOString().slice(0, 10) !== dobStr) {
+    return { error: "dateOfBirth must be a valid date (YYYY-MM-DD)" };
+  }
+  const now = new Date();
+  let age = now.getUTCFullYear() - dob.getUTCFullYear();
+  const monthDiff = now.getUTCMonth() - dob.getUTCMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getUTCDate() < dob.getUTCDate())) {
+    age--;
+  }
+  if (age < 0 || age > 120) {
+    return { error: "dateOfBirth is out of the accepted range" };
+  }
+
+  if (age < 18) {
+    const guardianRequired = [
+      "guardianName", "guardianRelationship", "guardianEmail", "guardianPhone", "guardianCountry",
+    ];
+    for (const field of guardianRequired) {
+      if (typeof body[field] !== "string" || !body[field].trim()) {
+        return { error: `${field} is required for applicants under 18` };
+      }
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.guardianEmail.trim())) {
+      return { error: "guardianEmail must be a valid email address" };
+    }
+    const guardianConfirmations = [
+      "guardianAuthorizesApplication",
+      "guardianAcceptsTerms",
+      "guardianAuthorizesDataProcessing",
+      "guardianAcknowledgesLicenses",
+    ];
+    for (const field of guardianConfirmations) {
+      if (body[field] !== true) {
+        return { error: "All guardian confirmations are required for applicants under 18" };
+      }
+    }
+    for (const field of guardianRequired) data[field] = body[field].trim();
+    // Server-side timestamp: all four confirmations arrived true.
+    data.guardianConsentAcceptedAt = new Date();
+  }
+
   // Consent timestamp is set server-side from the fact that this request
   // arrived with consent=true, never trusted from a client-supplied
   // timestamp (which could be spoofed).

@@ -36,6 +36,30 @@ export default function ApplyPage() {
     bio: "", careerObjective: "", competitionExperience: "",
   });
   const [boxrecError, setBoxrecError] = useState("");
+  const [guardian, setGuardian] = useState({
+    name: "", relationship: "", email: "", phone: "", country: "",
+  });
+  const [guardianChecks, setGuardianChecks] = useState({
+    authorizes: false, terms: false, data: false, licenses: false,
+  });
+
+  // Age computed from the date-of-birth field; guardian section appears
+  // automatically when the applicant is under 18.
+  const age = (() => {
+    if (!form.dateOfBirth) return null;
+    const dob = new Date(`${form.dateOfBirth}T00:00:00`);
+    if (isNaN(dob.getTime())) return null;
+    const now = new Date();
+    let a = now.getFullYear() - dob.getFullYear();
+    const m = now.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) a--;
+    return a;
+  })();
+  const isMinor = age !== null && age >= 0 && age < 18;
+  const guardianComplete =
+    !isMinor ||
+    (Object.values(guardian).every(v => v.trim().length > 0) &&
+      Object.values(guardianChecks).every(Boolean));
 
   const submitApplication = useSubmitFighterApplication();
   const { toast } = useToast();
@@ -48,7 +72,7 @@ export default function ApplyPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!agreed) return;
+    if (!agreed || !guardianComplete) return;
 
     submitApplication.mutate(
       {
@@ -73,6 +97,17 @@ export default function ApplyPage() {
           careerObjective: form.careerObjective.trim() || null,
           competitionExperience: athleteType === "amateur" ? (form.competitionExperience.trim() || null) : null,
           consent: agreed,
+          ...(isMinor ? {
+            guardianName: guardian.name.trim(),
+            guardianRelationship: guardian.relationship.trim(),
+            guardianEmail: guardian.email.trim(),
+            guardianPhone: guardian.phone.trim(),
+            guardianCountry: guardian.country.trim(),
+            guardianAuthorizesApplication: guardianChecks.authorizes,
+            guardianAcceptsTerms: guardianChecks.terms,
+            guardianAuthorizesDataProcessing: guardianChecks.data,
+            guardianAcknowledgesLicenses: guardianChecks.licenses,
+          } : {}),
         } as any,
       },
       {
@@ -420,6 +455,94 @@ export default function ApplyPage() {
                     </div>
                   </div>
 
+                  {/* Guardian section — only when the applicant is under 18 */}
+                  {isMinor && (
+                    <div className="bg-zinc-950 border border-primary/40 rounded-md p-6 md:p-8 space-y-6">
+                      <div>
+                        <h2 className="font-heading text-xl uppercase tracking-wider border-b border-border/50 pb-3">{(t.apply as any).guardianSectionTitle}</h2>
+                        <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{(t.apply as any).guardianSectionNote}</p>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="guardianName" className="uppercase text-xs tracking-wider text-muted-foreground">{(t.apply as any).guardianNameLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="guardianName"
+                            className="bg-background"
+                            placeholder={(t.apply as any).guardianNamePlaceholder}
+                            value={guardian.name}
+                            onChange={e => setGuardian(p => ({ ...p, name: e.target.value }))}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardianRelationship" className="uppercase text-xs tracking-wider text-muted-foreground">{(t.apply as any).guardianRelationshipLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="guardianRelationship"
+                            className="bg-background"
+                            placeholder={(t.apply as any).guardianRelationshipPlaceholder}
+                            value={guardian.relationship}
+                            onChange={e => setGuardian(p => ({ ...p, relationship: e.target.value }))}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardianEmail" className="uppercase text-xs tracking-wider text-muted-foreground">{(t.apply as any).guardianEmailLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="guardianEmail"
+                            type="email"
+                            className="bg-background"
+                            placeholder={(t.apply as any).guardianEmailPlaceholder}
+                            value={guardian.email}
+                            onChange={e => setGuardian(p => ({ ...p, email: e.target.value }))}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="guardianPhone" className="uppercase text-xs tracking-wider text-muted-foreground">{(t.apply as any).guardianPhoneLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="guardianPhone"
+                            className="bg-background"
+                            placeholder={(t.apply as any).guardianPhonePlaceholder}
+                            value={guardian.phone}
+                            onChange={e => setGuardian(p => ({ ...p, phone: e.target.value }))}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor="guardianCountry" className="uppercase text-xs tracking-wider text-muted-foreground">{(t.apply as any).guardianCountryLabel} <span className="text-primary">*</span></Label>
+                          <Input
+                            id="guardianCountry"
+                            className="bg-background"
+                            placeholder={(t.apply as any).guardianCountryPlaceholder}
+                            value={guardian.country}
+                            onChange={e => setGuardian(p => ({ ...p, country: e.target.value }))}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-4 pt-2">
+                        {([
+                          ["authorizes", (t.apply as any).guardianConsentAuthorize],
+                          ["terms", (t.apply as any).guardianConsentTerms],
+                          ["data", (t.apply as any).guardianConsentData],
+                          ["licenses", (t.apply as any).guardianConsentLicenses],
+                        ] as const).map(([key, label]) => (
+                          <div key={key} className="flex items-start gap-3">
+                            <Checkbox
+                              id={`guardian-${key}`}
+                              checked={guardianChecks[key]}
+                              onCheckedChange={(v) => setGuardianChecks(p => ({ ...p, [key]: !!v }))}
+                              className="mt-0.5"
+                            />
+                            <Label htmlFor={`guardian-${key}`} className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                              {label}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Terms */}
                   <div className="flex items-start gap-3 bg-zinc-950 border border-border rounded-md p-4">
                     <Checkbox
@@ -444,7 +567,7 @@ export default function ApplyPage() {
                     type="submit"
                     size="lg"
                     className="w-full h-14 font-heading text-xl uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]"
-                    disabled={!agreed || submitApplication.isPending}
+                    disabled={!agreed || !guardianComplete || submitApplication.isPending}
                   >
                     {submitApplication.isPending ? t.apply.submittingBtn : t.apply.submitBtn}
                   </Button>

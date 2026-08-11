@@ -6,3 +6,4 @@ export * from "./fighter-applications";
 export * from "./junior-applications";
 export * from "./email-log";
 export * from "./unmatched-payments";
+export * from "./gbs-interest";

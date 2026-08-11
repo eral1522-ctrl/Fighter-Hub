@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Briefcase, Shield, Globe2, TrendingUp, Radio, Cpu,
   Users, ArrowRight, CheckCircle2,
@@ -15,20 +16,51 @@ const AREA_ICONS = [Briefcase, Shield, Globe2, TrendingUp, Radio, Cpu];
 
 type InterestKind = "attendee" | "partner" | "speaker";
 
-// These three forms are intentionally NOT wired to a backend endpoint yet.
-// Submitting the contact form (/api/contact) fires an immediate automated
-// email - reusing it here would count as "connecting to automated
-// communications," which was explicitly ruled out until the intended flow
-// (storage, notifications, or otherwise) is confirmed. For now this is a
-// client-side-only confirmation state; the copy says so honestly rather
-// than implying the submission went anywhere.
 function InterestForm({ kind, title }: { kind: InterestKind; title: string }) {
   const { t } = useLanguage();
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [message, setMessage] = useState("");
+  const [consent, setConsent] = useState(false);
+  // Honeypot — hidden from humans; bots that fill it get silently ignored.
+  const [website, setWebsite] = useState("");
 
-  if (submitted) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!consent || status === "pending") return;
+    setStatus("pending");
+    setErrorMsg("");
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/gbs-interest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: kind,
+          name,
+          email,
+          organization: organization || undefined,
+          message: message || undefined,
+          consent,
+          website,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setErrorMsg(body?.error || t.gbs.formError);
+        setStatus("error");
+        return;
+      }
+      setStatus("success");
+    } catch {
+      setErrorMsg(t.gbs.formError);
+      setStatus("error");
+    }
+  };
+
+  if (status === "success") {
     return (
       <div className="bg-zinc-950 border border-primary/30 rounded-md p-8 text-center">
         <CheckCircle2 className="h-8 w-8 text-primary mx-auto mb-4" />
@@ -38,13 +70,7 @@ function InterestForm({ kind, title }: { kind: InterestKind; title: string }) {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
-      className="bg-zinc-950 border border-border rounded-md p-8 space-y-4"
-    >
+    <form onSubmit={handleSubmit} className="bg-zinc-950 border border-border rounded-md p-8 space-y-4">
       <h3 className="font-heading text-lg uppercase tracking-wide mb-2">{title}</h3>
       <div>
         <Label htmlFor={`${kind}-name`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formName}</Label>
@@ -57,17 +83,46 @@ function InterestForm({ kind, title }: { kind: InterestKind; title: string }) {
       {kind !== "attendee" && (
         <div>
           <Label htmlFor={`${kind}-org`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formOrganization}</Label>
-          <Input id={`${kind}-org`} />
+          <Input id={`${kind}-org`} value={organization} onChange={(e) => setOrganization(e.target.value)} />
         </div>
       )}
       <div>
         <Label htmlFor={`${kind}-message`} className="text-xs text-muted-foreground mb-1.5 block">{t.gbs.formMessage}</Label>
-        <Textarea id={`${kind}-message`} rows={3} />
+        <Textarea id={`${kind}-message`} rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
       </div>
-      <Button type="submit" className="w-full font-heading uppercase tracking-wider font-bold">
-        {t.gbs.formSubmit}
+      {/* Honeypot field — visually hidden, not display:none (some bots skip those) */}
+      <div className="absolute -left-[9999px] top-auto" aria-hidden="true">
+        <label htmlFor={`${kind}-website`}>Website</label>
+        <input
+          id={`${kind}-website`}
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
+      <div className="flex items-start gap-2.5 pt-1">
+        <Checkbox
+          id={`${kind}-consent`}
+          checked={consent}
+          onCheckedChange={(v) => setConsent(!!v)}
+          className="mt-0.5"
+        />
+        <Label htmlFor={`${kind}-consent`} className="text-[11px] text-muted-foreground leading-relaxed cursor-pointer">
+          {t.gbs.formConsent}
+        </Label>
+      </div>
+      {status === "error" && (
+        <p className="text-xs text-destructive leading-relaxed">{errorMsg}</p>
+      )}
+      <Button
+        type="submit"
+        className="w-full font-heading uppercase tracking-wider font-bold"
+        disabled={!consent || status === "pending"}
+      >
+        {status === "pending" ? t.gbs.formSubmitting : t.gbs.formSubmit}
       </Button>
-      <p className="text-[11px] text-muted-foreground/70 text-center pt-1">{t.gbs.formNote}</p>
     </form>
   );
 }

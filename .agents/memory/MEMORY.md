@@ -1,0 +1,1 @@
+- [Drizzle push interactive prompts](drizzle-push-interactive.md) — push hangs on rename prompts without a TTY; apply additive DDL via executeSql instead; prod syncs at Publish.

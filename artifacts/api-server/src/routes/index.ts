@@ -9,6 +9,7 @@ import membershipRouter from "./membership";
 import adminRouter from "./admin";
 import applyRouter from "./apply";
 import contactRouter from "./contact";
+import gbsInterestRouter from "./gbs-interest";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use("/membership", membershipRouter);
 router.use("/admin", adminRouter);
 router.use("/apply", applyRouter);
 router.use("/contact", contactRouter);
+router.use("/gbs-interest", gbsInterestRouter);
 
 export default router;

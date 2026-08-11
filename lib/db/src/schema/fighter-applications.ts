@@ -56,6 +56,19 @@ export const fighterApplicationsTable = pgTable("fighter_applications", {
   // checkbox, for consent auditability
   consentAcceptedAt: timestamp("consent_accepted_at", { withTimezone: true }),
 
+  // --- Guardian details for minor applicants (<18 at submission) ---
+  // All nullable (additive migration): only populated when the applicant
+  // is a minor, in which case the backend requires all of them.
+  guardianName: text("guardian_name"),
+  guardianRelationship: text("guardian_relationship"),
+  guardianEmail: text("guardian_email"),
+  guardianPhone: text("guardian_phone"),
+  guardianCountry: text("guardian_country"),
+  // Set server-side only when all four guardian confirmations arrived
+  // true (authorization, terms/privacy, data processing, licenses
+  // acknowledgment) — never trusted from a client timestamp.
+  guardianConsentAcceptedAt: timestamp("guardian_consent_accepted_at", { withTimezone: true }),
+
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
