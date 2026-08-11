@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Mail, Instagram, CheckCircle2, Megaphone, Handshake, AlertCircle } from "lucide-react";
 import { PublicPageLayout } from "@/components/public-page-layout";
 import { usePageMeta } from "@/lib/use-page-meta";
+import { INSTAGRAM_URL, INSTAGRAM_HANDLE } from "@/lib/social";
 
 const SUBJECTS = [
   "General Inquiry",
@@ -165,7 +166,7 @@ export default function ContactPage() {
                     </div>
                   </a>
                   <a
-                    href="https://instagram.com/fighters_room"
+                    href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 bg-zinc-950 border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors group"
@@ -175,7 +176,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <div className="text-xs text-muted-foreground uppercase tracking-widest mb-0.5">Instagram</div>
-                      <div className="font-heading tracking-wide text-sm">@fighters_room</div>
+                      <div className="font-heading tracking-wide text-sm">{INSTAGRAM_HANDLE}</div>
                     </div>
                   </a>
                 </div>

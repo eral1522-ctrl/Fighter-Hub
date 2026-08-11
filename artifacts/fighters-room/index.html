@@ -33,6 +33,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- Instant dark background + splash so a cold load never shows a
+         white/black empty screen while JS downloads. React replaces the
+         contents of #root on mount. -->
+    <style>
+      html, body { background: #0a0a0a; margin: 0; }
+      #root:empty::after {
+        content: "IFA";
+        position: fixed; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        color: #7a1f1f; font: 900 64px/1 "Barlow Condensed", Impact, sans-serif;
+        letter-spacing: 0.15em;
+        animation: ifa-pulse 1.2s ease-in-out infinite alternate;
+      }
+      @keyframes ifa-pulse { from { opacity: 0.35; } to { opacity: 0.8; } }
+    </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

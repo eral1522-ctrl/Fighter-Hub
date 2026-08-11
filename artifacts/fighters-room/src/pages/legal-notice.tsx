@@ -11,14 +11,14 @@ International membership association for professional and amateur combat sports 
 Operated by: NLIS UK Investments Limited
 Company Number: 16061459
 Registered in England and Wales
-Registered Office: Hull, United Kingdom
+Registered Office: Kingston House, Myton St, Hull, United Kingdom, HU1 2PS
 
 Website: https://fightersassociation.com
 Contact: info@fightersassociation.com`,
   },
   {
     title: "Nature of Operations",
-    content: `IFA operates as an international, independent, non-governmental membership association managed by NLIS UK Investments Limited, a company registered in England and Wales. IFA is not a sports governing body, regulatory authority, or sanctioning organization. IFA does not grant fighting licenses.
+    content: `IFA operates as an international, independent, non-governmental membership association managed by NLIS UK Investments Limited, a company registered in England and Wales. IFA is not a sports governing body, regulatory authority, or sanctioning organization. IFA does not grant fighting licenses and does not sanction bouts. Opportunities listed on the Platform are facilitated connections only; any final agreement, contract or arrangement is concluded directly between the parties involved.
 
 IFA operates globally across multiple jurisdictions. Our primary operational language is English. Our services are accessible internationally, subject to applicable local laws and regulations.`,
   },
@@ -26,7 +26,9 @@ IFA operates globally across multiple jurisdictions. Our primary operational lan
     title: "Website Usage Terms",
     content: `By accessing or using the IFA website and member platform (the "Platform"), you agree to be bound by these terms. If you do not agree, you may not use the Platform.
 
-You must be at least 18 years of age to register as an IFA member. You agree to provide accurate, current, and complete information during registration and to update it as necessary.
+Adult membership is available to applicants aged 18 or over. Applicants under 18 may apply only with the express authorization of a parent or legal guardian, who must complete the guardian section of the application. The authorizing guardian accepts these terms and the Privacy Policy on behalf of the minor, is responsible for the accuracy of the information provided and for supervising the minor's use of the Platform, and acknowledges that IFA membership does not replace any licensing, federative, medical or legal requirements applicable to the minor. IFA may request additional documentation to verify the identity of the guardian and the validity of the authorization before or after approving an application.
+
+You agree to provide accurate, current, and complete information during registration and to update it as necessary.
 
 Unauthorized use of the Platform, including attempting to access restricted areas, disrupt service, or impersonate other members, is strictly prohibited and may result in legal action.`,
   },
@@ -34,7 +36,9 @@ Unauthorized use of the Platform, including attempting to access restricted area
     title: "Membership and Services",
     content: `IFA membership provides access to the member portal, fighter profile services, fight and sponsor opportunity listings, events, and career support resources. IFA makes reasonable efforts to ensure the accuracy and availability of listed opportunities but does not guarantee specific outcomes.
 
-IFA acts as a facilitator connecting fighters with opportunities, promoters, and sponsors. IFA is not a party to any fight contract, sponsorship agreement, or commercial arrangement between members and third parties. IFA does not provide legal advice.
+IFA acts as a facilitator connecting fighters with opportunities, promoters, and sponsors. IFA is not a party to any fight contract, sponsorship agreement, or commercial arrangement between members and third parties.
+
+IFA is not a law firm. IFA provides initial legal support, contract education, document review assistance and dispute triage. Where regulated legal advice or formal representation is required, the matter may be coordinated with qualified external legal professionals, subject to availability, jurisdiction and a separate engagement where applicable. IFA does not guarantee the recovery of amounts, the resolution of disputes or the outcome of any proceedings.
 
 Membership fees are set by IFA and are subject to change. Current pricing is displayed on the membership page. Payment is processed through third-party payment providers.`,
   },
@@ -72,10 +76,11 @@ IFA reserves the right to update these legal terms at any time. Material changes
 
 NLIS UK Investments Limited (trading as IFA – International Fighters Association)
 Company No. 16061459 — Registered in England and Wales
+Registered Office: Kingston House, Myton St, Hull, United Kingdom, HU1 2PS
 Email: info@fightersassociation.com
 Website: https://fightersassociation.com
 
-Last updated: June 2026`,
+Last updated: August 2026`,
   },
 ];
 

@@ -59,9 +59,9 @@ export default function AssociationPage() {
         <div className="container relative z-10 flex flex-col items-center text-center">
           <div className="h-1 w-20 bg-primary mb-8" />
           <h2 className="font-heading text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 max-w-2xl">
-            {a.title}
+            {a.ctaHeading}
           </h2>
-          <p className="text-muted-foreground text-lg mb-10 max-w-xl">{a.intro}</p>
+          <p className="text-muted-foreground text-lg mb-10 max-w-xl">{a.ctaText}</p>
           <Link href="/apply">
             <Button size="lg" className="h-14 px-10 font-heading text-base uppercase tracking-wider font-bold shadow-[0_0_40px_-10px_hsl(var(--primary))]">
               {a.cta}

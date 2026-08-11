@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, LangSwitcher } from "@/lib/i18n";
 import { Mail, Instagram, MessageCircle, Menu, X } from "lucide-react";
 import ifaLogo from "@assets/ifa-logo-2026.png";
+import { INSTAGRAM_URL, WHATSAPP_URL } from "@/lib/social";
 import { useState } from "react";
 
 export function PublicPageLayout({ children }: { children: React.ReactNode }) {
@@ -83,10 +84,10 @@ export function PublicPageLayout({ children }: { children: React.ReactNode }) {
                 <a href="mailto:info@fightersassociation.com" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 hover:text-primary transition-colors">
                   <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
-                <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 hover:text-primary transition-colors">
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 hover:text-primary transition-colors">
                   <Instagram className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
-                <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 hover:text-primary transition-colors">
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 hover:text-primary transition-colors">
                   <MessageCircle className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
               </div>

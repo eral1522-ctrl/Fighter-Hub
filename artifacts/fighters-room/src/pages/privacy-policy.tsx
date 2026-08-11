@@ -4,8 +4,10 @@ import { useLanguage } from "@/lib/i18n";
 
 const SECTIONS = [
   {
-    title: "1. Who We Are",
-    text: `IFA – International Fighters Association ("IFA", "we", "us", or "our") is a global independent membership association operating internationally. This Privacy Policy explains how we collect, use, store, and protect your personal data when you interact with our website at fightersassociation.com and related services (collectively, the "Platform").
+    title: "1. Who We Are (Data Controller)",
+    text: `IFA – International Fighters Association ("IFA", "we", "us", or "our") is a global independent membership association operating internationally. IFA is a trading name of NLIS UK Investments Limited, Company Number 16061459, registered in England and Wales with registered office at Kingston House, Myton St, Hull, United Kingdom, HU1 2PS, which acts as the data controller for personal data processed through the Platform.
+
+This Privacy Policy explains how we collect, use, store, and protect your personal data when you interact with our website at fightersassociation.com and related services (collectively, the "Platform").
 
 Our contact for data matters: info@fightersassociation.com`,
   },
@@ -29,7 +31,7 @@ Performance of a contract: To provide you with IFA membership services, process 
 
 Legitimate interests: To improve our platform, manage security, and communicate with members about relevant opportunities.
 
-Consent: For marketing communications and non-essential cookies (you may withdraw consent at any time).
+Consent: For marketing communications, and for any non-essential cookies should they ever be introduced (none are used today — see Section 7). You may withdraw consent at any time.
 
 Legal obligation: Where required by applicable law.`,
   },
@@ -51,7 +53,7 @@ Legal obligation: Where required by applicable law.`,
 
 Service providers: Third-party processors that help us operate the platform (hosting, authentication, payment processing). These processors are bound by data protection agreements.
 
-Promoters and sponsors: With your explicit consent, your professional fighter profile may be shared with verified event promoters and brand sponsors in our network.
+Promoters, matchmakers and sponsors: Your professional fighter profile is only shared with verified event promoters, matchmakers and brand sponsors in our network where there is an adequate legal basis for doing so — normally your explicit consent, or the performance of the membership services you have requested.
 
 Legal authorities: Where required by law, court order, or to protect IFA's legal rights.
 
@@ -75,9 +77,14 @@ You also have the right to lodge a complaint with your local data protection aut
   },
   {
     title: "7. Cookies",
-    text: `We use essential cookies to operate the platform (authentication sessions, security tokens). We may also use analytics cookies to understand how our platform is used. You may control non-essential cookies through your browser settings.
+    text: `The Platform only uses strictly necessary cookies and similar technologies. Because no analytics, advertising or other non-essential cookies are set, no cookie consent banner is required.
 
-We do not use third-party advertising cookies. A cookie consent mechanism is in development and will be deployed in a future release.`,
+Specifically, we use:
+
+• Authentication and session cookies set by our authentication provider (Clerk) to keep you securely signed in and to protect your account (security tokens, session state).
+• Local browser storage to remember your language preference (English/Spanish). This stays on your device and is not used to track you.
+
+We do not use analytics cookies, third-party advertising cookies, or tracking pixels. If this changes in the future, we will implement a consent mechanism (rejected by default for non-essential cookies) before any such cookies are set, and update this policy accordingly. You can delete cookies and local storage at any time through your browser settings; essential cookies will be recreated when you sign in again.`,
   },
   {
     title: "8. Data Retention",
@@ -98,16 +105,27 @@ No system is 100% secure. If you believe your data has been compromised, contact
 Where data is transferred outside the EEA, we rely on Standard Contractual Clauses or other legally recognized transfer mechanisms to ensure an adequate level of protection.`,
   },
   {
-    title: "11. Changes to This Policy",
-    text: `We may update this Privacy Policy from time to time. We will notify members of material changes via email or through the member portal. The date of the latest revision is shown below.
+    title: "11. Minors and Guardian Consent",
+    text: `Applicants under 18 may only apply for membership with the express authorization of a parent or legal guardian, provided through the guardian section of the application form.
 
-Last updated: May 2025`,
+For minor applicants we additionally collect the guardian's full name, relationship to the applicant, email address, phone number and country. The guardian authorizes the processing of the minor's personal data for the purposes of the application and membership, accepts the terms and this Privacy Policy on behalf of the minor, and is our point of contact for any matter concerning the minor's data.
+
+The guardian is responsible for the accuracy of the information provided and may exercise the minor's data protection rights on their behalf. IFA may request additional documentation to verify the guardian's identity and the validity of the authorization. A minor's profile is never shared with promoters, matchmakers or sponsors without a valid legal basis and the guardian's adequate authorization.
+
+To exercise a minor's rights or withdraw guardian consent, contact: info@fightersassociation.com`,
   },
   {
-    title: "12. Contact",
+    title: "12. Changes to This Policy",
+    text: `We may update this Privacy Policy from time to time. We will notify members of material changes via email or through the member portal. The date of the latest revision is shown below.
+
+Last updated: August 2026`,
+  },
+  {
+    title: "13. Contact",
     text: `For any questions, concerns, or requests regarding this Privacy Policy or your personal data:
 
 IFA – International Fighters Association
+NLIS UK Investments Limited, Kingston House, Myton St, Hull, United Kingdom, HU1 2PS
 Email: info@fightersassociation.com
 Website: https://fightersassociation.com`,
   },
@@ -129,7 +147,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="font-heading text-5xl md:text-6xl font-black uppercase tracking-tighter mb-6">Privacy Policy</h1>
           <div className="h-1 w-20 bg-primary mb-8" />
           <p className="text-muted-foreground text-lg leading-relaxed">
-            This policy explains how IFA – International Fighters Association collects, uses, and protects your personal data. We are committed to full GDPR compliance and respect for your privacy rights.
+            This policy explains how IFA – International Fighters Association collects, uses, and protects your personal data. We are committed to processing personal data responsibly and in accordance with applicable data protection laws, including the GDPR where applicable.
           </p>
         </div>
       </section>

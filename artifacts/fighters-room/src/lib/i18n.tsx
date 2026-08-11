@@ -120,7 +120,7 @@ const T = {
         "Fighter profile & IFA member card",
         "Access to fight opportunities",
         "Sponsor opportunity listings",
-        "Career support & legal guidance",
+        "Career support & initial legal guidance",
         "International event access",
         "Priority support",
       ],
@@ -377,7 +377,7 @@ const T = {
         },
         {
           title: "7. Fighter Protection",
-          text: "IFA is committed to protecting the rights of all members. This includes fair representation in contract discussions, support in disputes with promoters or management, access to legal guidance, and advocacy for safe and fair working conditions across professional combat sports.",
+          text: "IFA is committed to protecting the rights of all members. IFA provides initial legal support, contract education, document review assistance and a first assessment of non-payment and professional disputes, alongside advocacy for safe and fair working conditions across professional combat sports. Where regulated legal advice or formal representation is required, the matter may be coordinated with qualified external legal professionals, subject to availability, jurisdiction and a separate engagement where applicable. IFA does not guarantee the recovery of amounts, the resolution of disputes or the outcome of any proceedings.",
         },
         {
           title: "8. Opportunities and Services",
@@ -396,7 +396,7 @@ const T = {
       sections: [
         {
           title: "Fighter Protection",
-          text: "IFA works to ensure every member has access to legal guidance and fair representation. We stand with fighters in contract disputes, promoter negotiations, and any situation where their professional rights are at stake. No fighter should face these challenges alone.",
+          text: "IFA offers initial legal support: help understanding contracts, identifying terms, risks and red flags, organizing documentation, and a first assessment of non-payment and professional disputes. Where regulated legal advice or formal representation is required, IFA can refer or coordinate the matter with qualified external legal professionals, subject to jurisdiction and, where applicable, a separate engagement. IFA does not guarantee specific outcomes — but no fighter should face these challenges alone.",
         },
         {
           title: "Access to Opportunities",
@@ -428,6 +428,8 @@ const T = {
         },
       ],
       cta: "Apply to Join IFA",
+      ctaHeading: "Ready to Join?",
+      ctaText: "Become part of the association built to represent, protect and connect fighters worldwide.",
     },
     gbs: {
       badge: "IFA Presents",
@@ -567,7 +569,7 @@ const T = {
         { name: "Boxeo", icon: "🥊", desc: "Boxeo profesional y amateur en todas las categorías — desde veladas locales hasta combates por el título mundial." },
         { name: "MMA", icon: "🥋", desc: "Luchadores de artes marciales mixtas compitiendo en todas las grandes promociones y circuitos regionales del mundo." },
         { name: "Kickboxing", icon: "🦵", desc: "Reglas K-1, contacto pleno y todos los formatos de kickboxing con acceso a competición global." },
-        { name: "Muay Thai", icon: "🏆", desc: "El arte de los ocho miembros — desde estadios locales hasta campeonatos internacionales de Muay Thai." },
+        { name: "Muay Thai", icon: "🏆", desc: "El arte de las ocho extremidades — desde estadios locales hasta campeonatos internacionales de Muay Thai." },
         { name: "Bare Knuckle", icon: "✊", desc: "El deporte de combate de más rápido crecimiento. IFA apoya a los luchadores de bare knuckle en todo el mundo." },
       ],
     },
@@ -603,7 +605,7 @@ const T = {
         "Perfil de luchador y carnet de miembro IFA",
         "Acceso a oportunidades de pelea",
         "Listados de oportunidades con patrocinadores",
-        "Apoyo profesional y orientación legal",
+        "Apoyo profesional y orientación legal inicial",
         "Acceso a eventos internacionales",
         "Soporte prioritario",
       ],
@@ -860,7 +862,7 @@ const T = {
         },
         {
           title: "7. Protección del luchador",
-          text: "IFA está comprometida con la protección de los derechos de todos sus miembros. Esto incluye representación justa en negociaciones contractuales, apoyo en disputas con promotores o agentes, acceso a orientación legal y defensa de condiciones de trabajo seguras y justas en los deportes de combate profesionales.",
+          text: "IFA está comprometida con la protección de los derechos de todos sus miembros. IFA ofrece apoyo legal inicial, educación contractual, ayuda para revisar documentación y una primera evaluación de impagos y disputas profesionales, además de defender condiciones de trabajo seguras y justas en los deportes de combate profesionales. Cuando se requiera asesoramiento jurídico regulado o representación formal, el asunto podrá coordinarse con profesionales jurídicos externos cualificados, sujeto a disponibilidad, jurisdicción y, en su caso, una contratación separada. IFA no garantiza la recuperación de cantidades, la resolución de disputas ni el resultado de ningún procedimiento.",
         },
         {
           title: "8. Oportunidades y servicios",
@@ -879,7 +881,7 @@ const T = {
       sections: [
         {
           title: "Protección del luchador",
-          text: "IFA trabaja para garantizar que cada miembro tenga acceso a orientación legal y representación justa. Apoyamos a los luchadores en disputas contractuales, negociaciones con promotores y cualquier situación en la que sus derechos profesionales estén en juego. Ningún luchador debería enfrentar estos desafíos solo.",
+          text: "IFA ofrece apoyo legal inicial: ayuda para comprender contratos, identificar términos, riesgos y señales de alerta, organizar documentación y hacer una primera evaluación de impagos y disputas profesionales. Cuando se requiera asesoramiento jurídico regulado o representación formal, IFA puede derivar o coordinar el asunto con profesionales jurídicos externos cualificados, según la jurisdicción y, en su caso, mediante una contratación separada. IFA no garantiza resultados concretos — pero ningún luchador debería enfrentar estos desafíos solo.",
         },
         {
           title: "Acceso a oportunidades",
@@ -911,6 +913,8 @@ const T = {
         },
       ],
       cta: "Solicitar Membresía",
+      ctaHeading: "¿Listo para Unirte?",
+      ctaText: "Forma parte de la asociación creada para representar, proteger y conectar a luchadores de todo el mundo.",
     },
     gbs: {
       badge: "IFA Presenta",
@@ -979,9 +983,30 @@ const LanguageContext = createContext<{
   setLang: (l: Lang) => void;
 }>({ lang: "en", t: T.en, setLang: () => {} });
 
+const LANG_STORAGE_KEY = "ifa-lang";
+
+function getInitialLang(): Lang {
+  try {
+    const stored = localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored === "en" || stored === "es") return stored;
+  } catch {
+    // localStorage unavailable (private mode, etc.) — fall through
+  }
+  return "en";
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
-  const setLang = useCallback((l: Lang) => setLangState(l), []);
+  // Initialize synchronously from localStorage so the very first render is
+  // already in the saved language — no English flash before Spanish.
+  const [lang, setLangState] = useState<Lang>(getInitialLang);
+  const setLang = useCallback((l: Lang) => {
+    setLangState(l);
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, l);
+    } catch {
+      // Persisting is best-effort; the in-session language still switches.
+    }
+  }, []);
   const t = T[lang] as TranslationShape;
   return (
     <LanguageContext.Provider value={{ lang, t, setLang }}>

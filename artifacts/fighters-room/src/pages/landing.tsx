@@ -13,6 +13,7 @@ import { useUser } from "@clerk/react";
 import { useGetDashboardStats, useListOpportunities } from "@workspace/api-client-react";
 import { usePageMeta } from "@/lib/use-page-meta";
 import ifaLogo from "@assets/ifa-logo-2026.png";
+import { INSTAGRAM_URL, INSTAGRAM_HANDLE, WHATSAPP_URL, WHATSAPP_NUMBER_DISPLAY } from "@/lib/social";
 
 const STRIPE_LINK = "https://buy.stripe.com/cNibJ39hjcX210cbh2gfu05";
 
@@ -601,18 +602,18 @@ export default function LandingPage() {
                   <div className="font-heading tracking-wide text-sm">info@fightersassociation.com</div>
                 </div>
               </a>
-              <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <Instagram className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">Instagram</div>
-                  <div className="font-heading tracking-wide text-sm">@fighters_room</div>
+                  <div className="font-heading tracking-wide text-sm">{INSTAGRAM_HANDLE}</div>
                 </div>
               </a>
-              <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-background border border-border rounded-md px-6 py-4 hover:border-primary/40 transition-colors">
                 <MessageCircle className="h-5 w-5 text-primary" />
                 <div>
                   <div className="text-xs text-muted-foreground uppercase tracking-widest">WhatsApp</div>
-                  <div className="font-heading tracking-wide text-sm">+34 603 304 636</div>
+                  <div className="font-heading tracking-wide text-sm">{WHATSAPP_NUMBER_DISPLAY}</div>
                 </div>
               </a>
             </div>
@@ -630,10 +631,10 @@ export default function LandingPage() {
                 <a href="mailto:info@fightersassociation.com" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
                   <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
-                <a href="https://instagram.com/fighters_room" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
                   <Instagram className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
-                <a href="https://wa.me/34603304636" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-md bg-white/5 border border-border flex items-center justify-center hover:border-primary/40 transition-colors">
                   <MessageCircle className="h-3.5 w-3.5 text-muted-foreground" />
                 </a>
               </div>

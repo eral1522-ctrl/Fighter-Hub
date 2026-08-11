@@ -3,7 +3,7 @@ import { Switch, Route, Redirect, useLocation, Router as WouterRouter } from "wo
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ClerkProvider, SignIn, Show, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, Show, useClerk, useUser } from "@clerk/react";
 import { LanguageProvider, useLanguage } from "@/lib/i18n";
 import { publishableKeyFromHost } from "@clerk/react/internal";
 import { shadcn } from "@clerk/themes";
@@ -138,12 +138,14 @@ function SignUpPage() {
 }
 
 function HomeRedirect() {
-  return (
-    <>
-      <Show when="signed-in"><Redirect to="/dashboard" /></Show>
-      <Show when="signed-out"><LandingPage /></Show>
-    </>
-  );
+  // Render the public landing page immediately instead of waiting for
+  // Clerk to finish loading (which previously left the homepage as a
+  // black screen for ~2s on cold loads). Signed-in members are redirected
+  // to the dashboard as soon as Clerk resolves; for everyone else the
+  // hero is visible right away.
+  const { isLoaded, isSignedIn } = useUser();
+  if (isLoaded && isSignedIn) return <Redirect to="/dashboard" />;
+  return <LandingPage />;
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
